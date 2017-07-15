@@ -119,20 +119,27 @@ public class OnlineRechargeController extends RechargeBaseController {
         PayAccount weChatPayAccount = getWeChatAlipay(rank, PayAccountAccountType.WECHAT.getCode());
         //支付宝收款账号
         PayAccount alipayPayAccount = getWeChatAlipay(rank, PayAccountAccountType.ALIPAY.getCode());
+        //QQ钱包收款账号
+        PayAccount qqWalletPayAccount = getWeChatAlipay(rank, PayAccountAccountType.QQWALLET.getCode());
         Map<String, PayAccount> payAccountMap = new HashMap<>(2);
         if (weChatPayAccount != null) {
             payAccountMap.put(WECHATPAY, weChatPayAccount);
-        }
-        if (alipayPayAccount != null) {
+        }if (alipayPayAccount != null) {
             payAccountMap.put(ALIPAY, alipayPayAccount);
+        }if(qqWalletPayAccount!=null){
+            payAccountMap.put(QQWALLET,qqWalletPayAccount);
         }
         model.addAttribute("payAccountMap", payAccountMap);
         model.addAttribute("currency", getCurrencySign());
         //优惠存款方式
-        if (alipayPayAccount != null || weChatPayAccount != null) {
+        if (alipayPayAccount != null || weChatPayAccount != null || qqWalletPayAccount!=null) {
             String type = DepositWayEnum.WECHATPAY_SCAN.getCode();
             if (weChatPayAccount == null) {
-                type = DepositWayEnum.ALIPAY_SCAN.getCode();
+                if (alipayPayAccount==null){
+                    type= DepositWayEnum.QQWALLET_SCAN.getCode();
+                }else if (qqWalletPayAccount==null){
+                    type = DepositWayEnum.ALIPAY_SCAN.getCode();
+                }
             }
             model.addAttribute("sales", searchSales(type));
         }
@@ -442,6 +449,8 @@ public class OnlineRechargeController extends RechargeBaseController {
             payAccount = getWeChatAlipay(rank, PayAccountAccountType.ALIPAY.getCode());
         } else if (RechargeTypeEnum.WECHATPAY_SCAN.getCode().equals(rechargeType)) {
             payAccount = getWeChatAlipay(rank, PayAccountAccountType.WECHAT.getCode());
+        } else if (RechargeTypeEnum.QQWALLET_SCAN.getCode().equals(rechargeType)){
+            payAccount = getWeChatAlipay(rank, PayAccountAccountType.QQWALLET.getCode());
         }
         return payAccount;
     }

@@ -59,6 +59,8 @@ public abstract class RechargeBaseController {
     public static final String ALIPAY = "alipay";
     /*微信支付*/
     public static final String WECHATPAY = "wechatpay";
+    /*QQ钱包*/
+    public static final String QQWALLET = "qqwallet";
     /*比特币支付*/
     public static final String BITCOIN = "bitcoin";
     /*存款次数超3次，需输入验证码*/

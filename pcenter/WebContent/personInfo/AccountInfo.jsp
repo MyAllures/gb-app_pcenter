@@ -427,7 +427,7 @@
         </div>
 
         <c:if test="${showTips}">
-            <div class="control-group" id="submitInfo">
+            <div class="control-group" id="submitInfo" style="margin-left:255px;">
                 <soul:button cssClass="btn-blue btn large-big" text="${views.account['AccountSetting.personal.msg']}"
                              opType="function" target="updatePerson" callback="mySaveCallBack" precall="validateForm">${views.personInfo_auto['提交']}</soul:button>
             </div>

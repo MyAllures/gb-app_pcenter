@@ -14,7 +14,6 @@ import org.soul.commons.support._Module;
 import org.soul.model.comet.vo.MessageVo;
 import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.vo.SysUserVo;
-import org.soul.model.sys.po.SysParam;
 import org.soul.web.session.SessionManagerBase;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
@@ -24,8 +23,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import so.wwb.gamebox.model.ParamTool;
-import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
 import so.wwb.gamebox.model.master.dataRight.po.SysUserDataRight;
@@ -35,7 +32,6 @@ import so.wwb.gamebox.model.master.enums.RankFeeType;
 import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
 import so.wwb.gamebox.model.master.enums.UserTaskEnum;
 import so.wwb.gamebox.model.master.fund.enums.FundTypeEnum;
-import so.wwb.gamebox.model.master.fund.enums.RemittanceWayEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransactionTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.WithdrawStatusEnum;
 import so.wwb.gamebox.model.master.fund.po.PlayerWithdraw;
@@ -163,7 +159,7 @@ public class WithdrawController {
 
             //取款信息
             withdrawVo.getSearch().setId(SessionManager.getUserId());
-            withdrawVo = ServiceTool.vPcenterWithdrawService().get(withdrawVo);
+            withdrawVo = ServiceTool.vPcenterWithdrawService().search(withdrawVo);
             model.addAttribute("command", withdrawVo);
             Map auditMap = getAuditMap();
             model.addAttribute("auditMap", auditMap);

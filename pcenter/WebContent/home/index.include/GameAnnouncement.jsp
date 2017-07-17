@@ -1,3 +1,4 @@
+<%--@elvariable id="gameAnnouncement" type="so.wwb.gamebox.model.company.operator.vo.SystemAnnouncementListVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
 <c:if test="${fn:length(gameAnnouncement.result)>0}">
@@ -14,20 +15,13 @@
                     <c:forEach items="${apiMap}" var="apis">
                         <c:if test="${apis.value.apiId==s.apiId}">
                             <dd class="clearfix">
-                                    <%--<soul:button target="gameDetail" url="${root}/operation/pAnnouncementMessage/gameNoticeDetail.html?searchId=${gameAnnouncement.getSearchId(s.id)}" text="" opType="function">
-                                        <img src="${soulFn:getThumbPath(domain, apis.value.cover,66,24)}">
-                                    </soul:button>--%>
                                 <div class="item">
                                     <h2 class="orange">${gbFn:getApiName((s.apiId).toString())}<c:if test="${s.gameId!=null}">——${gbFn:getGameName((s.gameId).toString())}</c:if></h2>
                                     <p>
-                                        <%--<soul:button target="gameDetail" text=""
-                                                     url="${root}/operation/pAnnouncementMessage/gameNoticeDetail.html?searchId=${gameAnnouncement.getSearchId(s.id)}"
-                                                     opType="function">${fn:substring(s.content,0,50)}<c:if test="${fn:length(s.content)>50}">...</c:if></soul:button>--%>
                                             <a href="/operation/pAnnouncementMessage/gameNoticeDetail.html?searchId=${gameAnnouncement.getSearchId(s.id)}"
-                                               nav-target="mainFrame">${fn:substring(s.content,0,80)}<c:if test="${fn:length(s.content)>80}">...</c:if></a>
+                                               nav-target="mainFrame">${s.shortContentText80}"></a>
                                             <i class="date clock"></i>
                                         <span class="date">${soulFn:formatDateTz(s.publishTime, DateFormat.DAY_SECOND,timeZone)}</span>
-
                                     </p>
                                 </div>
                             </dd>

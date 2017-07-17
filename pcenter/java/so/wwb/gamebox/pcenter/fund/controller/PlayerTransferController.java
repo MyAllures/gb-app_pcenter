@@ -299,9 +299,6 @@ public class PlayerTransferController {
         Integer apiId = playerTransferVo.getResult().getApiId();
         Api api = CacheBase.getApi().get(String.valueOf(apiId));
         SiteApi siteApi = CacheBase.getSiteApi().get(String.valueOf(apiId));
-        if (NumberTool.toInt(ApiProviderEnum.BSG.getCode()) == apiId) {
-            return getErrorMessage(TransferResultStatusEnum.API_TRANSFER_UNSUPPORTED.getCode(), playerTransferVo.getResult().getApiId());
-        }
         //无api
         if (api == null || siteApi == null) {
             return getErrorMessage(TransferResultStatusEnum.API_INTERFACE_BUSY.getCode(), playerTransferVo.getResult().getApiId());

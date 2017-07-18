@@ -34,6 +34,7 @@ import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
+import so.wwb.gamebox.model.company.operator.po.VSystemAnnouncement;
 import so.wwb.gamebox.model.company.operator.vo.VSystemAnnouncementListVo;
 import so.wwb.gamebox.model.master.enums.AnnouncementTypeEnum;
 import so.wwb.gamebox.model.master.enums.UserTaskEnum;
@@ -268,6 +269,9 @@ public class AnnouncementMessageController {
         vListVo.getSearch().setAnnouncementType(AnnouncementTypeEnum.SYSTEM.getCode());
         vListVo.getSearch().setPublishTime(SessionManager.getUser().getCreateTime());
         vListVo = ServiceTool.vSystemAnnouncementService().searchMasterSystemNotice(vListVo);
+        for (VSystemAnnouncement vSystemAnnouncement : vListVo.getResult()) {
+            vSystemAnnouncement.setContent(StringTool.replaceHtml(vSystemAnnouncement.getContent()));
+        }
         model.addAttribute("command", vListVo);
         model.addAttribute("maxDate", new Date());
         //未读数量

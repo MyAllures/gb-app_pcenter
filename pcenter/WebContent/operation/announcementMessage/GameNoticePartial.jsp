@@ -1,3 +1,4 @@
+<%--@elvariable id="command" type="so.wwb.gamebox.model.company.operator.vo.SystemAnnouncementListVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
 
@@ -26,7 +27,7 @@
                                                         ${fn:substring(s.title,0,50)}<c:if test="${fn:length(s.title)>50}">...</c:if>
                                                     </span>
                                                     <a href="/operation/pAnnouncementMessage/gameNoticeDetail.html?searchId=${command.getSearchId(s.id)}"
-                                                       nav-target="mainFrame">${fn:substring(s.content,0,80)}<c:if test="${fn:length(s.content)>80}">...</c:if></a>
+                                                       nav-target="mainFrame">${s.shortContentText80}</a>
 
                                                 </p>
                                             </div>

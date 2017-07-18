@@ -28,7 +28,7 @@
             <h4>${views.fund_auto['请填写回执信息']}：</h4>
             <span class="deposit-info-title">${views.fund_auto['步骤4']}<img src="${resRoot}/images/online-pay2.png"></span>
             <div class="control-group">
-                <label class="control-label" style="width:130px;">${views.fund_auto['您的']}
+                <label class="control-label">${views.fund_auto['您的']}
                     <c:choose>
                         <c:when test="${payAccount.bankCode eq 'wechatpay'}">
                             ${dicts.common.bank_nickname[payAccount.bankCode]}：
@@ -51,7 +51,7 @@
 
             </div>
             <div class="control-group">
-                <label class="control-label" style="width:130px;">${views.fund_auto['金额']}：</label>
+                <label class="control-label">${views.fund_auto['金额']}：</label>
                 <div class="controls">
                     <input type="text" class="input" name="result.rechargeAmount" autocomplete="off">
                     <span class="fee"></span>
@@ -59,7 +59,7 @@
             </div>
             <%@include file="sale.jsp" %>
             <div class="control-group">
-                <label class="control-label" style="width:130px;">${views.fund_auto['订单号（后5位）']}：</label>
+                <label class="control-label">${views.fund_auto['订单号（后5位）']}：</label>
                 <div class="controls">
                     <input type="text" class="input" placeholder="${views.fund_auto['非必填']}" maxlength="5" name="result.bankOrder"
                            autocomplete="off">
@@ -67,14 +67,14 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" style="width:130px;"></label>
+                <label class="control-label"></label>
                 <div class="controls co-gray">
                     ${payAccount.bankCode=='alipay'? views.fund_auto['请填写订单号非商户订单号']:''}
                 </div>
             </div>
             <%@include file="CaptchaCode.jsp" %>
             <div class=" control-group">
-                <label class="control-label" style="width:130px;"></label>
+                <label class="control-label"></label>
                 <soul:button target="commonRecharge.confirm" precall="validateForm" text="${views.fund_auto['提交申请']}" opType="function"
                              cssClass="btn-blue btn large-big disabled _submit"/>
             </div>

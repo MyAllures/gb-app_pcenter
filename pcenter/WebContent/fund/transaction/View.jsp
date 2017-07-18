@@ -199,10 +199,20 @@
                         <h3>${views.fund['FundRecord.view.tips']}</h3>
                     </c:when>
                     <%--扫码支付、电子支付--%>
-                    <c:when test="${command.result.fundType eq 'alipay_scan'||command.result.fundType eq 'other_fast' || command.result.fundType eq 'wechatpay_scan'||command.result.fundType eq 'wechatpay_fast' || command.result.fundType eq 'alipay_fast' ||command.result.fundType eq 'bitcoin_fast'}">
+                    <c:when test="${command.result.fundType eq 'alipay_scan'||command.result.fundType eq 'other_fast' || command.result.fundType eq 'wechatpay_scan'||command.result.fundType eq 'wechatpay_fast' || command.result.fundType eq 'alipay_fast' ||command.result.fundType eq 'bitcoin_fast'||command.result.fundType eq 'qqwallet_scan'}">
                         <h1>
+                            <c:set var="scanCss" value="${bankCode}"/>
+                            <c:if test="${command.result.fundType eq 'alipay_scan'||command.result.fundType eq 'alipay_fast'}">
+                                <c:set var="scanCss" value="alipay"/>
+                            </c:if>
+                            <c:if test="${command.result.fundType eq 'wechatpay_scan'||command.result.fundType eq 'wechatpay_fast'}">
+                                <c:set var="scanCss" value="wechatpay"/>
+                            </c:if>
+                            <c:if test="${command.result.fundType eq 'qqwallet_scan'}">
+                                <c:set var="scanCss" value="qqwallet"/>
+                            </c:if>
                             <c:set var="isOther" value="${bankCode eq 'other' && !empty command.result._describe['customBankName']}"/>
-                            <i class="${isOther?'':'pay-third '}${bankCode}"></i>
+                            <i class="${isOther?'':'pay-third '}${scanCss}"></i>
                             <i style="font-size: medium">${isOther?command.result._describe['customBankName']:''}</i>
                         </h1>
                     </c:when>

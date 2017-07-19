@@ -1,3 +1,4 @@
+<%--@elvariable id="command" type="so.wwb.gamebox.model.company.operator.vo.SystemAnnouncementListVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
 
@@ -10,7 +11,7 @@
                         <tr class="${(dex.index % 2)==0 ? '':'gameback'}">
                             <td class="al-left">
                                 <a href="/operation/pAnnouncementMessage/systemNoticeDetail.html?searchId=${command.getSearchId(s.id)}"
-                                   nav-target="mainFrame">${fn:substring(s.content,0,50)}<c:if test="${fn:length(s.content)>50}">...</c:if></a>
+                                   nav-target="mainFrame">${s.shortContentText50}</a>
                             </td>
                             <td><span class="datemessage"><i class="clock"></i>${soulFn:formatDateTz(s.publishTime, DateFormat.DAY_SECOND,timeZone)}</span></td>
                         </tr>

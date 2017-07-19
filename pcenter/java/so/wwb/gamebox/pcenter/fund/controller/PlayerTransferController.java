@@ -297,11 +297,11 @@ public class PlayerTransferController {
             return getErrorMessage(TransferResultStatusEnum.TRANSFER_SWITCH_CLOSE.getCode(), playerTransferVo.getResult().getApiId());
         }
         Integer apiId = playerTransferVo.getResult().getApiId();
-        Api api = CacheBase.getApi().get(String.valueOf(apiId));
-        SiteApi siteApi = CacheBase.getSiteApi().get(String.valueOf(apiId));
         if (NumberTool.toInt(ApiProviderEnum.BSG.getCode()) == apiId) {
             return getErrorMessage(TransferResultStatusEnum.API_TRANSFER_UNSUPPORTED.getCode(), playerTransferVo.getResult().getApiId());
         }
+        Api api = CacheBase.getApi().get(String.valueOf(apiId));
+        SiteApi siteApi = CacheBase.getSiteApi().get(String.valueOf(apiId));
         //无api
         if (api == null || siteApi == null) {
             return getErrorMessage(TransferResultStatusEnum.API_INTERFACE_BUSY.getCode(), playerTransferVo.getResult().getApiId());

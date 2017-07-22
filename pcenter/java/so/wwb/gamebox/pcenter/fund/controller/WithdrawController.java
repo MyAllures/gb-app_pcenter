@@ -51,6 +51,7 @@ import so.wwb.gamebox.web.bank.BankHelper;
 import so.wwb.gamebox.web.common.token.Token;
 import so.wwb.gamebox.web.common.token.TokenHandler;
 
+import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.DecimalFormat;
@@ -164,7 +165,6 @@ public class WithdrawController {
             Map auditMap = getAuditMap();
             model.addAttribute("auditMap", auditMap);
             return ServletTool.isAjaxSoulRequest(request) ? WITHDRAW_INDEX + "Partial" : WITHDRAW_INDEX;
-
         } else {
             model.addAttribute("bankListVo", BankHelper.getBankListVo());
             model.addAttribute("type", "withdraw");

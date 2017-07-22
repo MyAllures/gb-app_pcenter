@@ -89,7 +89,7 @@
         <div class="deposit-tab01">
             <a href="/fund/recharge/company/bitCoinFirst.html" nav-Target="mainFrame">
                 <img src="${resRoot}/images/deposit-tab-img8.png">
-                <span class="pay-title"><em>比特币支付</em><i class="pay-title-tips">${views.fund_auto['范例']}</i></span>
+                <span class="pay-title"><em>${views.fund_auto['比特币支付']}</em><i class="pay-title-tips">${views.fund_auto['范例']}</i></span>
             </a>
         </div>
     </c:if>

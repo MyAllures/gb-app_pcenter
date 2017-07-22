@@ -28,7 +28,7 @@
             <c:choose>
                 <c:when test="${type eq 'bitcoin_fast'}">
                     <div class="form-group clearfix line-hi45 m-b-xxs">
-                        <label class="col-xs-5 al-right bold">比特币：</label>
+                        <label class="col-xs-5 al-right bold">${views.fund_auto['比特币']}：</label>
                         <div class="col-xs-6 p-x  f-size26"><fmt:formatNumber pattern="#.########" value="${playerRechargeVo.result.bitAmount}"/></div>
                     </div>
                 </c:when>

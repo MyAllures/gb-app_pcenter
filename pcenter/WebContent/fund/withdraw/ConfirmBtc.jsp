@@ -31,7 +31,7 @@
         <soul:button target="closePage" text="" opType="function" cssClass="btn btn-filter btn-lg real-time-btn" tag="button">
             <span class="hd">${views.common['cancel']}</span>
         </soul:button>
-        <soul:button target="next" text="" opType="ajax" cssClass="btn btn-filter btn-lg real-time-btn" tag="button" precall="validateForm">
+        <soul:button target="${root}/fund/userBankcard/bindBtc.html" text="" opType="ajax" cssClass="btn btn-filter btn-lg real-time-btn" tag="button" dataType="json" post="getCurrentFormData" callback="saveCallbak" precall="validateForm">
             <span class="hd">${views.common['ok']}</span>
         </soul:button>
     </div>

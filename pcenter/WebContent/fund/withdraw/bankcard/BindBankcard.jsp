@@ -8,7 +8,7 @@
     <form name="bindBankcardForm">
     <c:choose>
         <%--比特币、银行卡都支持--%>
-        <c:when test="${isBankCard && isBtc}">
+        <c:when test="${isCash && isBit}">
             <div class="tabmenu bankTab">
                 <ul class="tab">
                     <li><a class="current">银行卡账户</a></li>
@@ -16,11 +16,11 @@
                 </ul>
             </div>
             <div class="user-info">
-                <%@include file="IntoBankcard.jsp" %>
+                <%@include file="Bankcard.jsp" %>
             </div>
         </c:when>
         <%--银行卡不支持、比特币支持--%>
-        <c:when test="${isBtc}">
+        <c:when test="${isBit}">
             <div class="user-info">
                 <%@include file="Btc.jsp" %>
             </div>
@@ -28,7 +28,7 @@
         <%--默认支持银行卡--%>
         <c:otherwise>
             <div class="user-info">
-                <%@include file="IntoBankcard.jsp" %>
+                <%@include file="Bankcard.jsp" %>
             </div>
         </c:otherwise>
     </c:choose>

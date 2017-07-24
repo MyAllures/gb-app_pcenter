@@ -20,7 +20,7 @@
 </div>
 <div class="main-wrap">
     <c:choose>
-        <c:when test="${playerWithdrawExist > 0}">
+        <c:when test="${hasOrder}">
             <div class="withdraw-not">
                 <h1><i class="tipbig fail"></i></h1>
                 <div class="tiptext">
@@ -29,15 +29,15 @@
                 </div>
             </div>
         </c:when>
-        <c:otherwise>
-            <c:if test="${balanceFreezen}">
-                <div class="withdraw-not">
-                    <h1><i class="tipbig fail"></i></h1>
-                    <div class="tiptext" style="padding: 0 80px">
-                        <p>${empty player.balanceFreezeContent? views.fund_auto['您的账号余额已被冻结，请联系客服']:player.balanceFreezeContent}</p>
-                    </div>
+        <c:when test="${hasFreeze}">
+            <div class="withdraw-not">
+                <h1><i class="tipbig fail"></i></h1>
+                <div class="tiptext" style="padding: 0 80px">
+                    <p>${empty player.balanceFreezeContent? views.fund_auto['您的账号余额已被冻结，请联系客服']:player.balanceFreezeContent}</p>
                 </div>
-            </c:if>
+            </div>
+        </c:when>
+        <c:otherwise>
             <c:if test="${not empty rank && (rank.withdrawMaxNum == null || rank.withdrawMinNum == null)}">
                 <div class="withdraw-not">
                     <h1><i class="tipbig fail"></i></h1>

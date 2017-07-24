@@ -1,3 +1,4 @@
+<%--@elvariable id="bankcard" type="so.wwb.gamebox.model.master.player.po.UserBankcard"--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/include/include.inc.jsp" %>
 
@@ -11,10 +12,10 @@
             <c:choose>
                 <c:when test="${not empty user.realName}">
                     <span>${soulFn:overlayName(user.realName)}</span>
-                    <input type="hidden" name="result.bankcardMasterName" value="${user.realName}">
+                    <input type="hidden" name="result.bankcardMasterName" value="${user.realName}"/>
                 </c:when>
                 <c:otherwise>
-                    <input type="text" name="result.bankcardMasterName" maxlength="30" class="input bn">
+                    <input type="text" name="result.bankcardMasterName" maxlength="30" class="input bn"/>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -76,18 +77,15 @@
     <div class="control-grouptwo">
         <label class="control-left">${views.fund_auto['银行卡号']}：</label>
         <div class="controls">
-            <input type="text" class="input bn ignore" placeholder="" maxlength="24" name="bankcardNumber2"
-                   tipsName="result.bankcardNumber-tips"
-                   autocomplete="off"
-                   value="${soulFn:formatBankCard(bankcard.bankcardNumber)}">
-            <input type="hidden" class="input" name="result.bankcardNumber" value="${bankcard.bankcardNumber}">
+            <input type="text" class="input bn ignore" placeholder="" maxlength="24" name="bankcardNumber2" tipsName="result.bankcardNumber-tips" autocomplete="off">
+            <input type="hidden" class="input" name="result.bankcardNumber"/>
         </div>
     </div>
 
     <div class="control-grouptwo">
         <label class="control-left">${views.fund_auto['开户行']}：</label>
         <div class="controls">
-            <input type="text" autocomplete="off" class="input bn result-bankDeposit" placeholder="${views.fund_auto['选择其它银行时必填']}" name="result.bankDeposit" value="${bankcard.bankDeposit}">
+            <input type="text" autocomplete="off" class="input bn result-bankDeposit" placeholder="${views.fund_auto['选择其它银行时必填']}" name="result.bankDeposit" value=""/>
         </div>
         <p class="tipsgray">${views.fund_auto['如']}</p>
     </div>

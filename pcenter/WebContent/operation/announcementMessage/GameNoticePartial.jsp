@@ -23,9 +23,6 @@
                                             <div class="item">
                                                 <h2 class="orange">${gbFn:getApiName((s.apiId).toString())}<c:if test="${s.gameId!=null}">——${gbFn:getGameName((s.gameId).toString())}</c:if></h2>
                                                 <p>
-                                                    <span class="title">
-                                                        ${fn:substring(s.title,0,50)}<c:if test="${fn:length(s.title)>50}">...</c:if>
-                                                    </span>
                                                     <a href="/operation/pAnnouncementMessage/gameNoticeDetail.html?searchId=${command.getSearchId(s.id)}"
                                                        nav-target="mainFrame">${s.shortContentText80}</a>
 

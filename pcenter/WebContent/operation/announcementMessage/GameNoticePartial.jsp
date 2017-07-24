@@ -12,23 +12,17 @@
                 <div class="gamenotice">
                     <div class="gamenotice-box">
                         <dl>
-
-
                             <c:forEach items="${command.result}" var="s" varStatus="dex">
-                                <i class="date clock"></i>
-                                <span class="date">${soulFn:formatDateTz(s.publishTime, DateFormat.DAY_SECOND,timeZone)}</span>
                                 <c:forEach items="${apiMap}" var="apis">
                                     <c:if test="${apis.value.apiId==s.apiId}">
+                                        <i class="date clock"></i>
+                                        <span class="date">${soulFn:formatDateTz(s.publishTime, DateFormat.DAY_SECOND,timeZone)}</span>
                                         <dd class="clearfix ${(dex.index % 2)==0 ? '':'gameback'}" >
                                             <div class="item">
                                                 <h2 class="orange">${gbFn:getApiName((s.apiId).toString())}<c:if test="${s.gameId!=null}">——${gbFn:getGameName((s.gameId).toString())}</c:if></h2>
                                                 <p>
-                                                    <span class="title">
-                                                        ${fn:substring(s.title,0,50)}<c:if test="${fn:length(s.title)>50}">...</c:if>
-                                                    </span>
                                                     <a href="/operation/pAnnouncementMessage/gameNoticeDetail.html?searchId=${command.getSearchId(s.id)}"
                                                        nav-target="mainFrame">${s.shortContentText80}</a>
-
                                                 </p>
                                             </div>
                                         </dd>
@@ -56,4 +50,4 @@
 <c:if test="${fn:length(command.result) le 0}">
 </div>
 </c:if>
-<soul:pagination/>
+<%--<soul:pagination/>--%>

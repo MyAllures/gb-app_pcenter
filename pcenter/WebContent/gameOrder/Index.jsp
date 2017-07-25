@@ -14,10 +14,12 @@
                 <span class="pull-left">${views.gameOrder_auto['投注日期']}：</span>
                 <gb:dateRange style="width:170px;" inputStyle="width:150px" format="${DateFormat.DAY_SECOND}" useToday="true" useRange="true" position="down" btnClass="search"  minDate="${command.minDate}" startName="search.beginBetTime" endName="search.endBetTime" startDate="${command.search.beginBetTime}" endDate="${command.search.endBetTime}"/>
                 <soul:button target="queryByCondition" text="${views.gameOrder_auto['搜索']}" opType="function" cssClass="btn btn-filter"/>
-                <div class="pull-right">
-                    ${views.gameOrder_auto['游戏类型']}：
-                    <soul:button target="${root}/gameOrder/game.html" callback="gameCallBack" cssClass="btn btn-gray" text="${views.gameOrder_auto['选取']}" title="${views.gameOrder_auto['游戏分类']}" opType="dialog" tag="button"/>
-                </div>
+                <c:if test="${isLottery.paramValue!='true'}">
+                    <div class="pull-right">
+                        ${views.gameOrder_auto['游戏类型']}：
+                        <soul:button target="${root}/gameOrder/game.html" callback="gameCallBack" cssClass="btn btn-gray" text="${views.gameOrder_auto['选取']}" title="${views.gameOrder_auto['游戏分类']}" opType="dialog" tag="button"/>
+                    </div>
+                </c:if>
             </div>
         </div>
         <div class="count">

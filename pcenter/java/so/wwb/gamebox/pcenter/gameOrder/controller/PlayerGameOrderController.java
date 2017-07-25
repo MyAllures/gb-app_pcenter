@@ -5,11 +5,14 @@ import org.soul.commons.dict.DictTool;
 import org.soul.commons.lang.DateTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.net.ServletTool;
+import org.soul.model.sys.po.SysParam;
 import org.soul.web.session.SessionManagerBase;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import so.wwb.gamebox.model.DictEnum;
+import so.wwb.gamebox.model.ParamTool;
+import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.company.setting.po.SysCurrency;
 import so.wwb.gamebox.model.company.site.po.SiteApiTypeI18n;
 import so.wwb.gamebox.model.company.site.po.SiteGame;
@@ -72,6 +75,8 @@ public class PlayerGameOrderController {
         model.addAttribute("command", listVo);
         model.addAttribute("currency", getCurrencySign());
         model.addAttribute("orderState", DictTool.get(DictEnum.GAME_ORDER_STATE));
+        SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.SETTING_SYSTEM_SETTINGS_IS_LOTTERY_SITE);
+        model.addAttribute("isLottery",sysParam);
         return ServletTool.isAjaxSoulRequest(request) ? INDEX_PARTIAL_URI : INDEX_URI;
     }
 

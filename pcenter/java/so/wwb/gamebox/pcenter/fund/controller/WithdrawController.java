@@ -144,11 +144,11 @@ public class WithdrawController {
         model.addAttribute("userBankcardVo", userBankcardVo);
         SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.SETTING_SYSTEM_SETTINGS_IS_LOTTERY_SITE);
         model.addAttribute("isLottery",sysParam);
+        //取款时同步彩票余额
+        if(sysParam!=null&&"true".equals(sysParam.getParamValue())){
+            fetchUserBalanceFromApi();
+        }
         if (bankcard != null) {
-            if("true".equals(sysParam.getParamValue())){
-                fetchUserBalanceFromApi();
-            }
-
             //查询是否已存在取款订单
             Long existence = isExistence();
             model.addAttribute("playerWithdrawExist", existence);

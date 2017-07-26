@@ -176,24 +176,48 @@
                 </div>
             </c:otherwise>
         </c:choose>
-
         <c:choose>
-            <c:when test="${not empty userBankcard}">
+            <c:when test="${not empty userBankcards}">
                 <div class="control-grouptwo">
                     <label class="control-left">${views.personInfo_auto['当前使用']}：</label>
-                    <div class="controls">
-                        <i class="pay-bank ${userBankcard.bankName}" style="border: 1px solid #cecfd0"></i>【${soulFn:overlayName(userBankcard.bankcardMasterName)}】
-                            ${soulFn:formatBankCard(userBankcard.bankcardNumber)}&nbsp;&nbsp;${userBankcard.bankDeposit}
-                    </div>
                 </div>
+                <c:forEach items="${userBankcards}" var="i">
+                    <div class=" control-group">
+                        <label class="control-label"></label>
+                        <div class="controls">
+                            <div class="hintbank">
+                                <c:if test="${i.bankName=='bitcoin'}">
+                                    <i class="pay-third ${i.bankName}"></i>
+                                    ${soulFn:overlayString(i.bankcardNumber)}
+                                </c:if>
+                                <c:if test="${i.bankName!='bitcoin'}">
+                                    <i class="pay-bank ${i.bankName}"></i>
+                                    ${soulFn:overlayString(i.bankcardNumber)}
+                                    <span>${soulFn:overlayName(i.bankcardMasterName)}</span>
+                                </c:if>
+                            </div>
+                        </div>
+                    </div>
+                </c:forEach>
             </c:when>
             <c:otherwise>
-                <div class="control-grouptwo">
-                    <label class="control-left">${views.personInfo_auto['尚未设置银行卡']}：</label>
-                    <div class="controls">
-                        <a href="/personInfo/toUserBank.html" nav-target="mainFrame">${views.personInfo_auto['新增银行卡']}</a>
+                <c:if test="${cashParam.paramValue=='true'}">
+                    <div class="control-grouptwo">
+                        <label class="control-left">${views.personInfo_auto['尚未设置银行卡']}：</label>
+                        <div class="controls">
+                            <a href="/personInfo/toUserBank.html" nav-target="mainFrame">${views.personInfo_auto['新增银行卡']}</a>
+                        </div>
                     </div>
-                </div>
+                </c:if>
+                <c:if test="${bitcoinParam.paramValue=='true'}">
+                    <div class=" control-group">
+                        <label class="control-label"></label>
+                        <div class="controls">
+                            您当前尚未设置比特币钱包！
+                            <soul:button target="${root}/fund/userBankcard/btcDialog.html" title="绑定比特币" callback="bankSaveCallBack" text="立即新增" opType="dialog"/>
+                        </div>
+                    </div>
+                </c:if>
             </c:otherwise>
         </c:choose>
     </div>

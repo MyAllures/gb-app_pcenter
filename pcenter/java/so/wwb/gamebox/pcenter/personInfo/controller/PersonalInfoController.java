@@ -13,6 +13,7 @@ import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.net.ServletTool;
+import org.soul.model.gameapi.param.User;
 import org.soul.model.msg.notice.po.NoticeContactWay;
 import org.soul.model.msg.notice.vo.EmailMsgVo;
 import org.soul.model.msg.notice.vo.NoticeContactWayListVo;
@@ -98,8 +99,9 @@ public class PersonalInfoController {
         model.addAttribute("sysUserProtectionVo", sysUserProtectionVo);
 
         //获取玩家银行卡信息
-        UserBankcard userBankcard = BankHelper.getUserBankcard();
-        model.addAttribute("userBankcard", userBankcard);
+        model.addAttribute("userBankcards", BankHelper.getUserBankcardList());
+        model.addAttribute("bitcoinParam", ParamTool.getSysParam(SiteParamEnum.SETTING_WITHDRAW_TYPE_IS_BITCOIN));
+        model.addAttribute("cashParam", ParamTool.getSysParam(SiteParamEnum.SETTING_WITHDRAW_TYPE_IS_CASH));
 
         //获取联系方式
         getNoticeContactWay(model);

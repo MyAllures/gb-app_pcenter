@@ -202,20 +202,15 @@
             </c:when>
             <c:otherwise>
                 <c:if test="${cashParam.paramValue=='true'}">
-                    <div class="control-grouptwo">
-                        <label class="control-left">${views.personInfo_auto['尚未设置银行卡']}：</label>
-                        <div class="controls">
-                            <a href="/personInfo/toUserBank.html" nav-target="mainFrame">${views.personInfo_auto['新增银行卡']}</a>
-                        </div>
+                    <div class=" control-group">
+                        <label class="control-label"></label>
+                        <div class="controls">您当前尚未设置银行卡！  <a href="/personInfo/toUserBank.html" nav-target="mainFrame">立即新增</a></div>
                     </div>
                 </c:if>
                 <c:if test="${bitcoinParam.paramValue=='true'}">
                     <div class=" control-group">
                         <label class="control-label"></label>
-                        <div class="controls">
-                            您当前尚未设置比特币钱包！
-                            <soul:button target="${root}/fund/userBankcard/btcDialog.html" title="绑定比特币" callback="bankSaveCallBack" text="立即新增" opType="dialog"/>
-                        </div>
+                        <div class="controls">您当前尚未设置比特币钱包！ <soul:button target="${root}/fund/userBankcard/btcDialog.html" title="绑定比特币" callback="bankSaveCallBack" text="立即新增" opType="dialog"/></div>
                     </div>
                 </c:if>
             </c:otherwise>

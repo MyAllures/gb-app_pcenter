@@ -5,7 +5,7 @@
 <h3>${views.fund_auto['绑定取款银行卡']}</h3>
 <h4 class="gray" style="font-weight: normal; padding-top: 10px">${views.fund_auto['绑定银行卡提醒']}</h4>
 <div class="m-t-sm line-hi32">
-    <div id="validateRule" style="display: none">${validateRule}</div>
+    <div id="validateRule" style="display: none">${validate}</div>
     <div class="control-grouptwo">
         <label class="control-left">${views.fund_auto['真实姓名']}：</label>
         <div class="controls">
@@ -94,7 +94,7 @@
         <label class="control-label" style="width:132px;"></label>
         <div class="controls" id="submitInfo">
             <soul:button target="resetBankCard" text="${views.fund_auto['重置']}" opType="function" cssClass="btn btn-gray middle-big "/>
-            <soul:button precall="validateForm" target="${root}" text="${views.fund_auto['确认']}" opType="ajax" callback="saveBankcardCallback" dataType="json" post="getCurrentFormData"  cssClass="btn btn-blue middle-big btn-bank"/>
+            <soul:button precall="validateForm" target="${root}/fund/userBankcard/submitBankCard.html" text="${views.fund_auto['确认']}" opType="ajax" callback="saveBankcardCallback" dataType="json" post="getCurrentFormData"  cssClass="btn btn-blue middle-big btn-bank"/>
         </div>
     </div>
 </div>

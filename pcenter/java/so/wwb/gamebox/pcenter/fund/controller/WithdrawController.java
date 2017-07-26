@@ -3,13 +3,11 @@ package so.wwb.gamebox.pcenter.fund.controller;
 import org.soul.commons.collections.MapTool;
 import org.soul.commons.currency.CurrencyTool;
 import org.soul.commons.data.json.JsonTool;
-import org.soul.commons.lang.DateTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
-import org.soul.commons.net.ServletTool;
 import org.soul.commons.support._Module;
 import org.soul.model.comet.vo.MessageVo;
 import org.soul.model.security.privilege.po.SysUser;
@@ -25,37 +23,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
-import so.wwb.gamebox.model.master.dataRight.po.SysUserDataRight;
 import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
-import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightVo;
-import so.wwb.gamebox.model.master.enums.RankFeeType;
 import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
-import so.wwb.gamebox.model.master.enums.UserTaskEnum;
 import so.wwb.gamebox.model.master.fund.enums.FundTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransactionTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.WithdrawStatusEnum;
 import so.wwb.gamebox.model.master.fund.po.PlayerWithdraw;
 import so.wwb.gamebox.model.master.fund.vo.PlayerWithdrawVo;
-import so.wwb.gamebox.model.master.fund.vo.VPcenterWithdrawVo;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.model.master.player.po.PlayerTransaction;
 import so.wwb.gamebox.model.master.player.po.UserBankcard;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
 import so.wwb.gamebox.model.master.player.vo.*;
-import so.wwb.gamebox.model.master.tasknotify.vo.UserTaskReminderVo;
 import so.wwb.gamebox.pcenter.fund.form.AddBankcardForm;
 import so.wwb.gamebox.pcenter.fund.form.SettingRealNameForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
-import so.wwb.gamebox.web.bank.BankHelper;
 import so.wwb.gamebox.web.common.token.Token;
 import so.wwb.gamebox.web.common.token.TokenHandler;
+import so.wwb.gamebox.web.fund.controller.BaseWithdrawController;
+import so.wwb.gamebox.web.fund.form.WithdrawForm;
 
-import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 控制器
@@ -65,7 +60,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/player/withdraw")
-public class WithdrawController {
+public class WithdrawController extends BaseWithdrawController {
 
     private static final Log LOG = LogFactory.getLog(WithdrawController.class);
 
@@ -129,60 +124,8 @@ public class WithdrawController {
      */
     @RequestMapping({"/withdrawList"})
     @Token(generate = true)
-    protected String withdrawList(HttpServletRequest request, VPcenterWithdrawVo withdrawVo, Model model) {
-        // 表单校验
-        model.addAttribute("validate", JsRuleCreator.create(AddBankcardForm.class));
-        // 获取用户信息
-        model.addAttribute("user", getUser(model));
-
-        // 是否设置收款账号
-        UserBankcard bankcard = BankHelper.getUserBankcard();
-        UserBankcardVo userBankcardVo = new UserBankcardVo();
-        userBankcardVo.setResult(bankcard);
-        model.addAttribute("userBankcardVo", userBankcardVo);
-        if (bankcard != null) {
-            //查询是否已存在取款订单
-            Long existence = isExistence();
-            model.addAttribute("playerWithdrawExist", existence);
-            if (existence > 0) {
-                return ServletTool.isAjaxSoulRequest(request) ? WITHDRAW_INDEX + "Partial" : WITHDRAW_INDEX;
-            }
-            //余额冻结
-            UserPlayer player = getPlayer();
-            model.addAttribute("player", player);
-            boolean flag = player.getBalanceFreezeEndTime() != null && player.getBalanceFreezeEndTime().getTime() > new Date().getTime();
-            model.addAttribute("balanceFreezen", flag);
-            if (flag) {
-                return ServletTool.isAjaxSoulRequest(request) ? WITHDRAW_INDEX + "Partial" : WITHDRAW_INDEX;
-            }
-            //层级上下限金额
-            model.addAttribute("rank", getRank(player));
-
-            //取款信息
-            withdrawVo.getSearch().setId(SessionManager.getUserId());
-            withdrawVo = ServiceTool.vPcenterWithdrawService().search(withdrawVo);
-            model.addAttribute("command", withdrawVo);
-            Map auditMap = getAuditMap();
-            model.addAttribute("auditMap", auditMap);
-            return ServletTool.isAjaxSoulRequest(request) ? WITHDRAW_INDEX + "Partial" : WITHDRAW_INDEX;
-        } else {
-            model.addAttribute("bankListVo", BankHelper.getBankListVo());
-            model.addAttribute("type", "withdraw");
-            return INTO_BANKCARD;
-        }
-    }
-
-    private Map getAuditMap() {
-        LOG.info("进行取款稽核");
-        if (SessionManager.getUserId() == null) {
-            throw new RuntimeException("玩家ID不存在");
-        }
-        PlayerTransactionVo transactionVo = new PlayerTransactionVo();
-        transactionVo.setResult(new PlayerTransaction());
-        transactionVo.setPlayerId(SessionManager.getUserId());
-        transactionVo.setAuditDate(new Date());
-        Map transactionMap = ServiceTool.getPlayerTransactionService().getTransactionMap(transactionVo);
-        return toAuditObjectMap(transactionVo, transactionMap);
+    protected String withdrawList(Model model) {
+        return withdraw(model);
     }
 
     /**
@@ -218,94 +161,11 @@ public class WithdrawController {
         return bankcardVo.getResult();
     }
 
-    /**
-     * 获取玩家信息
-     *
-     * @return 玩家信息
-     */
-    private UserPlayer getPlayer() {
-        if (SessionManager.getUserId() == null) {
-            return null;
-        }
-        UserPlayerVo playerVo = new UserPlayerVo();
-        playerVo.setResult(new UserPlayer());
-        playerVo.getSearch().setId(SessionManager.getUserId());
-        playerVo = ServiceTool.userPlayerService().get(playerVo);
-        return playerVo.getResult();
-    }
-
-    /**
-     * 获取玩家层级
-     *
-     * @param player 玩家
-     * @return 层级信息
-     */
-    private PlayerRank getRank(UserPlayer player) {
-        if (player == null || player.getRankId() == null) {
-            return null;
-        }
-        PlayerRankVo rankVo = new PlayerRankVo();
-        rankVo.setResult(new PlayerRank());
-        rankVo.getSearch().setId(player.getRankId());
-        rankVo = ServiceTool.playerRankService().get(rankVo);
-        return rankVo.getResult();
-    }
-
-    /**
-     * 查询是否已存在取款订单
-     */
-    private Long isExistence() {
-        //如果session不存在，不让取款
-        if (SessionManager.getUserId() == null) {
-            LOG.info("session不存在");
-            return 1l;
-        }
-        PlayerWithdrawVo playerWithdrawVo = new PlayerWithdrawVo();
-        playerWithdrawVo.setResult(new PlayerWithdraw());
-        playerWithdrawVo.getSearch().setPlayerId(SessionManager.getUserId());
-        Long aLong = ServiceTool.playerWithdrawService().existPlayerWithdrawCount(playerWithdrawVo);
-        LOG.info("是否存在未取款订单:" + aLong);
-        return aLong;
-    }
-
     @RequestMapping("/pleaseWithdraw")
     @ResponseBody
     @Token(valid = true)
-    public Map pleaseWithdraw(PlayerTransactionVo transactionVo, Model model, PlayerWithdraw playerWithdraw) {
-        Map result = new HashMap();
-        try {
-            Long length = isExistence();
-            if (length == 0) {
-                LOG.info("玩家{0}开始取款", SessionManager.getUserName());
-                result = toWithdraw(transactionVo, model);
-            } else {
-                LOG.info("已存在取款订单");
-                result.put("state", false);
-                result.put("msg", "已存在取款订单");
-                result.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
-                model.addAttribute("errmsg", "已存在取款订单");
-            }
-        } catch (Exception ex) {
-            LOG.error(ex, "申请取款出错");
-            result.put("state", false);
-            result.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
-        }
-        if (result.get("state") != null && MapTool.getBoolean(result, "state")) {
-            // 生成任务提醒
-            LOG.info("生成任务提醒");
-            PlayerWithdrawVo withdrawVo = new PlayerWithdrawVo();
-            if (playerWithdraw == null) {
-                playerWithdraw = new PlayerWithdraw();
-            }
-            withdrawVo.setResult(playerWithdraw);
-            withdrawVo.getResult().setTransactionNo(MapTool.getString(result, "transactionNo"));
-            tellerReminder(withdrawVo);//发送提醒消息给站长中心
-        } else {
-            result.put("state", false);
-            result.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
-        }
-
-        return result;
+    public Map pleaseWithdraw(HttpServletRequest request, PlayerTransactionVo transactionVo, Model model, @FormModel @Valid WithdrawForm form, BindingResult result) {
+        return submitWithdraw(request, transactionVo, model, result);
     }
 
     private PlayerTransactionVo insertTransactionData(PlayerTransactionVo transactionVo) {
@@ -343,7 +203,7 @@ public class WithdrawController {
         } else {
             LOG.info("取款玩家ID为:{0}", player.getId());
         }
-        PlayerRank rank = getRank(player);
+        PlayerRank rank = getRank();
         if (rank == null) {
             LOG.info("获取层级信息为空");
             result.put("state", false);
@@ -478,74 +338,6 @@ public class WithdrawController {
         return ServiceTool.getPlayerTransactionService().searchAuditLog(listVo);
     }
 
-    /**
-     * 取得24H内已取款次数
-     *
-     * @return 已取款次数
-     */
-    private Integer get24HHasCount() {
-        Date nowTime = SessionManager.getDate().getToday(); // 今天零时时间
-        PlayerWithdrawVo withdrawVo = new PlayerWithdrawVo();
-        withdrawVo.getSearch().setPlayerId(SessionManager.getUserId());
-        withdrawVo.getSearch().setCreateTime(nowTime);
-        Long count = ServiceTool.playerWithdrawService().searchPlayerWithdrawNum(withdrawVo);
-        count = count == null ? 0L : count;
-        return count.intValue();
-    }
-
-
-    /**
-     * 创建任务提醒
-     */
-    private void createSchedule(List<Integer> subUserIds) {
-        UserTaskReminderVo reminderVo = new UserTaskReminderVo();
-        reminderVo.setUserIds(subUserIds);
-        reminderVo.setTaskEnum(UserTaskEnum.PLAYERWITHDRAW);
-        ServiceTool.userTaskReminderService().addTaskReminder(reminderVo);
-    }
-
-    private Map<String, Object> toAuditObjectMap(PlayerTransactionVo transactionVo, Map auditMap) {
-        double favorableSum = MapTool.getDouble(auditMap, "favorableSum");
-        double depositSum = MapTool.getDouble(auditMap, "depositSum");
-        double withdrawAmount = 0;
-        if (auditMap.get("withdrawAmount") != null) {
-            withdrawAmount = MapTool.getDouble(auditMap, "withdrawAmount");
-        }
-        double poundage = getPoundage(transactionVo, withdrawAmount);
-        double actualWithdraw = withdrawAmount - depositSum - favorableSum - poundage;
-        //用于显示用的手续用，不能用来计算
-        String counterFee = ServiceTool.playerWithdrawService().getDisplayCounterFee(transactionVo);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("actualWithdraw", actualWithdraw);
-        result.put("deductFavorable", auditMap.get("favorableSum"));
-        result.put("transactionNo", auditMap.get("transactionNo"));
-        result.put("administrativeFee", depositSum);
-        result.put("withdrawAmount", withdrawAmount);
-        result.put("withdrawFeeMoney", poundage);
-        result.put("counterFee", counterFee);
-        boolean flag = MapTool.getBoolean(auditMap, "depositRecord");
-        boolean flag2 = MapTool.getBoolean(auditMap, "favorableRecord");
-        if (flag || flag2) {
-            result.put("recordList", true);
-        } else {
-            result.put("recordList", false);
-        }
-        return result;
-    }
-
-    /**
-     * 获取手续费
-     */
-    private double getPoundage(PlayerTransactionVo transactionVo, double withdrawAmount) {
-        PlayerWithdrawVo withdrawVo = new PlayerWithdrawVo();
-        withdrawVo.setResult(new PlayerWithdraw());
-        withdrawVo.getSearch().setTransactionNo(transactionVo.getResult().getTransactionNo());
-        withdrawVo.getResult().setWithdrawAmount(withdrawAmount);
-        Double poundage = ServiceTool.playerWithdrawService().getWithdrawFeeNum(transactionVo, withdrawVo, transactionVo.getPlayerId());
-        return poundage == null ? 0 : poundage;
-    }
-
     @RequestMapping("/withdrawSuccess")
     private String withdrawSuccess(PlayerWithdrawVo withdrawVo, Model model) {
         if (StringTool.isNotBlank(withdrawVo.getSearch().getTransactionNo())) {
@@ -564,7 +356,7 @@ public class WithdrawController {
             model.addAttribute("errmsg", "找不到玩家取款信息");
             return getViewBasePath() + "WithdrawError";
         }
-        PlayerRank rank = getRank(getPlayer());
+        PlayerRank rank = getRank();
 
         if (rank != null) {
             Integer count = get24HHasCount();
@@ -744,38 +536,6 @@ public class WithdrawController {
         createSchedule(list);
     }
 
-    private void filterUnavailableSubAccount(PlayerWithdrawVo withdrawVo, List<Integer> list) {
-        SysUserDataRightVo sysUserDataRightVo = new SysUserDataRightVo();
-        sysUserDataRightVo.getSearch().setModuleType(DataRightModuleType.PLAYERWITHDRAW.getCode());
-        Map<Integer, List<SysUserDataRight>> udrMap = ServiceTool.sysUserDataRightService().searchDataRightsByModuleType(sysUserDataRightVo);
-        Integer rankId = withdrawVo.getResult().getRankId();
-        if (rankId == null) {
-            UserPlayerVo userPlayerVo = new UserPlayerVo();
-            userPlayerVo.getSearch().setId(SessionManager.getUserId());
-            userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
-            rankId = userPlayerVo.getResult().getRankId();
-        }
-        for (Iterator<Integer> iterator = list.iterator(); iterator.hasNext(); ) {
-            Integer userId = iterator.next();
-            List<SysUserDataRight> dataRights = udrMap.get(userId);
-            if (dataRights == null || dataRights.size() == 0) {
-                continue;
-            }
-            if (rankId != null) {
-                boolean flag = true;
-                for (SysUserDataRight sysUserDataRight : dataRights) {
-                    if (rankId.equals(sysUserDataRight.getEntityId())) {
-                        flag = false;
-                        break;
-                    }
-                }
-                if (flag) {
-                    iterator.remove();
-                }
-            }
-        }
-    }
-
     /**
      * 远程验证取款金额
      */
@@ -820,7 +580,7 @@ public class WithdrawController {
 
         //取款手续费
         double amount = Double.valueOf(withdrawAmount);
-        PlayerRank rank = getRank(getPlayer());
+        PlayerRank rank = getRank();
         Double poundage = getPoundage(amount, rank);
         Map auditMap = getAuditMap();
         Double administrativeFee = MapTool.getDouble(auditMap, "administrativeFee");
@@ -846,80 +606,6 @@ public class WithdrawController {
         }
         return frontInt;
     }
-
-    /**
-     * 获取手续费
-     *
-     * @param withdrawAmount 取款金额
-     * @return 手续费
-     */
-    private double getPoundage(Double withdrawAmount, PlayerRank rank) {
-
-        Integer hasCount = 0;     // 设定时间内已取款次数
-        Integer freeCount = rank.getWithdrawFreeCount();
-        // 有设置取款次数限制
-        if (rank.getWithdrawTimeLimit() != null && freeCount != null) {
-            hasCount = getHasCount(rank);
-        }
-        LOG.info("已取款次数：{0}", hasCount);
-        Double poundage = 0.0d; // 手续费
-        // 超过免手续费次数(n+1次：即已取款次数+当前取款次数)时需要扣除手续费
-        if (hasCount >= (freeCount == null ? 0 : freeCount)) {
-            LOG.info("已取款次数超过免手续费次数：{0}", freeCount);
-            poundage = calPoundage(withdrawAmount, rank);
-        }
-
-        // 手续费上限
-        Double maxFee = rank.getWithdrawMaxFee();
-        if (maxFee != null && poundage > maxFee) {
-            LOG.info("手续费超过最大手续费：{0}", maxFee);
-            poundage = maxFee;
-        }
-
-        DecimalFormat df = new DecimalFormat("#.00");
-        df.format(poundage);
-        return poundage;
-    }
-
-    /**
-     * 设定时间内已取款次数
-     */
-    private Integer getHasCount(PlayerRank rank) {
-        //返回多次取款次数，收取手续费
-        if (SessionManager.getUserId() == null) {
-            throw new RuntimeException("玩家ID不存在");
-        }
-        Date date = new Date();
-        Date lastTime = DateTool.addHours(date, -rank.getWithdrawTimeLimit());
-        PlayerWithdrawVo withdrawVo = new PlayerWithdrawVo();
-        withdrawVo.setResult(new PlayerWithdraw());
-        withdrawVo.getSearch().setPlayerId(SessionManager.getUserId());
-        withdrawVo.setStartTime(lastTime);
-        withdrawVo.setEndTime(date);
-        Long count = ServiceTool.playerWithdrawService().searchTwoHoursPlayerWithdrawCount(withdrawVo);
-        return count.intValue();
-    }
-
-    /**
-     * 计算平台设定的手续费
-     *
-     * @param withdrawAmount 取款金额
-     * @param rank           玩家层级信息
-     * @return 手续费
-     */
-    private Double calPoundage(Double withdrawAmount, PlayerRank rank) {
-        Double ratioOrFee = rank.getWithdrawFeeNum();  // 比例或固定费用
-        ratioOrFee = ratioOrFee == null ? 0d : ratioOrFee;
-
-        Double poundage = 0d;
-        if (RankFeeType.PROPORTION.getCode().equals(rank.getWithdrawFeeType())) {   // 比例收费
-            poundage = ratioOrFee / 100 * withdrawAmount;
-        } else if (RankFeeType.FIXED.getCode().equals(rank.getWithdrawFeeType())) { // 固定收费
-            poundage = ratioOrFee;
-        }
-        return poundage == null ? 0d : poundage;
-    }
-
 
     //***************************************************begin设置真实姓名************************************************************//
 

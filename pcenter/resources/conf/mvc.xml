@@ -19,6 +19,7 @@
         so.wwb.gamebox.web.passport.controller,
         so.wwb.gamebox.web.regions.controller,
         so.wwb.gamebox.web.validate.controller,
+        so.wwb.gamebox.web.fund.controller,
         so.wwb.gamebox.pcenter.**.controller," />
 
     <import resource="classpath*:conf/mvc-ctx.xml" />

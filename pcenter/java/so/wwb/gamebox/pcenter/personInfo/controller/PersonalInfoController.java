@@ -99,7 +99,7 @@ public class PersonalInfoController {
         model.addAttribute("sysUserProtectionVo", sysUserProtectionVo);
 
         //获取玩家银行卡信息
-        model.addAttribute("userBankcards", BankHelper.getUserBankcardList());
+        model.addAttribute("bankcardMap", BankHelper.getUserBankcards());
         model.addAttribute("bitcoinParam", ParamTool.getSysParam(SiteParamEnum.SETTING_WITHDRAW_TYPE_IS_BITCOIN));
         model.addAttribute("cashParam", ParamTool.getSysParam(SiteParamEnum.SETTING_WITHDRAW_TYPE_IS_CASH));
 
@@ -866,7 +866,6 @@ public class PersonalInfoController {
         model.addAttribute("validate", JsRuleCreator.create(AddBankcardForm.class));
         model.addAttribute("bankListVo", BankHelper.getBankListVo());
         model.addAttribute("user", SessionManager.getUser());
-        model.addAttribute("bankcard", BankHelper.getUserBankcard());
         return "fund/withdraw/IntoBankcard";
     }
 

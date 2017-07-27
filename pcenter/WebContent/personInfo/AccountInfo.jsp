@@ -1,3 +1,4 @@
+<%@ page import="so.wwb.gamebox.model.master.player.enums.UserBankcardTypeEnum" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/include/include.inc.jsp" %>
 
@@ -176,45 +177,45 @@
                 </div>
             </c:otherwise>
         </c:choose>
-        <c:choose>
-            <c:when test="${not empty userBankcards}">
-                <div class="control-grouptwo">
-                    <label class="control-left">${views.personInfo_auto['当前使用']}：</label>
-                </div>
-                <c:forEach items="${userBankcards}" var="i">
-                    <div class=" control-group">
-                        <label class="control-label"></label>
-                        <div class="controls">
-                            <div class="hintbank">
-                                <c:if test="${i.bankName=='bitcoin'}">
-                                    <i class="pay-third ${i.bankName}"></i>
-                                    ${soulFn:overlayString(i.bankcardNumber)}
-                                </c:if>
-                                <c:if test="${i.bankName!='bitcoin'}">
-                                    <i class="pay-bank ${i.bankName}"></i>
-                                    ${soulFn:overlayString(i.bankcardNumber)}
-                                    <span>${soulFn:overlayName(i.bankcardMasterName)}</span>
-                                </c:if>
-                            </div>
+        <c:set var="bankType" value="<%=UserBankcardTypeEnum.TYPE_BANK%>"/>
+        <c:set var="btcType" value="<%=UserBankcardTypeEnum.TYPE_BTC%>"/>
+        <c:set var="bank" value="${bankcardMap.get(bankType)}"/>
+        <c:set var="btc" value="${bankcardMap.get(btcType)}"/>
+        <c:if test="${!empty bank || !empty btc}">
+            <div class="control-grouptwo">
+                <label class="control-left">${views.personInfo_auto['当前使用']}：</label>
+            </div>
+            <c:forEach items="${bankcardMap}" var="i">
+                <div class=" control-group">
+                    <label class="control-label"></label>
+                    <div class="controls">
+                        <div class="hintbank">
+                            <c:if test="${i.value.bankName=='bitcoin'}">
+                                <i class="pay-third ${i.value.bankName}"></i>
+                                ${soulFn:overlayString(i.value.bankcardNumber)}
+                            </c:if>
+                            <c:if test="${i.value.bankName!='bitcoin'}">
+                                <i class="pay-bank ${i.value.bankName}"></i>
+                                ${soulFn:overlayString(i.value.bankcardNumber)}
+                                <span>${soulFn:overlayName(i.value.bankcardMasterName)}</span>
+                            </c:if>
                         </div>
                     </div>
-                </c:forEach>
-            </c:when>
-            <c:otherwise>
-                <c:if test="${cashParam.paramValue=='true'}">
-                    <div class=" control-group">
-                        <label class="control-label"></label>
-                        <div class="controls">您当前尚未设置银行卡！  <a href="/personInfo/toUserBank.html" nav-target="mainFrame">立即新增</a></div>
-                    </div>
-                </c:if>
-                <c:if test="${bitcoinParam.paramValue=='true'}">
-                    <div class=" control-group">
-                        <label class="control-label"></label>
-                        <div class="controls">您当前尚未设置比特币钱包！ <soul:button target="${root}/fund/userBankcard/btcDialog.html" title="绑定比特币" callback="bankSaveCallBack" text="立即新增" opType="dialog"/></div>
-                    </div>
-                </c:if>
-            </c:otherwise>
-        </c:choose>
+                </div>
+            </c:forEach>
+        </c:if>
+        <c:if test="${cashParam.paramValue=='true' && empty bank}">
+            <div class=" control-group">
+                <label class="control-label"></label>
+                <div class="controls">您当前尚未设置银行卡！  <a href="/personInfo/toUserBank.html" nav-target="mainFrame">立即新增</a></div>
+            </div>
+        </c:if>
+        <c:if test="${bitcoinParam.paramValue=='true' && empty btc}">
+            <div class=" control-group">
+                <label class="control-label"></label>
+                <div class="controls">您当前尚未设置比特币钱包！ <soul:button target="${root}/fund/userBankcard/btcDialog.html" title="绑定比特币" callback="bankSaveCallBack" text="立即新增" opType="dialog"/></div>
+            </div>
+        </c:if>
     </div>
 
     <hr>

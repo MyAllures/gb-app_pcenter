@@ -64,17 +64,32 @@
                         <div class="control-group">
                             <label class="control-label line-hi42">${views.fund_auto['收款账号']}：</label>
                             <div class="controls">
-                                <c:set var="banklen" value="${fn:length(bankcardMap)}"/>
                                 <c:set var="bank" value="${bankcardMap.get(bankType)}"/>
                                 <c:set var="btc" value="${bankcardMap.get(btcType)}"/>
                                 <c:choose>
                                     <%--两个收款帐号都有的、下拉--%>
-                                    <c:when test="${isBit && isCash && banklen==2}">
-                                        <select name="remittanceWay">
-                                            <c:forEach items="${bankcardMap.values}">
-
-                                            </c:forEach>
-                                        </select>
+                                    <c:when test="${isBit && isCash && !empty btc && !empty bank}">
+                                        <div class="controls">
+                                            <div class="controls">
+                                                <div class="btn-group table-desc-right-t-dropdown bank-down-menu" id="bankcardMenu">
+                                                    <input type="hidden" name="remittanceWay" value="1">
+                                                    <button type="button" class="btn btn btn-default" data-toggle="dropdown" aria-expanded="false">
+                                                        <c:set var="bankcardLen" value="${fn:length(bank.bankcardNumber)}"/>
+                                                        <i class="pay-bank ${bank.bankName}"></i> 尾号:${fn:substring(bank.bankcardNumber, bankcardLen-4, bankcardLen)} <span>&nbsp;${soulFn:overlayName(bank.bankcardMasterName)}</span>
+                                                        <span class="carat"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                                        <li role="presentation">
+                                                            <a role="menuitem" tabindex="-1" href="javascript:void(0)" key="1"><i class="pay-bank ${bank.bankName}"></i> 尾号:${fn:substring(bank.bankcardNumber, bankcardLen-4, bankcardLen)}<span>&nbsp;${soulFn:overlayName(bank.bankcardMasterName)}</span><span><i class="arrow"></i></span></a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <c:set var="bankcardLen" value="${fn:length(btc.bankcardNumber)}"/>
+                                                            <a role="menuitem" tabindex="-1" href="javascript:void(0)" key="2"><i class="pay-third ${btc.bankName}"></i> 尾号:${fn:substring(btc.bankcardNumber, bankcardLen-4, bankcardLen)}<span><i class="arrow"></i></span></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </c:when>
                                     <c:when test="${isBit && !empty btc}">
                                         <div class="hintbank">

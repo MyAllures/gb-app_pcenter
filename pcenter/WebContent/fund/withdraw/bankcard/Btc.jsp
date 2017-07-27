@@ -8,9 +8,9 @@
 <div class="m-t-sm line-hi32">
     <div id="validateRule" style="display: none">${validate}</div>
     <div class="control-grouptwo">
-        <label class="control-left">比特币钱包地址：</label>
+        <label class="control-left" for="result.bankcardNumber">比特币钱包地址：</label>
         <div class="controls">
-            <input type="text" name="result.bankcardNumber" class="input bn" style="width: 280px;"/>
+            <input type="text" id="result.bankcardNumber" name="result.bankcardNumber" class="input bn" style="width: 280px;"/>
         </div>
     </div>
     <div class="control-grouptwo">

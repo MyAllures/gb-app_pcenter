@@ -13,6 +13,7 @@ import org.soul.commons.net.ServletTool;
 import org.soul.iservice.pay.IOnlinePayService;
 import org.soul.model.comet.vo.MessageVo;
 import org.soul.model.pay.enums.CommonFieldsConst;
+import org.soul.model.pay.enums.PayApiTypeConst;
 import org.soul.model.pay.vo.OnlinePayVo;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
@@ -271,15 +272,7 @@ public class OnlineRechargeController extends RechargeBaseController {
             if (domain != null && (RechargeStatusEnum.PENDING_PAY.getCode().equals(playerRecharge.getRechargeStatus())
                     || RechargeStatusEnum.OVER_TIME.getCode().equals(playerRecharge.getRechargeStatus()))) {
                 String uri = "/onlinePay/abcefg.html?search.transactionNo=" + playerRecharge.getTransactionNo() + "&origin=" + TerminalEnum.PC.getCode();
-
-                domain = domain.replace("http://", "");
-                VSysSiteDomain siteDomain = Cache.getSiteDomain().get(domain);
-                if (siteDomain != null && siteDomain.getSslEnabled() != null && siteDomain.getSslEnabled()) {
-                    domain = "https://" + domain;
-                } else {
-                    domain = "http://" + domain;
-                }
-
+                domain = getDomain(domain, payAccount);
                 String url = domain + uri;
                 //添加支付网址
                 playerRecharge.setPayUrl(domain);
@@ -290,6 +283,33 @@ public class OnlineRechargeController extends RechargeBaseController {
         } catch (Exception e) {
             LOG.error(e);
         }
+    }
+
+    public String getDomain(String domain, PayAccount payAccount) {
+        domain = domain.replace("http://", "");
+        VSysSiteDomain siteDomain = Cache.getSiteDomain().get(domain);
+        Boolean sslEnabled = false;
+        if (siteDomain != null && siteDomain.getSslEnabled() != null && siteDomain.getSslEnabled()) {
+            sslEnabled = true;
+        }
+        String sslDomain = "https://" + domain;
+        String notSslDomain = "http://" + domain;
+        ;
+        if (!sslEnabled) {
+            return notSslDomain;
+        }
+        try {
+            OnlinePayVo onlinePayVo = new OnlinePayVo();
+            onlinePayVo.setChannelCode(payAccount.getBankCode());
+            onlinePayVo.setApiType(PayApiTypeConst.PAY_SSL_ENABLE);
+            sslEnabled = ServiceTool.onlinePayService().getSslEnabled(onlinePayVo);
+        } catch (Exception e) {
+            LOG.error(e);
+        }
+        if (sslEnabled) {
+            return sslDomain;
+        }
+        return notSslDomain;
     }
 
     @RequestMapping("/onlinePending")

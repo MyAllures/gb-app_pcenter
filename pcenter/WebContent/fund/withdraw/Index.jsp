@@ -93,6 +93,7 @@
                                     </c:when>
                                     <c:when test="${isBit && !empty btc}">
                                         <div class="hintbank">
+                                            <input type="hidden" name="remittanceWay" value="2">
                                             <i class="pay-third ${btc.bankName}"></i>
                                             ${views.fund_auto['尾号']}:${fn:substring(btc.bankcardNumber,fn:length(btc.bankcardNumber)-4, fn:length(btc.bankcardNumber))}
                                         </div>

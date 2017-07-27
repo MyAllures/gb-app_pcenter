@@ -29,12 +29,12 @@
             <div class="bank-total">
                 <c:forEach items="${bankListVo.result}" var="bank" varStatus="vs" end="14">
                     <label class="bank ${bankcard.bankName eq bank.bankName ? 'select' : ''}" bankcode="${bank.bankName}">
-                                <span class="radio">
-                                    <input name="result.bankName" showSuccMsg="false" type="radio" value="${bank.bankName}" ${bankcard.bankName eq bank.bankName ? 'checked': ''}/>
-                                </span>
-                                <span class="radio-bank" title="${dicts.common.bankname[bank.bankName]}">
-                                    <i class="pay-bank ${bank.bankName}"></i>
-                                </span>
+                        <span class="radio">
+                            <input name="result.bankName" showSuccMsg="false" type="radio" value="${bank.bankName}" ${bankcard.bankName eq bank.bankName ? 'checked': ''}/>
+                        </span>
+                        <span class="radio-bank" title="${dicts.common.bankname[bank.bankName]}">
+                            <i class="pay-bank ${bank.bankName}"></i>
+                        </span>
                         <span class="bank-logo-name">${dicts.common.bankname[bank.bankName]}</span>
                     </label>
                 </c:forEach>
@@ -43,12 +43,12 @@
             <div name="hideBank" style="display: none;">
                 <c:forEach items="${bankListVo.result}" var="bank" varStatus="vs" begin="15">
                     <label class="bank ${bankcard.bankName eq bank.bankName ? 'select':''}" bankcode="${bank.bankName}">
-                                <span class="radio">
-                                    <input name="result.bankName" showSuccMsg="false" type="radio" value="${bank.bankName}" ${bankcard.bankName eq bank.bankName ? 'checked':''} />
-                                </span>
-                                <span class="radio-bank" title="${dicts.common.bankname[bank.bankName]}">
-                                    <i class="pay-bank ${bank.bankName}"></i>
-                                </span>
+                        <span class="radio">
+                            <input name="result.bankName" showSuccMsg="false" type="radio" value="${bank.bankName}" ${bankcard.bankName eq bank.bankName ? 'checked':''} />
+                        </span>
+                        <span class="radio-bank" title="${dicts.common.bankname[bank.bankName]}">
+                            <i class="pay-bank ${bank.bankName}"></i>
+                        </span>
                         <span class="bank-logo-name">${dicts.common.bankname[bank.bankName]}</span>
                     </label>
                 </c:forEach>
@@ -61,14 +61,14 @@
         </div>
         <c:if test="${fn:length(bankListVo.result)>15}">
             <div class="bank-spreadout set" style="margin-right: 108px; margin-bottom: 0;">
-                        <span name="extendBank">
-                            <soul:button target="showMoreBank" text="${views.fund['Deposit.deposit.expendBank']}" opType="function"/>
-                            <i class="bank-arrico down"></i>
-                        </span>
-                        <span style="display: none" name="collapseBank">
-                            <soul:button target="showMoreBank" text="${views.fund['Deposit.deposit.shrinkBank']}" opType="function"/>
-                            <i class="bank-arrico up"></i>
-                        </span>
+                <span name="extendBank">
+                    <soul:button target="showMoreBank" text="${views.fund['Deposit.deposit.expendBank']}" opType="function"/>
+                    <i class="bank-arrico down"></i>
+                </span>
+                <span style="display: none" name="collapseBank">
+                    <soul:button target="showMoreBank" text="${views.fund['Deposit.deposit.shrinkBank']}" opType="function"/>
+                    <i class="bank-arrico up"></i>
+                </span>
             </div>
         </c:if>
 

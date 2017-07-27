@@ -162,7 +162,7 @@ public class HomeController {
         userPlayerVo.setResult(new UserPlayer());
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
         userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
-        HashMap map = new HashMap(2);
+        HashMap map = new HashMap(2,1f);
         map.put("state", Boolean.valueOf(userPlayerVo.isSuccess()));
         map.put("walletBalance", userPlayerVo.getResult().getWalletBalance());
         return map;

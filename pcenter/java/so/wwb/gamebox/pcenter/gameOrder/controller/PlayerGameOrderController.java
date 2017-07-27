@@ -141,7 +141,7 @@ public class PlayerGameOrderController {
      */
     private void apiTypes(Model model) {
         Map<String, SiteApiTypeI18n> siteApiTypeI18nMap = Cache.getSiteApiTypeI18n();
-        Map<Integer, String> apiTypes = new HashMap<>(siteApiTypeI18nMap.size());
+        Map<Integer, String> apiTypes = new HashMap<>(siteApiTypeI18nMap.size(),1f);
         for (SiteApiTypeI18n siteApiTypeI18n : siteApiTypeI18nMap.values()) {
             apiTypes.put(siteApiTypeI18n.getApiTypeId(), siteApiTypeI18n.getName());
         }

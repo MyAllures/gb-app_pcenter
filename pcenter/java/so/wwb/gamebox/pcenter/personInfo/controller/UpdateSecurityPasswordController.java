@@ -138,7 +138,7 @@ public class UpdateSecurityPasswordController {
     @ResponseBody
     public Map updatePrivilegePassword(UpdatePasswordVo updatePasswordVo,String code) {
 
-        Map<String,Object> map = new HashMap<>(2);
+        Map<String,Object> map = new HashMap<>(2,1f);
 
         //密码相同验证新安全密码不能和旧安全密码一样
         String newPrivilegePwd = AuthTool.md5SysUserPermission(updatePasswordVo.getPrivilegePwd(),
@@ -325,7 +325,7 @@ public class UpdateSecurityPasswordController {
     }
 
     private HashMap inputFault() {
-        HashMap map = new HashMap(3);
+        HashMap map = new HashMap(3,1f);
         Date now = DateQuickPicker.getInstance().getNow();
         int errTimes = getErrorTimes();
         if (errTimes == 0) {
@@ -352,12 +352,12 @@ public class UpdateSecurityPasswordController {
     }
 
     private HashMap inputFalutNoAtMax(int times) {
-        Map<String,Object> privilegeUsers = new HashMap<>(2);
+        Map<String,Object> privilegeUsers = new HashMap<>(2,1f);
         privilegeUsers.put("state", PrivilegeStatusEnum.STATUS_ERRORS.getCode());
         privilegeUsers.put("times", times);
         SessionManagerCommon.setPrivilegeStatus(privilegeUsers);
         //返回页面消息
-        HashMap<String,Object> map = new HashMap<>(3);
+        HashMap<String,Object> map = new HashMap<>(3,1f);
         map.put("msg", LocaleTool.tranMessage("privilege", "input.wrong"));
         map.put("stateCode", PrivilegeStatusEnum.CODE_98.getCode());
         map.put("state", false);
@@ -367,12 +367,12 @@ public class UpdateSecurityPasswordController {
 
     private HashMap inputMaxFalut() {
 
-        Map<String,Object> privilegeUsers = new HashMap<>(2);
+        Map<String,Object> privilegeUsers = new HashMap<>(2,1f);
         privilegeUsers.put("state", PrivilegeStatusEnum.STATUS_LOCK.getCode());
         privilegeUsers.put("time", new Date());
         SessionManagerCommon.setPrivilegeStatus(privilegeUsers);
         //返回页面消息
-        HashMap<String,Object> map = new HashMap<>(3);
+        HashMap<String,Object> map = new HashMap<>(3,1f);
         map.put("msg", LocaleTool.tranMessage("privilege", "input.freeze"));
         map.put("stateCode", PrivilegeStatusEnum.CODE_99.getCode());
         map.put("state", false);
@@ -380,12 +380,12 @@ public class UpdateSecurityPasswordController {
     }
 
     private HashMap firstInputFalut() {
-        Map<String,Object> privilegeUsers = new HashMap<>(2);
+        Map<String,Object> privilegeUsers = new HashMap<>(2,1f);
         privilegeUsers.put("state", PrivilegeStatusEnum.STATUS_ERRORS.getCode());
         privilegeUsers.put("times", 1);
         SessionManagerCommon.setPrivilegeStatus(privilegeUsers);
         //返回页面消息
-        HashMap<String,Object> map = new HashMap<>(3);
+        HashMap<String,Object> map = new HashMap<>(3,1f);
         map.put("msg", LocaleTool.tranMessage("privilege", "input.wrong"));
         map.put("state", false);
         map.put("leftTimes", TRY_TIMES - 1);
@@ -421,7 +421,7 @@ public class UpdateSecurityPasswordController {
     }
 
     private HashMap<String,Object> validateCheckCode(String valiCode) {
-        HashMap<String,Object> map = new HashMap<>(3);
+        HashMap<String,Object> map = new HashMap<>(3,1f);
         String msg;
         if (StringTool.isBlank(valiCode)) {
             msg = LocaleTool.tranMessage("privilege", "captcha.input");

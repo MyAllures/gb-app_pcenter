@@ -250,7 +250,7 @@ public abstract class RechargeBaseController {
      */
     public List<PayAccount> searchPayAccount(String type, String accountType, String terminal) {
         PayAccountListVo listVo = new PayAccountListVo();
-        Map<String, Object> map = new HashMap<>(3);
+        Map<String, Object> map = new HashMap<>(3,1f);
         map.put("playerId", SessionManager.getUserId());
         map.put("type", type);
         map.put("accountType", accountType);

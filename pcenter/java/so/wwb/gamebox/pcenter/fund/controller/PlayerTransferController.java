@@ -408,7 +408,7 @@ public class PlayerTransferController {
      * @return
      */
     private Map<String, Object> getSuccessMessage(Integer apiId) {
-        Map<String, Object> resultMap = new HashMap<>(5);
+        Map<String, Object> resultMap = new HashMap<>(5,1f);
         resultMap.put("state", true);
         //用于站点站进入API前的转账窗口
         resultMap.put("api", apiId);
@@ -423,7 +423,7 @@ public class PlayerTransferController {
      * @return
      */
     private Map<String, Object> getErrorMessage(String messageCode, Integer apiId) {
-        Map<String, Object> resultMap = new HashMap<>(5);
+        Map<String, Object> resultMap = new HashMap<>(5,1f);
         resultMap.put("state", false);
         resultMap.put("msg", LocaleTool.tranMessage(Module.FUND.getCode(), messageCode));
         //用于站点站进入API前的转账窗口
@@ -460,7 +460,7 @@ public class PlayerTransferController {
     @RequestMapping("/reconnectTransfer")
     @ResponseBody
     public Map reconnectTransfer(PlayerTransferVo playerTransferVo) {
-        Map<String, Object> map = new HashMap<>(4);
+        Map<String, Object> map = new HashMap<>(4,1f);
         if (StringTool.isBlank(playerTransferVo.getSearch().getTransactionNo())) {
             map.put("state", false);
             return map;
@@ -516,7 +516,7 @@ public class PlayerTransferController {
     @RequestMapping("refreshApi")
     @ResponseBody
     public String refreshApi(PlayerApiListVo listVo, String isRefresh) {
-        Map<String, String> map = new HashMap<>(4);
+        Map<String, String> map = new HashMap<>(4,1f);
         if (StringTool.isBlank(isRefresh)) {
             //同步玩家api余额
             fetchPlayerAllApiBalance(listVo);

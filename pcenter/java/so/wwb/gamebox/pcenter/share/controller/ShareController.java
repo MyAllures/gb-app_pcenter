@@ -122,7 +122,7 @@ public class ShareController {
     @RequestMapping("/saveRealName")
     @ResponseBody
     public Map saveRealName(@FormModel @Valid RealNameConfirmForm form, BindingResult result) {
-        Map<String, Object> map = new HashMap<>(2);
+        Map<String, Object> map = new HashMap<>(2,1f);
         if (result.hasErrors()) {
             map.put("state", false);
             map.put("msg", LocaleTool.tranMessage(_Module.COMMON, "save.failed"));

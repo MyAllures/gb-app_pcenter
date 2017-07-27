@@ -211,7 +211,7 @@ public class AccountSettingsController {
 	@RequestMapping(value = "/updateEmail")
 	@ResponseBody
 	public Map updateEmail(UpdateNoticeContactWayVo updateNoticeContactWayVo, SysUserVo sysUserVo, UserPlayerVo userPlayerVo) {
-		Map map = new HashMap(2);
+		Map map = new HashMap(2,1f);
 
 		String emailCode = updateNoticeContactWayVo.getVerificationCode();
 		String email = updateNoticeContactWayVo.getEmail().getContactValue();
@@ -419,7 +419,7 @@ public class AccountSettingsController {
 	@ResponseBody
 	public Map isAnswer(SafeQuestionVo safeQuestionVo) {
 
-		Map map = new HashMap(3);
+		Map map = new HashMap(3,1f);
 		SysUserProtectionVo sysUserProtectionVo = getSysUserProtectionVo(SessionManager.getUserId());
 		if (sysUserProtectionVo == null ||  (sysUserProtectionVo != null && sysUserProtectionVo.getResult() == null)) {
 			map.put("state", false);
@@ -483,7 +483,7 @@ public class AccountSettingsController {
 	@RequestMapping(value = "/saveQuestions")
 	@ResponseBody
 	public Map saveQuestions(SysUserProtection sysUserProtection, Integer sysUserProtectionId) {
-		Map map = new HashMap(2);
+		Map map = new HashMap(2,1f);
 		SysUserProtectionVo vo = new SysUserProtectionVo();
 		if (sysUserProtectionId != null) {
 			//更新
@@ -637,7 +637,7 @@ public class AccountSettingsController {
 	@RequestMapping({"/updateBank"})
 	@ResponseBody
 	public Map updateBank(UserBankcardVo vo, @FormModel("result") @Valid PlayerBankcardForm form,Model model) {
-		Map map = new HashMap(2);
+		Map map = new HashMap(2,1f);
         /*if (!vo.isEmptyPwd()) {
             String permissionPwd = vo.getPermissionPwd();
             boolean isCorrect = recheckPermissionPwd(permissionPwd);
@@ -782,7 +782,7 @@ public class AccountSettingsController {
 	@RequestMapping("/updateRealName")
 	@ResponseBody
 	public Map updateRealName(SysUserVo sysUserVo, Model model) {
-		Map map = new HashMap(2);
+		Map map = new HashMap(2,1f);
 		sysUserVo.getResult().setId(SessionManager.getUserId());
 		sysUserVo.setProperties(SysUser.PROP_REAL_NAME);
 		boolean success = ServiceTool.sysUserService().updateOnly(sysUserVo).isSuccess();
@@ -847,7 +847,7 @@ public class AccountSettingsController {
 	@RequestMapping(value = "/updatePhone")
 	@ResponseBody
 	public Map updatePhone(UpdateNoticeContactWayVo updateNoticeContactWayVo, SysUserVo sysUserVo, UserPlayerVo userPlayerVo) {
-		Map map = new HashMap(2);
+		Map map = new HashMap(2,1f);
 
 //        String emailCode = updatePhoneVo.getVerificationCode();
 //        if (isCodeAvailable(map, emailCode)) return map;

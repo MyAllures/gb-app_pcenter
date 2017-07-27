@@ -513,7 +513,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         //推送消息给前端
         MessageVo message = new MessageVo();
         message.setSubscribeType(CometSubscribeType.MCENTER_RECHARGE_REMINDER.getCode());
-        Map<String, Object> map = new HashMap<>(3);
+        Map<String, Object> map = new HashMap<>(3,1f);
         map.put("date", recharge.getCreateTime() == null ? new Date() : recharge.getCreateTime());
         map.put("currency", getCurrencySign());
         map.put("type", recharge.getRechargeTypeParent());

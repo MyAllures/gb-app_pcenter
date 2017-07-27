@@ -146,7 +146,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/uploadHeadPortrait")
     @ResponseBody
     public Map uploadHeadPortrait(SysUserVo sysUserVo) {
-        Map map = new HashMap(2);
+        Map map = new HashMap(2,1f);
         SysUser sysUser = sysUserVo.getResult();
         if (sysUser == null || StringTool.isBlank(sysUser.getAvatarUrl())) {
             map.put("state", false);
@@ -455,7 +455,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/updateEmail")
     @ResponseBody
     public Map updateEmail(SysUserVo sysUserVo, UserPlayerVo userPlayerVo) {
-        Map map = new HashMap(2);
+        Map map = new HashMap(2,1f);
 
         String emailCode = userPlayerVo.getVerificationCode();
         String email = userPlayerVo.getEmail().getContactValue();
@@ -603,7 +603,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/updatePhone")
     @ResponseBody
     public Map updatePhone(SysUserVo sysUserVo, UserPlayerVo userPlayerVo) {
-        Map map = new HashMap(2);
+        Map map = new HashMap(2,1f);
 
         String phoneCode = userPlayerVo.getPhoneVerificationCode();
         String phone = userPlayerVo.getPhone().getContactValue();

@@ -264,7 +264,7 @@ public class WithdrawController extends BaseWithdrawController {
     @Token(valid = true)
     public Map submitBankCard(UserBankcardVo bankcardVo, @FormModel @Valid AddBankcardForm form, BindingResult result) {
 
-        Map<String, Object> map = new HashMap<>(2);
+        Map<String, Object> map = new HashMap<>(2,1f);
         if (result.hasErrors()) {
             map.put("state", false);
             map.put("msg", "信息有误");
@@ -408,7 +408,7 @@ public class WithdrawController extends BaseWithdrawController {
     @RequestMapping("/updateRealName")
     @ResponseBody
     public Map updateRealName(SysUserVo sysUserVo) {
-        Map map = new HashMap(2);
+        Map map = new HashMap(2,1f);
         sysUserVo.getResult().setId(SessionManager.getUserId());
         sysUserVo.setProperties(SysUser.PROP_REAL_NAME);
         boolean success = ServiceTool.sysUserService().updateOnly(sysUserVo).isSuccess();

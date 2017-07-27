@@ -216,7 +216,7 @@ public class AnnouncementMessageController {
         } else {
             vo.setErrMsg(LocaleTool.tranMessage(_Module.COMMON, "delete.failed"));
         }
-        HashMap map = new HashMap(2);
+        HashMap map = new HashMap(2,1f);
         map.put("msg", StringTool.isNotBlank(vo.getOkMsg()) ? vo.getOkMsg() : vo.getErrMsg());
         map.put("state", Boolean.valueOf(vo.isSuccess()));
         return map;
@@ -245,7 +245,7 @@ public class AnnouncementMessageController {
         } else {
             noticeReceiveVo.setErrMsg(LocaleTool.tranMessage(_Module.COMMON, "update.failed"));
         }
-        HashMap map = new HashMap(2);
+        HashMap map = new HashMap(2,1f);
         map.put("msg", StringTool.isNotBlank(noticeReceiveVo.getOkMsg()) ? noticeReceiveVo.getOkMsg() : noticeReceiveVo.getErrMsg());
         map.put("state", Boolean.valueOf(b));
         return map;
@@ -428,7 +428,7 @@ public class AnnouncementMessageController {
             playerAdvisoryVo.setErrMsg(LocaleTool.tranMessage(_Module.COMMON, "save.failed"));
         }
 
-        HashMap map = new HashMap(2);
+        HashMap map = new HashMap(2,1f);
         map.put("msg", StringTool.isNotBlank(playerAdvisoryVo.getOkMsg()) ? playerAdvisoryVo.getOkMsg() : playerAdvisoryVo.getErrMsg());
         map.put("state", Boolean.valueOf(playerAdvisoryVo.isSuccess()));
         return map;
@@ -450,7 +450,7 @@ public class AnnouncementMessageController {
         List<Integer> userIdByUrl = ServiceTool.playerRechargeService().findUserIdByUrl(sysResourceListVo);
         userIdByUrl.add(Const.MASTER_BUILT_IN_ID);
         message.addUserIds(userIdByUrl);
-        Map<String, String> msgBody = new HashMap<>(1);
+        Map<String, String> msgBody = new HashMap<>(1,1f);
         msgBody.put("toneType", noticeParam.getParamValue());
         message.setMsgBody(JsonTool.toJson(msgBody));
         DubboTool.getService(IMessageService.class).sendToMcenterMsg(message);
@@ -466,7 +466,7 @@ public class AnnouncementMessageController {
     @RequestMapping("/subAdvisoryMessage")
     @ResponseBody
     public Map subAdvisoryMessage(PlayerAdvisoryVo playerAdvisoryVo, Model model, @FormModel @Valid AdvisoryMessageForm form, BindingResult result) {
-        HashMap map = new HashMap(2);
+        HashMap map = new HashMap(2,1f);
         if (result.hasErrors()) {
             map.put("msg", LocaleTool.tranMessage(_Module.COMMON, "save.failed"));
             map.put("state", false);
@@ -522,7 +522,7 @@ public class AnnouncementMessageController {
         MessageVo message = new MessageVo();
         message.setSubscribeType("MCENTER-TELLER-REMINDER");
         PlayerWithdraw withdraw = new PlayerWithdraw();
-        Map<String, Object> map = new HashMap<>(3);
+        Map<String, Object> map = new HashMap<>(3,1f);
         map.put("date", withdraw.getCreateTime());
         map.put("currency", StringTool.isBlank(SessionManager.getUser().getDefaultCurrency()) ? "" : SessionManager.getUser().getDefaultCurrency());
         map.put("type", withdraw.getWithdrawTypeParent());
@@ -579,7 +579,7 @@ public class AnnouncementMessageController {
         } else {
             vo.setErrMsg(LocaleTool.tranMessage(_Module.COMMON, "delete.failed"));
         }
-        HashMap map = new HashMap(2);
+        HashMap map = new HashMap(2,1f);
         map.put("msg", StringTool.isNotBlank(vo.getOkMsg()) ? vo.getOkMsg() : vo.getErrMsg());
         map.put("state", Boolean.valueOf(vo.isSuccess()));
         return map;
@@ -619,7 +619,7 @@ public class AnnouncementMessageController {
                 ServiceTool.playerAdvisoryReadService().insert(parVo);
             }
         }
-        HashMap map = new HashMap(1);
+        HashMap map = new HashMap(1,1f);
         map.put("state", true);
         return map;
     }

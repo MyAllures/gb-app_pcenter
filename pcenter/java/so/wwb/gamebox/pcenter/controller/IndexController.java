@@ -169,7 +169,7 @@ public class IndexController extends BaseIndexController {
     @RequestMapping(value = "/index/getUserTimeZoneDate")
     @ResponseBody
     public String getUserTimeZoneDate() {
-        Map<String, String> map = new HashMap<>(2);
+        Map<String, String> map = new HashMap<>(2,1f);
         map.put("dateTimeFromat", CommonContext.getDateFormat().getDAY_SECOND());
         map.put("dateTime", SessionManager.getUserDate(CommonContext.getDateFormat().getDAY_SECOND()));
         map.put("time", String.valueOf(new Date().getTime()));
@@ -215,7 +215,7 @@ public class IndexController extends BaseIndexController {
         sysUserVo.getResult().setDefaultTimezone(defaultTimezone);
         ServiceTool.sysUserService().updateOnly(sysUserVo);
         sysUserVo.setOkMsg(LocaleTool.tranMessage(_Module.COMMON, "save.success"));
-        Map<String, Object> map = new HashMap(2);
+        Map<String, Object> map = new HashMap(2,1f);
 
         if (sysUserVo.isSuccess() && StringTool.isBlank(sysUserVo.getOkMsg())) {
             sysUserVo.setOkMsg(LocaleTool.tranMessage(_Module.COMMON, "save.success"));

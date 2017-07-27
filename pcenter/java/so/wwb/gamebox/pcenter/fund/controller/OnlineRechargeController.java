@@ -122,7 +122,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         PayAccount alipayPayAccount = getWeChatAlipay(rank, PayAccountAccountType.ALIPAY.getCode());
         //QQ钱包收款账号
         PayAccount qqWalletPayAccount = getWeChatAlipay(rank, PayAccountAccountType.QQWALLET.getCode());
-        Map<String, PayAccount> payAccountMap = new HashMap<>(3);
+        Map<String, PayAccount> payAccountMap = new HashMap<>(3,1f);
         if (weChatPayAccount != null) {
             payAccountMap.put(WECHATPAY, weChatPayAccount);
         }
@@ -217,7 +217,7 @@ public class OnlineRechargeController extends RechargeBaseController {
     }
 
     private Map<String, Object> getResultMsg(boolean isSuccess, String msg, String transactionNo) {
-        Map<String, Object> map = new HashMap<>(3);
+        Map<String, Object> map = new HashMap<>(3,1f);
         map.put("state", isSuccess);
         if (isSuccess) {
             map.put("transactionNo", transactionNo);

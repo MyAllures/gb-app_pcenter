@@ -177,8 +177,7 @@
                             <input type="hidden" value="" name="actualWithdraw">
                         </div>
                         <div>
-                            <soul:button precall="checkRate" target="saveWithdraw" text="${views.fund_auto['申请取款']}" opType="function"
-                                         post="getCurrentFormData" cssClass="btn-blue btn large-big lar-l withdraw-btn-css disable-gray ui-button-disable disabled">
+                            <soul:button precall="checkRate" target="saveWithdraw" text="${views.fund_auto['申请取款']}" opType="function" cssClass="btn-blue btn large-big lar-l withdraw-btn-css disable-gray ui-button-disable disabled">
                                 ${views.fund_auto['申请取款']}
                             </soul:button>
                             <a style="display: none" name="returnView" nav-target="mainFrame" href="/player/withdraw/withdrawList.html"></a>

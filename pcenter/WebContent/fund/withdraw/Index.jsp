@@ -109,7 +109,7 @@
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">${views.fund_auto['钱包余额']}：</label>
+                            <label class="control-label">${isLottery.paramValue=='true'?views.home['index.account.totalAssets']:views.fund_auto['钱包余额']}：</label>
                             <div class="controls">
                                 <span class="orange fontmiddle">
                                     <c:if test="${empty player.walletBalance}"><em>${currencySign}</em>0</c:if>

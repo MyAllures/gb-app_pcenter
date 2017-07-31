@@ -13,6 +13,7 @@ import org.soul.commons.query.Criteria;
 import org.soul.commons.query.enums.Operator;
 import org.soul.commons.query.sort.Order;
 import org.soul.model.security.privilege.vo.SysUserVo;
+import org.soul.model.sys.po.SysParam;
 import org.soul.web.controller.NoMappingCrudController;
 import org.soul.web.session.SessionManagerBase;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import so.wwb.gamebox.iservice.master.report.IVPlayerTransactionService;
 import so.wwb.gamebox.model.DictEnum;
+import so.wwb.gamebox.model.ParamTool;
+import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.master.enums.CommonStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransactionTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransactionWayEnum;
@@ -76,6 +80,10 @@ public class PlayerTransactionController extends NoMappingCrudController<IVPlaye
     public String list(VPlayerTransactionListVo listVo, PlayerTransactionSearchForm form, BindingResult result, Model model, HttpServletRequest request) {
         /*查询当前登录玩家的资金记录*/
         initDate(listVo);
+        SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.SETTING_SYSTEM_SETTINGS_IS_LOTTERY_SITE);
+        if(sysParam!=null&& "true".equals(sysParam.getParamValue())){
+            listVo.getSearch().setLotterySite(true);
+        }
         listVo.getSearch().setPlayerId(SessionManager.getUserId());
         listVo.setMaxDate(SessionManager.getDate().getToday());
         //玩家中心不展示派彩相关资金记录
@@ -166,7 +174,12 @@ public class PlayerTransactionController extends NoMappingCrudController<IVPlaye
     }
 
     public VPlayerTransactionListVo preList(VPlayerTransactionListVo playerTransactionListVo) {
-        playerTransactionListVo.setDictCommonTransactionType(DictTool.get(DictEnum.COMMON_TRANSACTION_TYPE));
+        Map<String, Serializable> transactionTypeDict = DictTool.get(DictEnum.COMMON_TRANSACTION_TYPE);
+        SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.SETTING_SYSTEM_SETTINGS_IS_LOTTERY_SITE);
+        if(sysParam!=null&& "true".equals(sysParam.getParamValue())){
+            transactionTypeDict.remove(TransactionTypeEnum.TRANSFERS.getCode());
+        }
+        playerTransactionListVo.setDictCommonTransactionType(transactionTypeDict);
         Map<String, Serializable> dictCommonStatus = DictTool.get(DictEnum.COMMON_STATUS);
         /*删掉稽核失败待处理状态*/
         dictCommonStatus.remove(CommonStatusEnum.DEAL_AUDIT_FAIL.getCode());

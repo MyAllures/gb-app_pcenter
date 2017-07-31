@@ -7,7 +7,9 @@
     <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-striped table-hover dataTable">
         <tbody>
             <tr>
-                <th>${views.gameOrder_auto['游戏类型']}</th>
+                <c:if test="${isLottery.paramValue!='true'}">
+                    <th>${views.gameOrder_auto['游戏类型']}</th>
+                </c:if>
                 <th>${views.gameOrder_auto['游戏名称']}</th>
                 <th width="20%">${views.gameOrder_auto['注单号']}</th>
                 <th>${views.gameOrder_auto['投注时间']}</th>
@@ -43,7 +45,9 @@
                 </tr>
                 <c:forEach items="${command.result}" var="i" varStatus="vs">
                     <tr style="${vs.index%2==0?'background: #f9f9f9;':''}">
+                        <c:if test="${isLottery.paramValue!='true'}">
                         <td>${gbFn:getApiName(i.apiId.toString())}&nbsp;&nbsp;${gbFn:getGameTypeName(i.gameType)}</td>
+                        </c:if>
                         <td>${gbFn:getGameName(i.gameId.toString())}</td>
                         <td>
                             <c:choose>

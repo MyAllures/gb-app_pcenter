@@ -40,7 +40,7 @@ public class BitCoinPayForm implements IForm {
     @Comment("txId")
     @NotBlank
     @Length(max = 64)
-    @Remote(message = "txId已存在!", checkClass = CompanyRechargeController.class, checkMethod = "checkTxId")
+    @Remote(message = "fund_auto.txId已存在!", checkClass = CompanyRechargeController.class, checkMethod = "checkTxId")
     public String getResult_bankOrder() {
         return result_bankOrder;
     }

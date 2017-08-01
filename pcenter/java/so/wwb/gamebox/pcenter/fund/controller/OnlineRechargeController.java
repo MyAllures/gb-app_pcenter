@@ -496,7 +496,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         try {
             channelBankCode = payService.getSupportDirectBank(new OnlinePayVo());
             channelCurrency = payService.getSupportCurrency(new OnlinePayVo());
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOG.error(e);
         }
 

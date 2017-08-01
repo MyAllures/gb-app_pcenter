@@ -87,6 +87,8 @@ public class IndexController extends BaseIndexController {
         ServiceTool.noticeService().fetchUnReceivedMsgs(new NoticeVo());
         content(null, request, response, model);
         model.addAttribute("isDebug", SystemTool.isDebug());
+        SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.SETTING_SYSTEM_SETTINGS_IS_LOTTERY_SITE);
+        model.addAttribute("isLottery",sysParam);
         return INDEX_URI;
     }
 

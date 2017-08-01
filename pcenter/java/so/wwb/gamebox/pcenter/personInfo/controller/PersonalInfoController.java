@@ -866,7 +866,7 @@ public class PersonalInfoController {
         model.addAttribute("validate", JsRuleCreator.create(AddBankcardForm.class));
         model.addAttribute("bankListVo", BankHelper.getBankListVo());
         model.addAttribute("user", SessionManager.getUser());
-        return "fund/withdraw/IntoBankcard";
+        return "fund/withdraw//IntoBankcard";
     }
 
     //endregion your codes 3

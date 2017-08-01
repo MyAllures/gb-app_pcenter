@@ -122,7 +122,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         PayAccount alipayPayAccount = getWeChatAlipay(rank, PayAccountAccountType.ALIPAY.getCode());
         //QQ钱包收款账号
         PayAccount qqWalletPayAccount = getWeChatAlipay(rank, PayAccountAccountType.QQWALLET.getCode());
-        Map<String, PayAccount> payAccountMap = new HashMap<>(3,1f);
+        Map<String, PayAccount> payAccountMap = new HashMap<>(3, 1f);
         if (weChatPayAccount != null) {
             payAccountMap.put(WECHATPAY, weChatPayAccount);
         }
@@ -217,7 +217,7 @@ public class OnlineRechargeController extends RechargeBaseController {
     }
 
     private Map<String, Object> getResultMsg(boolean isSuccess, String msg, String transactionNo) {
-        Map<String, Object> map = new HashMap<>(3,1f);
+        Map<String, Object> map = new HashMap<>(3, 1f);
         map.put("state", isSuccess);
         if (isSuccess) {
             map.put("transactionNo", transactionNo);
@@ -303,6 +303,7 @@ public class OnlineRechargeController extends RechargeBaseController {
             onlinePayVo.setChannelCode(payAccount.getBankCode());
             onlinePayVo.setApiType(PayApiTypeConst.PAY_SSL_ENABLE);
             sslEnabled = ServiceTool.onlinePayService().getSslEnabled(onlinePayVo);
+            LOG.info("支付{0}是否支持ssl:{1}", payAccount.getBankCode(), sslEnabled);
         } catch (Exception e) {
             LOG.error(e);
         }

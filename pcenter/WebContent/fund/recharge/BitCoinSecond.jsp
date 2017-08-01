@@ -64,7 +64,7 @@
         <div class="left-ico-message">
             <span class="deposit-info-title">${views.fund_auto['注意事项']}<img src="${resRoot}/images/online-pay3.png"></span>
             <ul class="attention-list">
-                <li class="red">为了方便系统快速完成转账，请输入正确的txId、交易时间，以加快系统入款速度。</li>
+                <li class="red">${views.fund_auto['为了方便系统快速完成转账']}</li>
             </ul>
         </div>
     </div>

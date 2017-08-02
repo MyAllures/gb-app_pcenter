@@ -28,11 +28,11 @@
         </div>
     </div>
     <div class="modal-footer"  style="background: white">
-        <soul:button precall="validateForm" cssClass="btn btn-filter" callback="saveCallbak" text="${views.common['ok']}" opType="ajax" dataType="json" target="${root}/fund/userBankcard/submitBtc.html" post="getCurrentFormData"/>
+        <soul:button precall="validateForm" cssClass="btn btn-filter" text="${views.common['ok']}" opType="function" target="saveBtc"/>
         <soul:button target="closePage" text="${views.common['cancel']}" cssClass="btn btn-outline btn-filter" opType="function"/>
     </div>
 </form:form>
 </body>
 <%@ include file="/include/include.js.jsp" %>
-<soul:import type="edit"/>
+<soul:import res="site/fund/withdraw/bankcard/BtcDialog"/>
 </html>

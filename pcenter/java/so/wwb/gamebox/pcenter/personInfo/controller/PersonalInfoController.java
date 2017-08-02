@@ -43,7 +43,6 @@ import so.wwb.gamebox.model.master.player.po.UserBankcard;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
 import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
-import so.wwb.gamebox.pcenter.fund.form.AddBankcardForm;
 import so.wwb.gamebox.pcenter.personInfo.form.*;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
@@ -52,6 +51,7 @@ import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.SiteCustomerServiceHelper;
 import so.wwb.gamebox.web.common.token.Token;
 import so.wwb.gamebox.web.common.token.TokenHandler;
+import so.wwb.gamebox.web.fund.form.AddBankcardForm;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -866,7 +866,7 @@ public class PersonalInfoController {
         model.addAttribute("validate", JsRuleCreator.create(AddBankcardForm.class));
         model.addAttribute("bankListVo", BankHelper.getBankListVo());
         model.addAttribute("user", SessionManager.getUser());
-        return "fund/withdraw//IntoBankcard";
+        return "fund/withdraw/bankcard/IntoBankcard";
     }
 
     //endregion your codes 3

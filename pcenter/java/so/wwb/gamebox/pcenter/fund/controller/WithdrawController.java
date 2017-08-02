@@ -2,17 +2,13 @@ package so.wwb.gamebox.pcenter.fund.controller;
 
 import org.soul.commons.collections.MapTool;
 import org.soul.commons.currency.CurrencyTool;
-import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
-import org.soul.commons.support._Module;
-import org.soul.model.comet.vo.MessageVo;
 import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.vo.SysUserVo;
-import org.soul.web.session.SessionManagerBase;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
@@ -21,10 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import so.wwb.gamebox.model.common.Const;
-import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
-import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
-import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
 import so.wwb.gamebox.model.master.fund.enums.FundTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransactionTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.WithdrawStatusEnum;
@@ -35,18 +27,15 @@ import so.wwb.gamebox.model.master.player.po.PlayerTransaction;
 import so.wwb.gamebox.model.master.player.po.UserBankcard;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
 import so.wwb.gamebox.model.master.player.vo.*;
-import so.wwb.gamebox.pcenter.fund.form.AddBankcardForm;
 import so.wwb.gamebox.pcenter.fund.form.SettingRealNameForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
 import so.wwb.gamebox.web.common.token.Token;
-import so.wwb.gamebox.web.common.token.TokenHandler;
 import so.wwb.gamebox.web.fund.controller.BaseWithdrawController;
 import so.wwb.gamebox.web.fund.form.WithdrawForm;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -120,22 +109,6 @@ public class WithdrawController extends BaseWithdrawController {
     @Token(generate = true)
     protected String withdrawList(Model model) {
         return withdraw(model);
-    }
-
-    /**
-     * 检测卡号是否存在
-     * 如果支持银行卡修改要考虑 && !isExists.getUserId().equals(SessionManager.getUserId())
-     */
-    @RequestMapping(value = "/checkCardIsExists")
-    @ResponseBody
-    public String checkCardIsExists(@RequestParam("result.bankcardNumber") String bankcardNumber) {
-        UserBankcardVo vo = new UserBankcardVo();
-        vo.getSearch().setBankcardNumber(bankcardNumber);
-        UserBankcard isExists = ServiceTool.userBankcardService().cardIsExists(vo);
-        if (isExists != null && isExists.getIsDefault()) {
-            return "false";
-        }
-        return "true";
     }
 
     @RequestMapping("/pleaseWithdraw")
@@ -257,42 +230,6 @@ public class WithdrawController extends BaseWithdrawController {
     }
 
     /**
-     * 添加银行卡
-     */
-    @RequestMapping("/submitBankCard")
-    @ResponseBody
-    @Token(valid = true)
-    public Map submitBankCard(UserBankcardVo bankcardVo, @FormModel @Valid AddBankcardForm form, BindingResult result) {
-
-        Map<String, Object> map = new HashMap<>(2,1f);
-        if (result.hasErrors()) {
-            map.put("state", false);
-            map.put("msg", "信息有误");
-            map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
-            return map;
-        }
-
-        try {
-            SessionManager.refreshUser();
-            bankcardVo = ServiceTool.userBankcardService().updateUserBankCard(bankcardVo, SessionManager.getUser());
-            if (bankcardVo.isSuccess()) {
-                map.put("msg", LocaleTool.tranMessage(_Module.COMMON, "save.success"));
-                SessionManager.refreshUser();
-            } else {
-                map.put("msg", LocaleTool.tranMessage(_Module.COMMON, "save.failed"));
-                map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
-            }
-        } catch (Exception ex) {
-            map.put("state", false);
-            map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
-            LOG.error(ex, "玩家中心－添加银行卡错误");
-        }
-        map.put("state", bankcardVo.isSuccess());
-        return map;
-    }
-
-
-    /**
      * 获取用户信息
      *
      * @param model model 用于兼容 sysUserVo
@@ -408,7 +345,7 @@ public class WithdrawController extends BaseWithdrawController {
     @RequestMapping("/updateRealName")
     @ResponseBody
     public Map updateRealName(SysUserVo sysUserVo) {
-        Map map = new HashMap(2,1f);
+        Map map = new HashMap(2, 1f);
         sysUserVo.getResult().setId(SessionManager.getUserId());
         sysUserVo.setProperties(SysUser.PROP_REAL_NAME);
         boolean success = ServiceTool.sysUserService().updateOnly(sysUserVo).isSuccess();

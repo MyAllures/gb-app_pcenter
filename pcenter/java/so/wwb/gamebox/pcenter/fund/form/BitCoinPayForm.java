@@ -28,7 +28,7 @@ public class BitCoinPayForm implements IForm {
 
     @Comment("玩家比特币钱包地址")
     @NotBlank
-    @Length(max = 64)
+    @Length(min = 26, max = 34)
     public String getResult_payerBankcard() {
         return result_payerBankcard;
     }
@@ -62,8 +62,8 @@ public class BitCoinPayForm implements IForm {
 
     @Comment("比特币")
     @NotBlank
-    @DecimalMin(value = "0.00001")
-    @Digits(integer = 8,fraction = 8)
+    @DecimalMin(value = "0.00001001")
+    @Digits(integer = 8, fraction = 8)
     public String getResult_bitAmount() {
         return result_bitAmount;
     }

@@ -95,14 +95,31 @@
         <!--左边菜单栏-->
         <div class="sidebar-nav _nav_title">
             <c:forEach items="${command}" var="obj" varStatus="status">
-                <dl>
-                    <dt class="${status.index==0?'select':''}">
-                        <a <c:if test="${obj.children.size()>0}">href="javascript:void(0);"</c:if>
-                                <c:if test="${obj.children.size()==0}"> nav-target='mainFrame'  data="/${obj.object.resourceUrl}?t=${random}"  href="javascript:void(0);"</c:if>>
-                            <i class="navico ${obj.object.resourceIcon}"></i>${views.sysResource[obj.object.resourceRName]}
-                        </a>
-                    </dt>
-                </dl>
+                <c:if test="${isLottery.paramValue=='true'}">
+                    <c:if test="${obj.object.resourceUrl!='fund/playerTransfer/transfers.html'}">
+                        <dl>
+                            <dt class="${status.index==0?'select':''}">
+                                <a <c:if test="${obj.children.size()>0}">href="javascript:void(0);"</c:if>
+
+                                        <c:if test="${obj.children.size()==0}"> nav-target='mainFrame'  data="/${obj.object.resourceUrl}?t=${random}"  href="javascript:void(0);"</c:if>>
+                                    <i class="navico ${obj.object.resourceIcon}"></i>${views.sysResource[obj.object.resourceRName]}
+                                </a>
+                            </dt>
+                        </dl>
+                    </c:if>
+                </c:if>
+                <c:if test="${isLottery.paramValue!='true'}">
+                    <dl>
+                        <dt class="${status.index==0?'select':''}">
+                            <a <c:if test="${obj.children.size()>0}">href="javascript:void(0);"</c:if>
+
+                                    <c:if test="${obj.children.size()==0}"> nav-target='mainFrame'  data="/${obj.object.resourceUrl}?t=${random}"  href="javascript:void(0);"</c:if>>
+                                <i class="navico ${obj.object.resourceIcon}"></i>${views.sysResource[obj.object.resourceRName]}
+                            </a>
+                        </dt>
+                    </dl>
+                </c:if>
+
             </c:forEach>
         </div>
     </div>

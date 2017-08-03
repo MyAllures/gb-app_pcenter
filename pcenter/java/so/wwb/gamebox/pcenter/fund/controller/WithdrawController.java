@@ -14,6 +14,7 @@ import org.soul.commons.support._Module;
 import org.soul.model.comet.vo.MessageVo;
 import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.vo.SysUserVo;
+import org.soul.model.sys.po.SysParam;
 import org.soul.web.session.SessionManagerBase;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
@@ -23,6 +24,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.model.ParamTool;
+import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
 import so.wwb.gamebox.model.master.dataRight.po.SysUserDataRight;
@@ -139,6 +142,12 @@ public class WithdrawController {
         UserBankcardVo userBankcardVo = new UserBankcardVo();
         userBankcardVo.setResult(bankcard);
         model.addAttribute("userBankcardVo", userBankcardVo);
+        SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.SETTING_SYSTEM_SETTINGS_IS_LOTTERY_SITE);
+        model.addAttribute("isLottery",sysParam);
+        //取款时同步彩票余额
+        if(sysParam!=null&&"true".equals(sysParam.getParamValue())){
+            fetchUserBalanceFromApi();
+        }
         if (bankcard != null) {
             //查询是否已存在取款订单
             Long existence = isExistence();
@@ -169,6 +178,17 @@ public class WithdrawController {
             model.addAttribute("bankListVo", BankHelper.getBankListVo());
             model.addAttribute("type", "withdraw");
             return INTO_BANKCARD;
+        }
+    }
+
+    private void fetchUserBalanceFromApi(){
+        try{
+            UserPlayerVo userPlayerVo = new UserPlayerVo();
+            userPlayerVo.getSearch().setId(SessionManager.getUserId());
+            userPlayerVo = ServiceTool.userPlayerService().fetchUserBalanceFromApi(userPlayerVo);
+            LOG.info("更新玩家余额是否成功:{0}",userPlayerVo.isSuccess());
+        }catch (Exception ex){
+            LOG.error(ex,"更新玩家余额出错");
         }
     }
 

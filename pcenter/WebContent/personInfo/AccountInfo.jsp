@@ -213,7 +213,7 @@
         <c:if test="${bitcoinParam.paramValue=='true' && empty btc}">
             <div class=" control-group">
                 <label class="control-label"></label>
-                <div class="controls">${views.personInfo_auto['您当前尚未设置比特币钱包']}<soul:button target="${root}/fund/userBankcard/btcDialog.html" title="绑定比特币" callback="bankSaveCallBack" text="${views.personInfo_auto['立即新增']}" opType="dialog"/></div>
+                <div class="controls">${views.personInfo_auto['您当前尚未设置比特币钱包']}<soul:button target="${root}/fund/userBankcard/btcDialog.html" title="${views.personInfo_auto['绑定比特币']}" callback="bankSaveCallBack" text="${views.personInfo_auto['立即新增']}" opType="dialog"/></div>
             </div>
         </c:if>
     </div>

@@ -15,12 +15,12 @@
     <div class="modal-body" style="background: white">
         <div class="rgeechar">
             <div class="title">
-                <span class="tips"><em class="orange">取款前请先添加比特币钱包地址,成功取款后,我们会将款项打至您填写的钱包账户!</em></span></div>
+                <span class="tips"><em class="orange">${views.fund_auto['取款前请先添加比特币钱包地址']}</em></span></div>
         </div>
         <div class="m-t-sm line-hi32">
             <div id="validateRule" style="display: none">${validate}</div>
             <div class="control-group">
-                <label class="control-left">比特币地址：</label>
+                <label class="control-left">${views.fund_auto['比特币地址']}</label>
                 <div class="controls">
                     <input type="text" name="result.bankcardNumber" class="input bn" style="width: 280px;"/>
                 </div>

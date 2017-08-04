@@ -17,7 +17,7 @@
         <label class="control-label" style="width:132px;"></label>
         <div class="controls" id="submitInfo">
             <soul:button target="resetBtc" text="${views.fund_auto['重置']}" opType="function" cssClass="btn btn-gray middle-big"/>
-            <soul:button target="${root}/fund/userBankcard/submitBtc.html" post="getCurrentFormData" dataType="json" callback="saveBankcardCallback" text="${views.fund_auto['确认']}" opType="ajax" precall="validateForm" cssClass="btn btn-blue middle-big btn-bank"/>
+            <soul:button target="submitBtc" text="${views.fund_auto['确认']}" opType="function" precall="validateForm" cssClass="btn btn-blue middle-big btn-bank"/>
         </div>
     </div>
 </div>

@@ -94,7 +94,7 @@
         <label class="control-label" style="width:132px;"></label>
         <div class="controls" id="submitInfo">
             <soul:button target="resetBankCard" text="${views.fund_auto['重置']}" opType="function" cssClass="btn btn-gray middle-big "/>
-            <soul:button precall="validateForm" target="${root}/fund/userBankcard/submitBankCard.html" text="${views.fund_auto['确认']}" opType="ajax" callback="saveBankcardCallback" dataType="json" post="getCurrentFormData"  cssClass="btn btn-blue middle-big btn-bank"/>
+            <soul:button precall="validateForm" target="submitBank" text="${views.fund_auto['确认']}" opType="function" cssClass="btn btn-blue middle-big btn-bank"/>
         </div>
     </div>
 </div>

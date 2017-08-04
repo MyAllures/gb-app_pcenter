@@ -13,9 +13,9 @@
         <div class="modal-body">
             <div id="validateRule" style="display: none">${validateRule}</div>
             <input type="hidden" name="result.bankcardNumber" value=""/>
-            <h3 class="m-sm al-center">确认提交吗？</h3>
+            <h3 class="m-sm al-center">${views.fund_auto['确认提交吗']}？</h3>
             <div class="form-group clearfix line-hi34 m-b-xxs al-center">
-                <b>比特币钱包地址：</b>
+                <b>${views.fund_auto['比特币钱包地址']}：</b>
             </div>
             <div class="rgeechar">
                 <div class="title">

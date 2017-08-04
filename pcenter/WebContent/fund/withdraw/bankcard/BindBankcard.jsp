@@ -13,8 +13,8 @@
         <c:when test="${isCash && isBit}">
             <div class="tabmenu bankTab">
                 <ul class="tab">
-                    <li><a class="current" type="bankcard">银行卡账户</a></li>
-                    <li><a type="btc">比特币钱包</a></li>
+                    <li><a class="current" type="bankcard">${views.fund_auto['银行卡账户']}</a></li>
+                    <li><a type="btc">${views.fund_auto['比特币钱包']}</a></li>
                 </ul>
             </div>
         </c:when>

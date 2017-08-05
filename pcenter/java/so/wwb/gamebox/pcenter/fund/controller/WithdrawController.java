@@ -352,11 +352,11 @@ public class WithdrawController extends BaseWithdrawController {
         SessionManager.getUser().setRealName(sysUserVo.getResult().getRealName());
         map.put("state", success);
         if (success) {
-            map.put("msg", LocaleTool.tranMessage("player", "设置真实姓名成功"));
+            map.put("msg", LocaleTool.tranMessage("player_auto", "设置真实姓名成功"));
             SessionManager.clearPrivilegeStatus();
             SessionManager.refreshUser();
         } else {
-            map.put("msg", LocaleTool.tranMessage("player", "设置真实姓名失败"));
+            map.put("msg", LocaleTool.tranMessage("player_auto", "设置真实姓名失败"));
         }
         return map;
     }

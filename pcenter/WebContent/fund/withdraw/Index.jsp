@@ -65,6 +65,11 @@
                             <label class="control-label line-hi42">${views.fund_auto['收款账号']}：</label>
                             <div class="controls">
                                 <c:set var="bank" value="${bankcardMap.get(bankType)}"/>
+                                <c:if test="${empty bank && isCash}">
+                                    <c:forEach items="${bankcardMap}" var="i">
+                                        <c:set var="bank" value="${i.value}"/>
+                                    </c:forEach>
+                                </c:if>
                                 <c:set var="btc" value="${bankcardMap.get(btcType)}"/>
                                 <c:choose>
                                     <%--两个收款帐号都有的、下拉--%>

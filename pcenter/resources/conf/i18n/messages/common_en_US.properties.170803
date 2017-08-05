@@ -1,1 +1,1 @@
-gameMaintainTryAgainLater1=<div style='line-height: 30px;margin: 20px;'>尊敬的客户您好：<p style='text-indent: 2em'>{0}将于{timezone} {1} - {2}进行维护，维护时间若有变动将另行通知。 给您带来的不便，请您谅解！</div>user.freeze=账号被冻结
+gameMaintainTryAgainLater1=<div style='line-height: 30px;margin: 20px;'>Dear user hello ：<p style='text-indent: 2em'>{0}will at{timezone} {1} - {2}maintainence ，maintainance time is subject to change without notice .we apologize for the inconvenience ！</div>user.freeze=account frozen 

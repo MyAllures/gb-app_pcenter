@@ -16,7 +16,7 @@
                 <gb:selectPure callback="query" name="" value="${command.search.transactionType}" list="${command.dictCommonTransactionType}" prompt="${views.fund['FundRecord.record.allType']}"></gb:selectPure>
             </th>
             <th width="12%">${views.fund['FundRecord.record.transactionMoney']}</th>
-            <th width="12%">${views.fund['FundRecord.record.balance']}</th>
+            <th width="13%">${views.fund['FundRecord.record.balance']}</th>
             <th width="9%" data-selector=".transactionType_status" data-name="search.status" style="padding-left: 0">
                 <gb:selectPure callback="query" name="" value="${command.search.status}" list="${command.dictCommonStatus}" prompt="${views.fund['FundRecord.record.allStatus']}"></gb:selectPure>
             </th>

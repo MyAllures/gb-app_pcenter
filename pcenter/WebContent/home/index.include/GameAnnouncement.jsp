@@ -5,7 +5,7 @@
     <div class="gamenotice">
         <div class="gamenotice-title">
             <h1>${views.fund['Transfer.transfer.gameNotice']}</h1>
-            <span class="more gameMore">
+            <span class="more gameMore" style="width: 67px">
                 <soul:button target="moreGameAnnouncement" text="${views.common['more']}&gt;" opType="function"/>
             </span>
         </div>

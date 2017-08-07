@@ -91,17 +91,15 @@ public class PlayerGameOrderController {
 
     @RequestMapping("/gameRecordDetail")
     public String gameRecordDetail(PlayerGameOrderVo playerGameOrderVo, Model model) {
-        playerGameOrderVo = ServiceTool.playerGameOrderService().get(playerGameOrderVo);
+        playerGameOrderVo = ServiceTool.playerGameOrderService().getGameOrderDetail(playerGameOrderVo);
         PlayerGameOrder playerGameOrder = playerGameOrderVo.getResult();
         //如果不是这个玩家的投注订单，则视无该笔订单
-        if (playerGameOrder != null && playerGameOrder.getPlayerId() == SessionManager.getUserId().intValue()) {
-            //API详情JSON转换
-            List<Map> resultArray = (List<Map>) JsonTool.fromJson(playerGameOrderVo.getResult().getResultJson(), JsonTool.createCollectionType(ArrayList.class, Map.class));
-            model.addAttribute("resultArray", resultArray);
-        } else {
-            playerGameOrderVo.setResult(null);
+        if (playerGameOrder == null || playerGameOrder.getPlayerId() != SessionManager.getUserId().intValue()) {
+           playerGameOrderVo.setResultArray(null);
+           playerGameOrderVo.setResult(null);
         }
         model.addAttribute("command", playerGameOrderVo);
+        model.addAttribute("resultArray", playerGameOrderVo.getResultArray());
         return GAME_RECORD_DETAIL_URI;
     }
 

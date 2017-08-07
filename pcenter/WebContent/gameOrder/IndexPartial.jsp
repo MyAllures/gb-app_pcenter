@@ -4,7 +4,7 @@
 <textarea style="display: none" name="search.gameTypeList">${command.search.gameTypeList}</textarea>
 <input type="hidden" name="search.beginWinningAmount" value="${command.search.beginWinningAmount}"/>
 <div class="chart-table">
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="table table-striped table-hover dataTable">
+    <table  width="100%" border="0" cellpadding="0" cellspacing="0" class="game-record-table1">
         <tbody>
             <tr>
                 <c:if test="${isLottery.paramValue!='true'}">

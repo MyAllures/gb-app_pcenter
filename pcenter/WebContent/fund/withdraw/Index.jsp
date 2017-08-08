@@ -67,7 +67,9 @@
                                 <c:set var="bank" value="${bankcardMap.get(bankType)}"/>
                                 <c:if test="${empty bank && isCash}">
                                     <c:forEach items="${bankcardMap}" var="i">
-                                        <c:set var="bank" value="${i.value}"/>
+                                        <c:if test="${i.key == '' || i.value.type != btcType}">
+                                            <c:set var="bank" value="${i.value}"/>
+                                        </c:if>
                                     </c:forEach>
                                 </c:if>
                                 <c:set var="btc" value="${bankcardMap.get(btcType)}"/>

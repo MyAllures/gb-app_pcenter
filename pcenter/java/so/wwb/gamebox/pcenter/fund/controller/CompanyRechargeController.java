@@ -322,6 +322,7 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("/onlineBankSubmit")
     @Token(valid = true)
     public String onlineBankSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlineBankSecondForm form, BindingResult result) {
+        playerRechargeVo.setAcbKeyParam(ParamTool.getSysParam(SiteParamEnum.SITE_PAY_KEY));
         return companySubmit(playerRechargeVo, RechargeTypeEnum.ONLINE_BANK.getCode(), result);
     }
 

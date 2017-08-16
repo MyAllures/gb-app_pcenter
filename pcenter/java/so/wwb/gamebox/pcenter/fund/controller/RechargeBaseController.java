@@ -218,6 +218,7 @@ public abstract class RechargeBaseController {
      * @return
      */
     public PlayerRechargeVo saveRecharge(PlayerRechargeVo playerRechargeVo, PayAccount payAccount, String rechargeTypeParent, String rechargeType) {
+        playerRechargeVo.setPayAccount(payAccount);
         PlayerRank rank = getRank();
         //设置存款其他数据
         setRechargeOtherData(playerRechargeVo, rank, payAccount, rechargeTypeParent, rechargeType);

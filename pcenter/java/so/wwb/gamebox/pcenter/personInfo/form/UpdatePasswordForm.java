@@ -39,7 +39,7 @@ public class UpdatePasswordForm implements IForm {
     }
 
     @NotBlank(message = "passport.edit.info.passport.notBlank")
-    @Compare(message = "edit.info.passport.same", logic = CompareLogic.EQ, anotherProperty = "newPassword")
+    @Compare(message = "passport.edit.info.passport.same", logic = CompareLogic.EQ, anotherProperty = "newPassword")
     @Comment("确认密码")
     public String getNewRePassword() {
         return newRePassword;

@@ -150,7 +150,7 @@
                             --
                         </c:when>
                         <c:otherwise>
-                            <soul:button target="${_viewUrl}" text="${dicts.common.transaction_type[pt.transactionType]}${views.common['detail']}" opType="dialog">
+                            <soul:button target="${_viewUrl}" text="${dicts.common.transaction_type[pt.transactionType]}${views.common['detail']}" opType="dialog" size="jp-open-dialog-700">
                                 ${views.common['detail']}
                             </soul:button>
                         </c:otherwise>

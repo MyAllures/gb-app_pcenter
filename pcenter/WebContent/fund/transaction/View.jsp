@@ -156,15 +156,15 @@
                     </c:if>
                     <c:if test="${command.result.fundType eq 'bitcoin_fast'}">
                         <tr>
-                            <td class="popalignr">txId:</td>
+                            <td class="popalignr">txId：</td>
                             <td><span>${command.result._describe['bankOrder']}</span></td>
                         </tr>
                         <tr>
-                            <td class="popalignr">${views.fund_auto['交易时间']}:</td>
+                            <td class="popalignr">${views.fund_auto['交易时间']}：</td>
                             <td><span>${soulFn:formatDateTz(command.result._describe['returnTime'], DateFormat.DAY_SECOND, timeZone )}</span></td>
                         </tr>
                         <tr>
-                            <td class="popalignr">${views.fund_auto['比特币地址']}:</td>
+                            <td class="popalignr">${views.fund_auto['比特币地址']}</td>
                             <td><span>${command.result._describe['payerBankcard']}</span></td>
                         </tr>
                     </c:if>
@@ -301,7 +301,7 @@
                             <c:if test="${command.result.transactionType ne 'withdrawals'}">
                                 <c:if test="${command.result.fundType eq 'bitcoin_fast'}">
                                     <tr>
-                                        <td  class="popalignr"><span class="darkgray">${views.fund_auto['比特币']}:</span></td>
+                                        <td  class="popalignr"><span class="darkgray">${views.fund_auto['比特币']}：</span></td>
                                         <td>
                                             <span class="orange">Ƀ<fmt:formatNumber value="${command.result._describe['bitAmount']}" pattern="#.########"/></span>
                                         </td>

@@ -10,7 +10,7 @@
 
     <tr>
         <td class="datailname datailback" style="width:30%">
-            彩种：
+            ${views.gameOrder_auto['彩种']}：
         </td>
         <td class="arial">
                 ${dicts.lottery.lottery[array['code']]}
@@ -18,7 +18,7 @@
     </tr>
         <tr>
             <td class="datailname datailback" style="width:30%">
-                期号：
+                ${views.gameOrder_auto['期号']}：
             </td>
             <td class="arial">
                     ${array['expect']}
@@ -26,7 +26,7 @@
         </tr>
         <tr>
             <td class="datailname datailback" style="width:30%">
-                赔率：
+                ${views.gameOrder_auto['赔率']}：
             </td>
             <td class="arial">
                     ${array['odd']}
@@ -34,7 +34,7 @@
         </tr>
         <tr>
             <td class="datailname datailback" style="width:30%">
-                下注内容：
+                ${views.gameOrder_auto['下注内容']}：
             </td>
             <td class="arial">
                     ${dicts.lottery.lottery_betting[array['bet_code']]}-${array['bet_num']}

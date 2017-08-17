@@ -46,7 +46,7 @@
                     <label class="control-label">${views.operation_auto['标题']}：</label>
                     <div class="controls">
                         <input type="text" name="result.advisoryTitle" maxlength="100" class="input-big"
-                               placeholder="请输入2-100个字符">
+                               placeholder="${views.operation_auto['请输入2-100个字符']}">
                         <p class="character msg">0/100</p>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                     <label class="control-label">${views.operation_auto['内容']}：</label>
                     <div class="controls">
                     <textarea class="textarea-big" maxlength="2000" name="result.advisoryContent" style="height: 180px;"
-                              placeholder="至少输入1个字符"></textarea>
+                              placeholder="${views.operation_auto['至少输入1个字符']}"></textarea>
                         <p class="character textareaMsg">0/2000</p>
                     </div>
                 </div>

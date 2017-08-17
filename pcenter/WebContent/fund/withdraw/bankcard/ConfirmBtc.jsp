@@ -21,7 +21,7 @@
                 <div class="title">
                     <span class="tips">
                         <i class="mark plaintsmall"></i>
-                        <em class="orange">比特币钱包地址将直接影响您的正常收款，请务必再次确认！</em>
+                        <em class="orange">${views.fund_auto['比特币钱包地址将直接影响您的正常收款']}</em>
                     </span>
                 </div>
             </div>

@@ -16,7 +16,7 @@
         </div>
         <div class="rgeechar">
             <div class="history btnalign">
-                 <gb:dateRange format="${DateFormat.DAY_SECOND}" style="width:155px" inputStyle="width:135px" useRange="true" useToday="true"
+                 <gb:dateRange format="${DateFormat.DAY}" style="width:155px" inputStyle="width:135px" useRange="true" useToday="true"
                                startName="search.startTime" endName="search.endTime" maxDate="${maxDate}"
                                startDate="${command.search.startTime}" endDate="${command.search.endTime}"></gb:dateRange>
 

@@ -10,7 +10,7 @@
                 <td colspan="4" class="none-p">
                     <div class="pagination-total">
                         <div class="alldelete">
-                            <input type="checkbox" value="" name=""/>${views.operation_auto['全选']}
+                            <input type="checkbox" value="" name=""/>${views.common_report['全选']}
                             <span class="function-menu-show show">
                             <soul:button target="deleteMessage" text="${views.operation_auto['删除']}" opType="function" cssClass="btn btn-outline btn-filter"/>
                             <soul:button target="getSelectSystemMessageIds" text="${views.operation_auto['标记已读']}" opType="function" cssClass="btn btn-outline btn-filter"/>

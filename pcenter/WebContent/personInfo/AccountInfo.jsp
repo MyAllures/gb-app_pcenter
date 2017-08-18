@@ -384,67 +384,69 @@
                 </c:choose>
             </div>
         </div>--%>
+        <c:if test="${siteId!=185}">
+            <div class="control-group">
+                <label class="control-label">${views.personInfo_auto['微信']}：</label>
+                <div class="controls">
 
-        <div class="control-group">
-            <label class="control-label">${views.personInfo_auto['微信']}：</label>
-            <div class="controls">
-
-                <c:choose>
-                    <c:when test="${noticeContactWayMap['304'].status eq '22'}">
-                        ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
-                        <input type="hidden" name="weixin.contactValue"
-                               value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}">
-                        <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
-                    </c:when>
-                    <c:otherwise>
-                        <c:choose>
-                            <c:when test="${empty noticeContactWayMap['304'].contactValue}">
-                                <input type="text" class="input field-input" name="weixin.contactValue"
-                                       value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}"
-                                       maxlength="30">
-                                <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
-                            </c:when>
-                            <c:otherwise>
-                                <span class="">${soulFn:overlayString(noticeContactWayMap["304"].contactValue)}</span>
-                                <input type="hidden" name="weixin.contactValue"
-                                       value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}">
-                                <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
-                            </c:otherwise>
-                        </c:choose>
-                    </c:otherwise>
-                </c:choose>
+                    <c:choose>
+                        <c:when test="${noticeContactWayMap['304'].status eq '22'}">
+                            ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
+                            <input type="hidden" name="weixin.contactValue"
+                                   value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}">
+                            <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
+                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+                                <c:when test="${empty noticeContactWayMap['304'].contactValue}">
+                                    <input type="text" class="input field-input" name="weixin.contactValue"
+                                           value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}"
+                                           maxlength="30">
+                                    <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="">${soulFn:overlayString(noticeContactWayMap["304"].contactValue)}</span>
+                                    <input type="hidden" name="weixin.contactValue"
+                                           value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}">
+                                    <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
+                                </c:otherwise>
+                            </c:choose>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
-        </div>
 
-        <div class="control-group">
-            <label class="control-label">QQ：</label>
-            <div class="controls">
-                <c:choose>
-                    <c:when test="${noticeContactWayMap['301'].status eq '22'}">
-                        ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
-                        <input type="hidden" name="qq.contactValue"
-                               value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}">
-                        <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
-                    </c:when>
-                    <c:otherwise>
-                        <c:choose>
-                            <c:when test="${empty noticeContactWayMap['301'].contactValue}">
-                                <input type="text" class="input field-input" name="qq.contactValue"
-                                       value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}"
-                                       maxlength="30">
-                                <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
-                            </c:when>
-                            <c:otherwise>
-                                <span class="">${soulFn:overlayString(noticeContactWayMap["301"].contactValue)}</span>
-                                <input type="hidden" name="qq.contactValue"
-                                       value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}">
-                                <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
-                            </c:otherwise>
-                        </c:choose>
-                    </c:otherwise>
-                </c:choose>
+            <div class="control-group">
+                <label class="control-label">QQ：</label>
+                <div class="controls">
+                    <c:choose>
+                        <c:when test="${noticeContactWayMap['301'].status eq '22'}">
+                            ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
+                            <input type="hidden" name="qq.contactValue"
+                                   value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}">
+                            <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
+                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+                                <c:when test="${empty noticeContactWayMap['301'].contactValue}">
+                                    <input type="text" class="input field-input" name="qq.contactValue"
+                                           value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}"
+                                           maxlength="30">
+                                    <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="">${soulFn:overlayString(noticeContactWayMap["301"].contactValue)}</span>
+                                    <input type="hidden" name="qq.contactValue"
+                                           value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}">
+                                    <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
+                                </c:otherwise>
+                            </c:choose>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
-        </div>
+        </c:if>
+
 
         <c:if test="${showTips}">
             <div class="control-group" id="submitInfo" style="margin-left:255px;">

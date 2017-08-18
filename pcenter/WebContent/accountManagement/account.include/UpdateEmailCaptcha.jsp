@@ -35,7 +35,7 @@
         <label class="control-label"></label>
         <div class="controls">
             <soul:button precall="validateForm" target="${root}/accountSettings/updateEmail.html" text="${views.common['ok']}" opType="ajax" cssClass="btn btn-big btn-blue" dataType="json" post="getCurrentFormData"  callback="mySaveCallBack">${views.common['ok']}</soul:button>
-            <soul:button target="cancelUpdateEmail" text="${views.accountManagement_auto['取消']}" opType="function" cssClass="btn-gray btn btn-big">${views.accountManagement_auto['取消']}</soul:button>
+            <soul:button target="cancelUpdateEmail" text="${views.common_report['取消']}" opType="function" cssClass="btn-gray btn btn-big">${views.common_report['取消']}</soul:button>
         </div>
         <div class="warm-tips">
             <p>

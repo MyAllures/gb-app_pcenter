@@ -14,7 +14,7 @@
 <form:form method="post">
     <div class="modal-body">
         <div class="m-sm">
-            <soul:button target="checkAll" text="${views.gameOrder_auto['全选']}" opType="function" tag="button" cssClass="btn btn-filter btn-xs"/>
+            <soul:button target="checkAll" text="${views.common_report['全选']}" opType="function" tag="button" cssClass="btn btn-filter btn-xs"/>
             <soul:button target="clearAll" text="${views.gameOrder_auto['清空']}" opType="function" tag="button" cssClass="btn btn-outline btn-filter btn-xs m-l-xs m-r"/>
             <c:forEach items="${gameTypes}" var="i">
                 <soul:button target="choseApi" text="${gbFn:getApiName(i.key.toString())}" cssClass="btn btn-outline btn-filter btn-xs" opType="function" data="${i.key}"/>

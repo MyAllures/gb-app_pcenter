@@ -64,7 +64,7 @@
                                  text="${views.operation_auto['提交']}" opType="function"
                                  target="sendAnnouncementMessage" callback="saveCallbak"/>
 
-                    <soul:button style="height:36px" target="clearText" text="${views.operation_auto['取消']}"
+                    <soul:button style="height:36px" target="clearText" text="${views.common_report['取消']}"
                                  cssClass="btn btn-blue middle-big" opType="function"/>
                 </div>
             </div>

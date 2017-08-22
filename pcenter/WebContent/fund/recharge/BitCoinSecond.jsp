@@ -52,6 +52,7 @@
                     <gb:dateRange name="result.returnTime" style="width:45%" format="${DateFormat.DAY_SECOND}"/>
                 </div>
             </div>
+            <%@include file="sale.jsp" %>
             <%@include file="CaptchaCode.jsp" %>
             <div class=" control-group">
                 <label class="control-label"></label>

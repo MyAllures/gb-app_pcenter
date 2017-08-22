@@ -62,7 +62,7 @@ public class BitCoinPayForm implements IForm {
 
     @Comment("比特币")
     @NotBlank
-    @DecimalMin(value = "0.00001001")
+    @DecimalMin(value = "0.00010001")
     @Digits(integer = 8, fraction = 8)
     public String getResult_bitAmount() {
         return result_bitAmount;

@@ -10,7 +10,7 @@
                 <td width="72" class="al-right" style="width: 190px">${views.fund_auto['申请优惠']}：</td>
                 <td width="500">
                     <span class="radiotwo">
-                        <input name="activityId" type="radio" value="" ${! empty playerRechargeVo.result.rechargeAmount&&empty playerRechargeVo.activityId?'checked':''}>
+                        <input name="activityId" type="radio" value="" checked>
                     </span>
                         ${views.fund_auto['不参与优惠']}&nbsp;&nbsp;
                     <c:if test="${fn:length(sales)>2}">
@@ -28,7 +28,7 @@
                     <td>&nbsp;</td>
                     <td>
                         <span class="radiotwo">
-                            <input name="activityId" type="radio" ${(vs.index==0&&empty playerRechargeVo.result.rechargeAmount)||playerRechargeVo.activityId==i.id?'checked':''} value="${i.id}"/>
+                            <input name="activityId" type="radio" value="${i.id}"/>
                         </span>
                         <i class="item-title-ico ${i.code=='first_deposit'?'goryorange':'gorylightblue'}">
                            ${i.classifyKeyName}

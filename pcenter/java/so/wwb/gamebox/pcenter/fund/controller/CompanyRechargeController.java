@@ -242,6 +242,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         model.addAttribute("validateRule", JsRuleCreator.create(BitCoinPayForm.class));
         model.addAttribute("payAccount", payAccount);
         playerRechargeVo.getResult().setPlayerId(SessionManager.getUserId());
+        model.addAttribute("sales", searchSales(rechargeType));
         //上一次填写的账号/昵称
         model.addAttribute("payerBankcard", playerRechargeService().searchLastPayerBankcard(playerRechargeVo));
         return BIT_COIN_SECOND;

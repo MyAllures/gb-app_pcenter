@@ -251,7 +251,7 @@ public abstract class RechargeBaseController {
      */
     public List<PayAccount> searchPayAccount(String type, String accountType, String terminal) {
         PayAccountListVo listVo = new PayAccountListVo();
-        Map<String, Object> map = new HashMap<>(3,1f);
+        Map<String, Object> map = new HashMap<>(3, 1f);
         map.put("playerId", SessionManager.getUserId());
         map.put("type", type);
         map.put("accountType", accountType);
@@ -306,7 +306,7 @@ public abstract class RechargeBaseController {
         vActivityMessageVo.setLocal(SessionManager.getLocale().toString());
         vActivityMessageVo = ServiceTool.vActivityMessageService().searchDepositPromotions(vActivityMessageVo);
         LinkedHashSet<VActivityMessage> vActivityMessages = vActivityMessageVo.getvActivityMessageList();
-        if(CollectionTool.isEmpty(vActivityMessages)) {
+        if (CollectionTool.isEmpty(vActivityMessages)) {
             return new ArrayList<>();
         }
         //如果玩家首存可同时显示首存送和存就送
@@ -330,7 +330,9 @@ public abstract class RechargeBaseController {
         for (VActivityMessage message : vActivityMessages) {
             stringBuffer = new StringBuffer();
             stringBuffer.append(message.getActivityClassifyKey()).append(":").append(SessionManager.getLocale());
-            message.setClassifyKeyName(siteI18nMap.get(stringBuffer.toString()).getValue());
+            if (siteI18nMap != null && siteI18nMap.get(stringBuffer.toString()) != null) {
+                message.setClassifyKeyName(siteI18nMap.get(stringBuffer.toString()).getValue());
+            }
         }
         return vActivityMessages;
     }

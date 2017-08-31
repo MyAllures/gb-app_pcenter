@@ -33,6 +33,7 @@ import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.Const;
+import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
 import so.wwb.gamebox.model.company.operator.po.VSystemAnnouncement;
 import so.wwb.gamebox.model.company.operator.vo.VSystemAnnouncementListVo;
@@ -415,7 +416,7 @@ public class AnnouncementMessageController {
         playerAdvisoryVo = ServiceTool.playerAdvisoryService().insert(playerAdvisoryVo);
 
         if (playerAdvisoryVo.isSuccess()) {
-            playerAdvisoryVo.setOkMsg(LocaleTool.tranMessage(_Module.COMMON, "save.success"));
+            playerAdvisoryVo.setOkMsg(LocaleTool.tranMessage(_Module.COMMON, MessageI18nConst.SAVE_SUCCESS));
             //生成任务提醒
             UserTaskReminderVo userTaskReminderVo = new UserTaskReminderVo();
             userTaskReminderVo.setTaskEnum(UserTaskEnum.PLAYERCONSULTATION);
@@ -425,7 +426,7 @@ public class AnnouncementMessageController {
                 sendTaskMessage();
             }
         } else {
-            playerAdvisoryVo.setErrMsg(LocaleTool.tranMessage(_Module.COMMON, "save.failed"));
+            playerAdvisoryVo.setErrMsg(LocaleTool.tranMessage(_Module.COMMON, MessageI18nConst.SAVE_FAILED));
         }
 
         HashMap map = new HashMap(2,1f);
@@ -468,7 +469,7 @@ public class AnnouncementMessageController {
     public Map subAdvisoryMessage(PlayerAdvisoryVo playerAdvisoryVo, Model model, @FormModel @Valid AdvisoryMessageForm form, BindingResult result) {
         HashMap map = new HashMap(2,1f);
         if (result.hasErrors()) {
-            map.put("msg", LocaleTool.tranMessage(_Module.COMMON, "save.failed"));
+            map.put("msg", LocaleTool.tranMessage(_Module.COMMON, MessageI18nConst.SAVE_FAILED));
             map.put("state", false);
             return map;
         }
@@ -497,9 +498,9 @@ public class AnnouncementMessageController {
             paVo = ServiceTool.playerAdvisoryService().updateOnly(paVo);
             if (paVo.isSuccess()) {
                 SessionManager.setAdvisoryMessageTime(nowTime);
-                paVo.setOkMsg(LocaleTool.tranMessage(_Module.COMMON, "save.success"));
+                paVo.setOkMsg(LocaleTool.tranMessage(_Module.COMMON, MessageI18nConst.SAVE_SUCCESS));
             } else {
-                paVo.setErrMsg(LocaleTool.tranMessage(_Module.COMMON, "save.failed"));
+                paVo.setErrMsg(LocaleTool.tranMessage(_Module.COMMON, MessageI18nConst.SAVE_FAILED));
             }
         }
         //生成任务提醒

@@ -232,6 +232,8 @@ public abstract class RechargeBaseController {
             playerRechargeVo.setErrMsg(LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_AMOUNT_LT_FEE));
             return playerRechargeVo;
         }
+        //上分消费用到收款账号
+        playerRechargeVo.setPayAccount(payAccount);
         //保存订单
         return playerRechargeService().savePlayerRecharge(playerRechargeVo);
     }

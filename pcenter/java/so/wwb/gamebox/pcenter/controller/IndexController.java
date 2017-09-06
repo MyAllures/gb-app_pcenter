@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.enums.UserTypeEnum;
 import so.wwb.gamebox.model.master.enums.CreateChannelEnum;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
@@ -216,14 +217,14 @@ public class IndexController extends BaseIndexController {
         sysUserVo.setProperties(SysUser.PROP_DEFAULT_TIMEZONE);
         sysUserVo.getResult().setDefaultTimezone(defaultTimezone);
         ServiceTool.sysUserService().updateOnly(sysUserVo);
-        sysUserVo.setOkMsg(LocaleTool.tranMessage(_Module.COMMON, "save.success"));
+        sysUserVo.setOkMsg(LocaleTool.tranMessage(_Module.COMMON, MessageI18nConst.SAVE_SUCCESS));
         Map<String, Object> map = new HashMap(2,1f);
 
         if (sysUserVo.isSuccess() && StringTool.isBlank(sysUserVo.getOkMsg())) {
-            sysUserVo.setOkMsg(LocaleTool.tranMessage(_Module.COMMON, "save.success"));
+            sysUserVo.setOkMsg(LocaleTool.tranMessage(_Module.COMMON, MessageI18nConst.SAVE_SUCCESS));
 
         } else if (!sysUserVo.isSuccess() && StringTool.isBlank(sysUserVo.getErrMsg())) {
-            sysUserVo.setErrMsg(LocaleTool.tranMessage(_Module.COMMON, "save.failed"));
+            sysUserVo.setErrMsg(LocaleTool.tranMessage(_Module.COMMON, MessageI18nConst.SAVE_FAILED));
         }
         map.put("msg", StringTool.isNotBlank(sysUserVo.getOkMsg()) ? sysUserVo.getOkMsg() : sysUserVo.getErrMsg());
         map.put("state", sysUserVo.isSuccess());

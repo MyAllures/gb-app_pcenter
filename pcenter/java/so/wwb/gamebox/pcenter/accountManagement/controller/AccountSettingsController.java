@@ -39,6 +39,7 @@ import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.common.notice.enums.*;
 import so.wwb.gamebox.model.company.enums.BankCardTypeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
@@ -230,7 +231,7 @@ public class AccountSettingsController {
 			if (regSettingMailVerifcation) {
 				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.failed")));
 			} else {
-				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.COMMON, "operation.success")));
+				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.COMMON, MessageI18nConst.OPERATION_SUCCESS)));
 			}
 			SessionManager.clearPrivilegeStatus();
 			SessionManager.removeSessionEmailCodeKey();
@@ -238,7 +239,7 @@ public class AccountSettingsController {
 			if (regSettingMailVerifcation) {
 				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.failed")));
 			} else {
-				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.COMMON, "operation.failed")));
+				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.COMMON, MessageI18nConst.OPERATION_FAILED)));
 			}
 
 		}
@@ -869,14 +870,14 @@ public class AccountSettingsController {
 			if (regSettingMailVerifcation) {
 				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.success")));
 			} else {
-				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.COMMON, "operation.success")));
+				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.COMMON, MessageI18nConst.OPERATION_SUCCESS)));
 			}
 			SessionManager.clearPrivilegeStatus();
 		} else {
 			if (regSettingMailVerifcation) {
 				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.failed")));
 			} else {
-				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.COMMON, "operation.failed")));
+				map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.COMMON, MessageI18nConst.OPERATION_FAILED)));
 			}
 		}
 		return map;

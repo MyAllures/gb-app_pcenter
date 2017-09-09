@@ -28,7 +28,7 @@
             </c:if>
             <c:if test="${fn:length(command.result)>0}">
                 <tr style="background: #ededed;">
-                    <td colspan="5">
+                    <td colspan="4">
                         <span class="red m-r-sm al-bold">${fn:replace(views.gameOrder_auto['总共笔数'],"{0}" , command.paging.totalCount)}</span>
                         <span class="al-bold">
                             ${views.gameOrder_auto['彩池奖金']}：

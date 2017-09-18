@@ -48,7 +48,9 @@
                 <h1><i class="tipbig fail"></i></h1>
                 <div class="tiptext">
                     <p>${views.fund_auto['取款金额最少为']}${currencySign}${soulFn:formatCurrency(rank.withdrawMinNum)}</p>
-                    <p>${views.fund_auto['钱包余额不足提醒']}</p>
+                    <c:if test="${isLottery.paramValue=='false'}">
+                        <p>${views.fund_auto['钱包余额不足提醒']}</p>
+                    </c:if>
                     <p>
                         <a class="btn-blue btn large-big gotoDespoit" href="javascript:void(0)">${views.fund_auto['转到钱包']}</a>
                     </p>

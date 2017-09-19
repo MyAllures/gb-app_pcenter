@@ -1,9 +1,8 @@
 package so.wwb.gamebox.pcenter.personInfo.controller;
 
 import org.soul.commons.bean.Pair;
-import org.soul.commons.collections.CollectionTool;
-import org.soul.commons.collections.MapTool;
-import org.soul.commons.collections.SetTool;
+import org.soul.commons.collections.*;
+import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.dict.DictTool;
 import org.soul.commons.lang.DateTool;
 import org.soul.commons.lang.string.I18nTool;
@@ -13,6 +12,9 @@ import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.net.ServletTool;
+import org.soul.commons.query.Criterion;
+import org.soul.commons.query.enums.Operator;
+import org.soul.commons.query.sort.Order;
 import org.soul.model.gameapi.param.User;
 import org.soul.model.msg.notice.po.NoticeContactWay;
 import org.soul.model.msg.notice.vo.EmailMsgVo;
@@ -42,6 +44,7 @@ import so.wwb.gamebox.model.master.player.PhoneCodeVo;
 import so.wwb.gamebox.model.master.player.po.UserBankcard;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
 import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
+import so.wwb.gamebox.model.master.setting.po.FieldSort;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.personInfo.form.*;
 import so.wwb.gamebox.pcenter.session.SessionManager;
@@ -121,6 +124,23 @@ public class PersonalInfoController {
 
         model.addAttribute("validateRule", JsRuleCreator.create(PersonInfoForm.class));
         model.addAttribute("customerServiceUrl", SiteCustomerServiceHelper.getPCCustomerServiceUrl());
+
+
+        ParamTool.refresh(SiteParamEnum.SETTING_REG_SETTING_FIELD_SETTING);
+        SysParam param = ParamTool.getSysParam(SiteParamEnum.SETTING_REG_SETTING_FIELD_SETTING);
+        List<FieldSort> fieldSortAll = (List<FieldSort>) JsonTool.fromJson(param.getParamValue(), JsonTool.createCollectionType(ArrayList.class, FieldSort.class));
+        /*使用中的注册项*/
+        List<FieldSort> fieldSorts = CollectionQueryTool.andQuery(fieldSortAll, ListTool.newArrayList(new Criterion(FieldSort.PROP_STATUS, Operator.NE, "2")), Order.asc(FieldSort.PROP_SORT));
+
+        /*默认的注册项*/
+        List<FieldSort> regFieldSorts = CollectionQueryTool.andQuery(fieldSorts, ListTool.newArrayList(new Criterion(FieldSort.PROP_STATUS, Operator.NE, "2"), new Criterion(FieldSort.PROP_IS_REGFIELD, Operator.NE, "2")), Order.asc(FieldSort.PROP_SORT));
+
+        Map regFieldSortsMap = CollectionTool.toEntityMap(regFieldSorts, "name");
+        /*必填的注册项name的json*/
+
+        model.addAttribute("regFieldSortsMap", regFieldSortsMap);
+
+
         return PERSON_INFO_PERSON_INFO;
 
     }

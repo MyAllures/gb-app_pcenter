@@ -31,122 +31,126 @@
     <div class="left-ico-message">
         <span class="account-info-title">${views.personInfo_auto['账户安全']}<img src="${resRoot}/images/safety-b.png"></span>
 
-        <c:choose>
-            <c:when test="${empty noticeContactWayMap['110'].contactValue && noticeContactWayMap['110'].status ne 22}">
-                <div class="control-grouptwo clearfix">
-                    <label class="control-left">${views.personInfo_auto['手机号码']}：</label>
-                    <div class="controls">
-                        <div class="country phone" tipsName="phone.contactValue-tips">
-                            <div class="select-country guj-select">
-                                <p class="select-arr">
-                                     <span class="flag-phone">
-                                        <span id="region_${phoneCodeVo2.countryStandardCode.toLowerCase()}" class="bank-img-block"></span>
-                                        </span><%--${dicts.region.region[phoneCodeVo2.countryStandardCode]}--%><span>${phoneCodeVo2.phoneCode}</span>
-                                </p>
-                                <ul>
-                                    <c:forEach items="${phoneCodeList}" var="pc">
-                                        <li><a href="javascript:void(0)" rel="${pc.countryStandardCode.toLowerCase()}" data-code="${pc.phoneCode}">
-                                                        <span class="flag-phone">
-                                                            <span id="region_${pc.countryStandardCode.toLowerCase()}" class="bank-img-block"></span>
-                                                        </span><%--${dicts.region.region[pc.countryStandardCode]}--%><span>${pc.phoneCode}</span></a></li>
-                                    </c:forEach>
-                                </ul>
+        <c:if test="${not empty regFieldSortsMap['110']}">
+            <c:choose>
+                <c:when test="${empty noticeContactWayMap['110'].contactValue && noticeContactWayMap['110'].status ne 22}">
+                    <div class="control-grouptwo clearfix">
+                        <label class="control-left">${views.personInfo_auto['手机号码']}：</label>
+                        <div class="controls">
+                            <div class="country phone" tipsName="phone.contactValue-tips">
+                                <div class="select-country guj-select">
+                                    <p class="select-arr">
+                                         <span class="flag-phone">
+                                            <span id="region_${phoneCodeVo2.countryStandardCode.toLowerCase()}" class="bank-img-block"></span>
+                                            </span><%--${dicts.region.region[phoneCodeVo2.countryStandardCode]}--%><span>${phoneCodeVo2.phoneCode}</span>
+                                    </p>
+                                    <ul>
+                                        <c:forEach items="${phoneCodeList}" var="pc">
+                                            <li><a href="javascript:void(0)" rel="${pc.countryStandardCode.toLowerCase()}" data-code="${pc.phoneCode}">
+                                                            <span class="flag-phone">
+                                                                <span id="region_${pc.countryStandardCode.toLowerCase()}" class="bank-img-block"></span>
+                                                            </span><%--${dicts.region.region[pc.countryStandardCode]}--%><span>${pc.phoneCode}</span></a></li>
+                                        </c:forEach>
+                                    </ul>
+                                </div>
+                                <input type="hidden" value="${phoneCodeVo2.phoneCode}" name="phoneCode">
+                                <input type="hidden" value="${noticeContactWayMap['110'].id}" name="phone.id">
+                                <input type="text" class="countryinput field-input" name="phone.contactValue">
                             </div>
-                            <input type="hidden" value="${phoneCodeVo2.phoneCode}" name="phoneCode">
-                            <input type="hidden" value="${noticeContactWayMap['110'].id}" name="phone.id">
-                            <input type="text" class="countryinput field-input" name="phone.contactValue">
                         </div>
                     </div>
-                </div>
-                <c:if test="${regSettingPhoneVerifcation}">
-                    <div class="control-grouptwo">
-                        <label class="control-left">${views.personInfo_auto['手机验证码']}：</label>
+                    <c:if test="${regSettingPhoneVerifcation}">
+                        <div class="control-grouptwo">
+                            <label class="control-left">${views.personInfo_auto['手机验证码']}：</label>
+                            <div class="controls">
+                                <input type="text" class="input-code" name="phoneVerificationCode" id="phoneVerificationCode" showSuccMsg="false">
+                                <input type="hidden" value="phone" name="phoneFlag">
+                                <soul:button target="sendPhoneCode" text="${views.account['AccountSetting.setting.email.freeCaptcha']}" opType="function" cssClass="btn btn-outline btn-filter">${views.account['AccountSetting.setting.email.freeCaptcha']}</soul:button><span tipsName="phoneVerificationCode-tips"></span></span>
+                            </div>
+                        </div>
+                    </c:if>
+                </c:when>
+                <c:otherwise>
+                    <div class="control-grouptwo clearfix">
+                        <label class="control-left">${views.personInfo_auto['手机号码']}：</label>
                         <div class="controls">
-                            <input type="text" class="input-code" name="phoneVerificationCode" id="phoneVerificationCode" showSuccMsg="false">
-                            <input type="hidden" value="phone" name="phoneFlag">
-                            <soul:button target="sendPhoneCode" text="${views.account['AccountSetting.setting.email.freeCaptcha']}" opType="function" cssClass="btn btn-outline btn-filter">${views.account['AccountSetting.setting.email.freeCaptcha']}</soul:button><span tipsName="phoneVerificationCode-tips"></span></span>
+                            <c:if test="${noticeContactWayMap['110'].status eq 12}">
+                                <c:choose>
+                                    <c:when test="${regSettingPhoneVerifcation}">
+                                        <em class="orange">${soulFn:overlayTel(noticeContactWayMap['110'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知、绑定后可用于找回密码']}
+                                        <soul:button target="${root}/personInfo/toBindPhone.html" text="${views.personInfo_auto['绑定手机号']}" opType="dialog" cssClass="btn btn-outline btn-filter"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <em class="orange">${soulFn:overlayTel(noticeContactWayMap['110'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知']}
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:if>
+                            <c:if test="${noticeContactWayMap['110'].status eq 22}">
+                                ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
+                            </c:if>
+                            <c:if test="${noticeContactWayMap['110'].status eq 11}">
+                                <em class="orange">${soulFn:overlayTel(noticeContactWayMap['110'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知,找回密码']}
+                            </c:if>
                         </div>
                     </div>
-                </c:if>
-            </c:when>
-            <c:otherwise>
-                <div class="control-grouptwo clearfix">
-                    <label class="control-left">${views.personInfo_auto['手机号码']}：</label>
-                    <div class="controls">
-                        <c:if test="${noticeContactWayMap['110'].status eq 12}">
-                            <c:choose>
-                                <c:when test="${regSettingPhoneVerifcation}">
-                                    <em class="orange">${soulFn:overlayTel(noticeContactWayMap['110'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知、绑定后可用于找回密码']}
-                                    <soul:button target="${root}/personInfo/toBindPhone.html" text="${views.personInfo_auto['绑定手机号']}" opType="dialog" cssClass="btn btn-outline btn-filter"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <em class="orange">${soulFn:overlayTel(noticeContactWayMap['110'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知']}
-                                </c:otherwise>
-                            </c:choose>
-                        </c:if>
-                        <c:if test="${noticeContactWayMap['110'].status eq 22}">
-                            ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
-                        </c:if>
-                        <c:if test="${noticeContactWayMap['110'].status eq 11}">
-                            <em class="orange">${soulFn:overlayTel(noticeContactWayMap['110'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知,找回密码']}
-                        </c:if>
-                    </div>
-                </div>
-            </c:otherwise>
-        </c:choose>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
 
 
-        <c:choose>
-            <c:when test="${empty noticeContactWayMap['201'].contactValue && noticeContactWayMap['201'].status ne 22}">
-                <div class="control-grouptwo clearfix">
-                    <label class="control-left">${views.personInfo_auto['邮箱']}：</label>
-                    <div class="controls">
-                        <span class="sop-down">
-                            <input type="text" class="input inputMailList field-input" name="email.contactValue" id="emailCode" autocomplete="off">
-                            <input type="hidden" class="input" name="email.id" value="${noticeContactWay.id}">
-                        </span>
-                    </div>
-                </div>
-                <c:if test="${regSettingMailVerifcation}">
-                    <div class="control-grouptwo">
-                        <label class="control-left">${views.personInfo_auto['邮箱验证码']}：</label>
+        <c:if test="${not empty regFieldSortsMap['201']}">
+            <c:choose>
+                <c:when test="${empty noticeContactWayMap['201'].contactValue && noticeContactWayMap['201'].status ne 22}">
+                    <div class="control-grouptwo clearfix">
+                        <label class="control-left">${views.personInfo_auto['邮箱']}：</label>
                         <div class="controls">
-                            <input type="text" class="input-code" name="verificationCode" id="verificationCode" showSuccMsg="false">
-                            <input type="hidden" value="email" name="emailFlag">
-                            <soul:button target="sendmCode" text="${views.account['AccountSetting.setting.email.freeCaptcha']}" opType="function" cssClass="btn-gray btn btn-code">${views.account['AccountSetting.setting.email.freeCaptcha']}</soul:button><span tipsName="verificationCode-tips"></span></span>
+                            <span class="sop-down">
+                                <input type="text" class="input inputMailList field-input" name="email.contactValue" id="emailCode" autocomplete="off">
+                                <input type="hidden" class="input" name="email.id" value="${noticeContactWay.id}">
+                            </span>
                         </div>
                     </div>
-                </c:if>
-            </c:when>
-            <c:otherwise>
-                <%--//如果状态等于12并且开启原则   此邮箱可用于接收通知、绑定后可用于找回密码
-                    //如果状态等于12并且不开启验证  此邮箱可用于接收通知
-                    //如果状态等于22              已被设为最高级别隐私，不予显示！
-                    //如果状态等于11   此邮箱可用于接收通知,找回密码--%>
-                <div class="control-grouptwo clearfix">
-                    <label class="control-left">${views.personInfo_auto['邮箱']}：</label>
-                    <div class="controls">
-                        <c:if test="${noticeContactWayMap['201'].status eq 12}">
-                            <c:choose>
-                                <c:when test="${regSettingMailVerifcation}">
-                                    <em class="orange">${soulFn:overlayEmaill(noticeContactWayMap['201'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知、绑定后可用于找回密码']}
-                                    <soul:button target="${root}/personInfo/toBindEmail.html" text="${views.personInfo_auto['绑定邮箱']}" opType="dialog" cssClass="btn btn-outline btn-filter"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <em class="orange">${soulFn:overlayEmaill(noticeContactWayMap['201'].contactValue)}</em>${views.personInfo_auto['此邮箱可用于接收通知']}
-                                </c:otherwise>
-                            </c:choose>
-                        </c:if>
-                        <c:if test="${noticeContactWayMap['201'].status eq 22}">
-                            ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
-                        </c:if>
-                        <c:if test="${noticeContactWayMap['201'].status eq 11}">
-                            <em class="orange">${soulFn:overlayEmaill(noticeContactWayMap['201'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知,找回密码']}
-                        </c:if>
+                    <c:if test="${regSettingMailVerifcation}">
+                        <div class="control-grouptwo">
+                            <label class="control-left">${views.personInfo_auto['邮箱验证码']}：</label>
+                            <div class="controls">
+                                <input type="text" class="input-code" name="verificationCode" id="verificationCode" showSuccMsg="false">
+                                <input type="hidden" value="email" name="emailFlag">
+                                <soul:button target="sendmCode" text="${views.account['AccountSetting.setting.email.freeCaptcha']}" opType="function" cssClass="btn-gray btn btn-code">${views.account['AccountSetting.setting.email.freeCaptcha']}</soul:button><span tipsName="verificationCode-tips"></span></span>
+                            </div>
+                        </div>
+                    </c:if>
+                </c:when>
+                <c:otherwise>
+                    <%--//如果状态等于12并且开启原则   此邮箱可用于接收通知、绑定后可用于找回密码
+                        //如果状态等于12并且不开启验证  此邮箱可用于接收通知
+                        //如果状态等于22              已被设为最高级别隐私，不予显示！
+                        //如果状态等于11   此邮箱可用于接收通知,找回密码--%>
+                    <div class="control-grouptwo clearfix">
+                        <label class="control-left">${views.personInfo_auto['邮箱']}：</label>
+                        <div class="controls">
+                            <c:if test="${noticeContactWayMap['201'].status eq 12}">
+                                <c:choose>
+                                    <c:when test="${regSettingMailVerifcation}">
+                                        <em class="orange">${soulFn:overlayEmaill(noticeContactWayMap['201'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知、绑定后可用于找回密码']}
+                                        <soul:button target="${root}/personInfo/toBindEmail.html" text="${views.personInfo_auto['绑定邮箱']}" opType="dialog" cssClass="btn btn-outline btn-filter"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <em class="orange">${soulFn:overlayEmaill(noticeContactWayMap['201'].contactValue)}</em>${views.personInfo_auto['此邮箱可用于接收通知']}
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:if>
+                            <c:if test="${noticeContactWayMap['201'].status eq 22}">
+                                ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
+                            </c:if>
+                            <c:if test="${noticeContactWayMap['201'].status eq 11}">
+                                <em class="orange">${soulFn:overlayEmaill(noticeContactWayMap['201'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知,找回密码']}
+                            </c:if>
+                        </div>
                     </div>
-                </div>
-            </c:otherwise>
-        </c:choose>
+                </c:otherwise>
+            </c:choose>
+        </c:if>
 
         <c:choose>
             <c:when test="${empty sysUserProtectionVo.result.question1 && empty sysUserProtectionVo.result.answer1}">
@@ -385,66 +389,70 @@
             </div>
         </div>--%>
         <c:if test="${siteId!=185}">
-            <div class="control-group">
-                <label class="control-label">${views.personInfo_auto['微信']}：</label>
-                <div class="controls">
+            <c:if test="${not empty regFieldSortsMap['304']}">
+                <div class="control-group">
+                    <label class="control-label">${views.personInfo_auto['微信']}：</label>
+                    <div class="controls">
 
-                    <c:choose>
-                        <c:when test="${noticeContactWayMap['304'].status eq '22'}">
-                            ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
-                            <input type="hidden" name="weixin.contactValue"
-                                   value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}">
-                            <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
-                        </c:when>
-                        <c:otherwise>
-                            <c:choose>
-                                <c:when test="${empty noticeContactWayMap['304'].contactValue}">
-                                    <input type="text" class="input field-input" name="weixin.contactValue"
-                                           value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}"
-                                           maxlength="30">
-                                    <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="">${soulFn:overlayString(noticeContactWayMap["304"].contactValue)}</span>
-                                    <input type="hidden" name="weixin.contactValue"
-                                           value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}">
-                                    <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
-                                </c:otherwise>
-                            </c:choose>
-                        </c:otherwise>
-                    </c:choose>
+                        <c:choose>
+                            <c:when test="${noticeContactWayMap['304'].status eq '22'}">
+                                ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
+                                <input type="hidden" name="weixin.contactValue"
+                                       value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}">
+                                <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
+                            </c:when>
+                            <c:otherwise>
+                                <c:choose>
+                                    <c:when test="${empty noticeContactWayMap['304'].contactValue}">
+                                        <input type="text" class="input field-input" name="weixin.contactValue"
+                                               value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}"
+                                               maxlength="30">
+                                        <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="">${soulFn:overlayString(noticeContactWayMap["304"].contactValue)}</span>
+                                        <input type="hidden" name="weixin.contactValue"
+                                               value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}">
+                                        <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
                 </div>
-            </div>
+            </c:if>
 
-            <div class="control-group">
-                <label class="control-label">QQ：</label>
-                <div class="controls">
-                    <c:choose>
-                        <c:when test="${noticeContactWayMap['301'].status eq '22'}">
-                            ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
-                            <input type="hidden" name="qq.contactValue"
-                                   value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}">
-                            <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
-                        </c:when>
-                        <c:otherwise>
-                            <c:choose>
-                                <c:when test="${empty noticeContactWayMap['301'].contactValue}">
-                                    <input type="text" class="input field-input" name="qq.contactValue"
-                                           value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}"
-                                           maxlength="30">
-                                    <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="">${soulFn:overlayString(noticeContactWayMap["301"].contactValue)}</span>
-                                    <input type="hidden" name="qq.contactValue"
-                                           value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}">
-                                    <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
-                                </c:otherwise>
-                            </c:choose>
-                        </c:otherwise>
-                    </c:choose>
+            <c:if test="${not empty regFieldSortsMap['301']}">
+                <div class="control-group">
+                    <label class="control-label">QQ：</label>
+                    <div class="controls">
+                        <c:choose>
+                            <c:when test="${noticeContactWayMap['301'].status eq '22'}">
+                                ${views.personInfo_auto['已被设为最高级别隐私，不予显示！']}
+                                <input type="hidden" name="qq.contactValue"
+                                       value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}">
+                                <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
+                            </c:when>
+                            <c:otherwise>
+                                <c:choose>
+                                    <c:when test="${empty noticeContactWayMap['301'].contactValue}">
+                                        <input type="text" class="input field-input" name="qq.contactValue"
+                                               value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}"
+                                               maxlength="30">
+                                        <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="">${soulFn:overlayString(noticeContactWayMap["301"].contactValue)}</span>
+                                        <input type="hidden" name="qq.contactValue"
+                                               value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}">
+                                        <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
                 </div>
-            </div>
+            </c:if>
         </c:if>
 
 

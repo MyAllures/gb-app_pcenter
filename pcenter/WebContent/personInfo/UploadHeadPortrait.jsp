@@ -8,6 +8,7 @@
         <div class="path-right"><a class="cursor">${views.sysResource['个人资料']}</a>&nbsp;&nbsp;&nbsp;
             <soul:button target="goToLastPage" text="${views.personInfo_auto['返回']}" opType="function" refresh="true"/>
         </div>
+        <input type="hidden" id="playerId" value="${playerId}">
     </div>
     <!--头像上传-->
     <div class="accout-infomation">

@@ -19,7 +19,7 @@
                                     <h2 class="orange">${gbFn:getApiName((s.apiId).toString())}<c:if test="${s.gameId!=null}">——${gbFn:getGameName((s.gameId).toString())}</c:if></h2>
                                     <p>
                                             <a href="/operation/pAnnouncementMessage/gameNoticeDetail.html?searchId=${gameAnnouncement.getSearchId(s.id)}"
-                                               nav-target="mainFrame">${s.shortContentText80}"></a>
+                                               nav-target="mainFrame">${s.shortContentText80}"</a>
                                             <i class="date clock"></i>
                                         <span class="date">${soulFn:formatDateTz(s.publishTime, DateFormat.DAY_SECOND,timeZone)}</span>
                                     </p>

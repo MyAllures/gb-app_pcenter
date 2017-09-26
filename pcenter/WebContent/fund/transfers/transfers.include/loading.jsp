@@ -1,4 +1,5 @@
 <%@ page import="static so.wwb.gamebox.model.ParamTool.*" %>
+<%@ page import="so.wwb.gamebox.model.SiteParamEnum" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
 <div class="property">

@@ -1,4 +1,5 @@
 <%@ page import="static so.wwb.gamebox.model.ParamTool.*" %>
+<%@ page import="so.wwb.gamebox.model.SiteParamEnum" %>
 <%--@elvariable id="playerApiListVo" type="so.wwb.gamebox.model.master.player.vo.PlayerApiListVo"--%>
 <%--@elvariable id="player" type="so.wwb.gamebox.model.master.player.vo.UserPlayerVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>

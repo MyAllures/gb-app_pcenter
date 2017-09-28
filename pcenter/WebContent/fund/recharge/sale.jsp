@@ -52,7 +52,7 @@
             <td width="72" class="al-right" style="width: 190px">${views.fund_auto['申请优惠']}：</td>
             <td width="500">
                 <span class="radiotwo">
-                    <input name="activityId" type="radio" value="">
+                    <input name="activityId" type="radio" value="" checked>
                 </span>
                 ${views.fund_auto['不参与优惠']}&nbsp;&nbsp;
                 {{if len>2}}
@@ -67,7 +67,7 @@
                 <td>&nbsp;</td>
                 <td>
                     <span class="radiotwo">
-                        <input name="activityId" {{if #data.preferential!=true}}disabled{{/if}} type="radio" {{if #index==0 and #data.preferential==true}}checked{{/if}} value="{{:#data.id}}"/>
+                        <input name="activityId" {{if #data.preferential!=true}}disabled{{/if}} type="radio" value="{{:#data.id}}"/>
                     </span>
                     <i class="item-title-ico {{if #data.code=='first_deposit'}}goryorange{{else}}gorylightblue{{/if}}">
                         {{:#data.classifyKeyName}}

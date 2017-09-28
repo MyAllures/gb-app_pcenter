@@ -154,6 +154,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/toUploadHeadPortrait")
     public String toUploadHeadPortrait(Model model) {
         model.addAttribute("url", SessionManager.getUser().getAvatarUrl());
+        model.addAttribute("playerId",SessionManager.getUser().getId());
         return PERSON_INFO_UPLOAD_HEAD_PORTRAIT;
     }
 
@@ -179,9 +180,9 @@ public class PersonalInfoController {
         map.put("state", success);
         if (success) {
             SessionManager.refreshUser();
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.avatar.success")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.avatar.success"));
         } else {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.avatar.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.avatar.failed"));
         }
         return map;
     }

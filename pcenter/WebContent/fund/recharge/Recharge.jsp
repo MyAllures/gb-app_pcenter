@@ -94,7 +94,7 @@
         </div>
     </c:if>
 </div>
-<c:if test="${map['online']<=0&&map['company']<=0&&map['scancode']<=0&&map['third']<=0&&!isFastRecharge}">
+<c:if test="${map['online']<=0&&map['company']<=0&&map['scancode']<=0&&map['third']<=0&&map['bitcoin']<=0&&!isFastRecharge}">
     <div class="rgeechar">
         <div class="title deposit-hint">
             <span class="tips">

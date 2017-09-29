@@ -33,8 +33,6 @@ import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.sys.po.VSysSiteDomain;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
-import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
-import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
 import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
 import so.wwb.gamebox.model.master.enums.DepositWayEnum;
@@ -125,13 +123,8 @@ public class OnlineRechargeController extends RechargeBaseController {
         //QQ钱包收款账号
         PayAccount qqWalletPayAccount = getWeChatAlipay(rank, PayAccountAccountType.QQWALLET.getCode());
         Map<String, PayAccount> payAccountMap = new HashMap<>(3, 1f);
-        PayAccountVo payAccountVo = new PayAccountVo();
         if (weChatPayAccount != null) {
             payAccountMap.put(WECHATPAY, weChatPayAccount);
-
-            payAccountVo.getSearch().setBankCode(weChatPayAccount.getBankCode());
-            payAccountVo = ServiceTool.payAccountService().search(payAccountVo);
-
         }
         if (alipayPayAccount != null) {
             payAccountMap.put(ALIPAY, alipayPayAccount);
@@ -163,12 +156,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         model.addAttribute("rank", rank);
         return SCAN_CODE;
     }
-
-
-    /*
-     *
-     */
-
 
     /**
      * 更改扫码支付方式,相应的优惠要变更

@@ -132,7 +132,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         if (qqWalletPayAccount != null) {
             payAccountMap.put(QQWALLET, qqWalletPayAccount);
         }
-
         model.addAttribute("payAccountMap", payAccountMap);
         model.addAttribute("currency", getCurrencySign());
         //优惠存款方式
@@ -147,7 +146,6 @@ public class OnlineRechargeController extends RechargeBaseController {
             }
             model.addAttribute("sales", searchSales(type));
         }
-
         model.addAttribute("username", SessionManager.getUserName());
         //验证规则
         model.addAttribute("validateRule", JsRuleCreator.create(ScanCodeForm.class));

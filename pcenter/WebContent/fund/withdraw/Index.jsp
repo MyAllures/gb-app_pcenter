@@ -18,6 +18,9 @@
 <c:set var="btcType" value="<%=UserBankcardTypeEnum.TYPE_BTC%>"/>
 <div class="main-wrap">
     <c:choose>
+        <c:when test="${isDemo}">
+            <%@include file="../../share/DemoNoPermit.jsp"%>
+        </c:when>
         <c:when test="${hasOrder}">
             <div class="withdraw-not">
                 <h1><i class="tipbig fail"></i></h1>

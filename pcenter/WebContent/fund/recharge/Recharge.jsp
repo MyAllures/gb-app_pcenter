@@ -93,6 +93,12 @@
             </a>
         </div>
     </c:if>
+    <div class="deposit-tab01">
+        <a href="online-pay-sz.html">
+            <img src="${resRoot}/images/deposit-tab-img9.png">
+            <span class="pay-title"><em>数字货币支付</em></span>
+        </a>
+    </div>
 </div>
 <c:if test="${map['online']<=0&&map['company']<=0&&map['scancode']<=0&&map['third']<=0&&map['bitcoin']<=0&&!isFastRecharge}">
     <div class="rgeechar">

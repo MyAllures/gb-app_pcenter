@@ -23,6 +23,7 @@ import so.wwb.gamebox.iservice.company.sys.ISysSiteService;
 import so.wwb.gamebox.iservice.company.sys.IUserExtendService;
 import so.wwb.gamebox.iservice.master.content.ICttLogoService;
 import so.wwb.gamebox.iservice.master.content.IVCttCarouselService;
+import so.wwb.gamebox.iservice.master.digiccy.IUserDigiccyService;
 import so.wwb.gamebox.iservice.master.fund.IAgentWithdrawOrderService;
 import so.wwb.gamebox.iservice.master.fund.IPlayerTransferService;
 import so.wwb.gamebox.iservice.master.fund.IVAgentWithdrawOrderService;
@@ -1025,6 +1026,10 @@ public class ServiceTool {
 
     public static ISmsInterfaceService smsInterfaceService() {
         return getService(ISmsInterfaceService.class);
+    }
+
+    public static IUserDigiccyService userDigiccyService() {
+        return getService(IUserDigiccyService.class);
     }
 //endregion your codes 1
 

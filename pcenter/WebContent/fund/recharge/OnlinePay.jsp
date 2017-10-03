@@ -39,7 +39,18 @@
                         <c:forEach items="${payAccountMap}" var="i" varStatus="vs">
                             <c:if test="${vs.index==0}">
                                 <c:set var="onlinePayMax" value="${i.value.singleDepositMax}"/>
-                                <c:set var="onlinePayMin" value="${i.value.singleDepositMin}"/>
+                                <c:choose>
+                                    <c:when test="${empty i.value.singleDepositMin}">
+                                        <c:set var="onlinePayMin" value='1.00'/>
+                                    </c:when>
+                                    <c:when test="${i.value.singleDepositMin==0}">
+                                        <c:set var="onlinePayMin" value='0.01'/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="onlinePayMin" value="${soulFn:formatCurrency(i.value.singleDepositMin)}"/>
+                                    </c:otherwise>
+                                </c:choose>
+
                             </c:if>
                             <c:if test="${vs.index==16}"><div name="hideBank" style="display: none"></c:if>
                             <label class="bank ${vs.index==0?'select':''}">
@@ -47,7 +58,7 @@
                                 <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-bank ${i.key}"></i></span>
                                 <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
                                 <input type="hidden" class="onlinePayMax" value="${empty i.value.singleDepositMax?'99,999,999.00':soulFn:formatCurrency(i.value.singleDepositMax)}"/>
-                                <input type="hidden" class="onlinePayMin" value="${empty i.value.singleDepositMin?'1.00':soulFn:formatCurrency(i.value.singleDepositMin)}"/>
+                                <input type="hidden" class="onlinePayMin" value="${empty i.value.singleDepositMin?'0.01':soulFn:formatCurrency(i.value.singleDepositMin)}"/>
                             </label>
                             <c:if test="${fn:length(payAccountMap)>16&&vs.index==(fn:length(payAccountMap)-1)}"></div></c:if>
                         </c:forEach>
@@ -95,7 +106,7 @@
             <div class="left-ico-message">
                 <span class="deposit-info-title">${views.fund_auto['注意事项']}<img src="${resRoot}/images/online-pay3.png"></span>
                 <ul class="attention-list">
-                    <li>${fn:replace(fn:replace(fn:replace(views.fund_auto['在线快速存储单笔限额范围'], "{0}",siteCurrency ), "{1}", empty onlinePayMin?'1.00':soulFn:formatCurrency(onlinePayMin)),"{2}" , empty onlinePayMax?'99,999,999.00':soulFn:formatCurrency(onlinePayMax))}
+                    <li>${fn:replace(fn:replace(fn:replace(views.fund_auto['在线快速存储单笔限额范围'], "{0}",siteCurrency ), "{1}", onlinePayMin),"{2}" , empty onlinePayMax?'99,999,999.00':soulFn:formatCurrency(onlinePayMax))}
                     </li>
                 </ul>
             </div>

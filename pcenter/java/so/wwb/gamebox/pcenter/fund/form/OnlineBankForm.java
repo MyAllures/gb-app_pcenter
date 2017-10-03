@@ -12,6 +12,7 @@ import so.wwb.gamebox.pcenter.fund.controller.CompanyRechargeController;
 import so.wwb.gamebox.pcenter.fund.controller.RechargeController;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -39,6 +40,7 @@ public class OnlineBankForm implements IForm {
     @Pattern(message = "fund.rechargeForm.rechargeAmountCorrect", regexp = FormValidRegExps.MONEY)
     @Remote(message = "fund.rechargeForm.rechargeAmountOver", checkClass = CompanyRechargeController.class, checkMethod = "checkAmount", additionalProperties = {"result.rechargeType"}, jsValueExp = {"$(\"[name='payType']:checked\").val()"})
     @Max(message = "fund.rechargeForm.rechargeAmountMax", value = 99999999)
+    @Min(message = "fund.rechargeForm.rechargeAmountMin", value = 0)
     public String getResult_rechargeAmount() {
         return result_rechargeAmount;
     }

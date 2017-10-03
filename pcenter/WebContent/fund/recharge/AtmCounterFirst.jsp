@@ -101,7 +101,7 @@
         <div class="account-list account-info-warp">
             <div class="left-ico-message">
                 <span class="deposit-info-title">${views.fund_auto['注意事项']}<img src="${resRoot}/images/online-pay3.png"></span>
-                <c:set var="onlinePayMin" value="${empty rank.onlinePayMin?'1.00':soulFn:formatCurrency(rank.onlinePayMin)}"/>
+                <c:set var="onlinePayMin" value="${empty rank.onlinePayMin || rank.onlinePayMin == '0'?'0.01':soulFn:formatCurrency(rank.onlinePayMin)}"/>
                 <c:set var="onlinePayMax" value="${empty rank.onlinePayMax?'99,999,999.00':soulFn:formatCurrency(rank.onlinePayMax)}"/>
                 <input type="hidden" name="onlinePayMin" value="${onlinePayMin}"/>
                 <input type="hidden" name="onlinePayMax" value="${onlinePayMax}"/>

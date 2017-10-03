@@ -67,7 +67,7 @@
             <div class="left-ico-message">
                 <span class="deposit-info-title">${views.fund_auto['注意事项']}<img src="${resRoot}/images/online-pay3.png"></span>
                 <ul class="attention-list">
-                    <li>${fn:replace(fn:replace(fn:replace(views.fund_auto['单笔存储限额范围'], "{0}",siteCurrency ), "{1}", empty rank.onlinePayMin?'1.00':soulFn:formatCurrency(rank.onlinePayMin)),"{2}" , empty rank.onlinePayMax?'99,999,999.00':soulFn:formatCurrency(rank.onlinePayMax))}</li>
+                    <li>${fn:replace(fn:replace(fn:replace(views.fund_auto['单笔存储限额范围'], "{0}",siteCurrency ), "{1}", empty rank.onlinePayMin || rank.onlinePayMin == '0'?'0.01':soulFn:formatCurrency(rank.onlinePayMin)),"{2}" , empty rank.onlinePayMax?'99,999,999.00':soulFn:formatCurrency(rank.onlinePayMax))}</li>
                     <li>${views.fund_auto['2、请使用同行存款，加速您的入款速度。']}</li>
                 </ul>
             </div>

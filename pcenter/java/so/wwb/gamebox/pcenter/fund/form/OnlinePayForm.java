@@ -31,7 +31,7 @@ public class OnlinePayForm implements IForm {
     @Pattern(message = "fund.rechargeForm.rechargeAmountCorrect", regexp = FormValidRegExps.MONEY)
     @Remote(message = "fund.rechargeForm.rechargeAmountOver", checkClass = OnlineRechargeController.class, checkMethod = "checkOnlineRechargeAmount", additionalProperties = {"result.payerBank"}, jsValueExp = {"$(\"[name='result.payerBank']:checked\").val()"})
     @Max(message = "fund.rechargeForm.rechargeAmountMax", value = 99999999)
-    @Min(message = "fund.rechargeForm.rechargeAmountMin", value = 1)
+    @Min(message = "fund.rechargeForm.rechargeAmountMin", value = 0)
     public String getResult_rechargeAmount() {
         return result_rechargeAmount;
     }

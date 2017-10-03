@@ -50,6 +50,7 @@ import so.wwb.gamebox.model.company.site.po.SiteOperateArea;
 import so.wwb.gamebox.model.company.site.vo.SiteOperateAreaListVo;
 import so.wwb.gamebox.model.company.sys.vo.SysSiteVo;
 import so.wwb.gamebox.model.company.vo.BankListVo;
+import so.wwb.gamebox.model.enums.UserTypeEnum;
 import so.wwb.gamebox.model.listop.FreezeTime;
 import so.wwb.gamebox.model.master.player.PhoneCodeVo;
 import so.wwb.gamebox.model.master.player.po.UserBankcard;
@@ -650,6 +651,7 @@ public class AccountSettingsController {
         }*/
 
 		vo.getSearch().setBankcardNumber(vo.getBankcardNumber());
+		vo.getSearch().setUserType(UserTypeEnum.PLAYER.getCode());
 		UserBankcard oldBankCard = ServiceTool.userBankcardService().cardIsExists(vo);
 		if (oldBankCard != null && oldBankCard.getIsDefault() && !oldBankCard.getUserId().equals(SessionManager.getUserId())) {
 			map.put("state",false);

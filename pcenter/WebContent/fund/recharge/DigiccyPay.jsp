@@ -1,7 +1,7 @@
 <%--@elvariable id="userDigiccyList" type="java.util.List<so.wwb.gamebox.model.master.digiccy.po.UserDigiccy>"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
-<form>
+<form name="digiccyPayForm">
     <div class="notice">
         <div class="notice-left"><em class="path"></em>
         </div>
@@ -19,25 +19,41 @@
             <div class="sc-left-warp"><img src="${resRoot}/images/scqk-btb.png"></div>
             <div class="sc-right-warp">
                 <div class="st-r-tit">
-                    <span class="s-title">比特币</span>
-                  <span class="s-yue">
-                       <em>余额:</em>
-                       <i class="orange">999,999,999,999.00</i>
-                       <i class="ico-ask refresh"></i>
-                       <button type="button" class="btn btn-filter btn-outline btn-lg">兑换金额</button>
-                  </span>
+                    <span class="s-title">${dicts.digiccy.digiccy_currency[i.currency]}</span>
+                    <c:if test="${!empty i.address}">
+                        <span class="s-yue">
+                            <em>余额:</em>
+                            <i class="orange"><fmt:formatNumber var="${i.amount}" pattern="#.########"/></i>
+                            <i class="ico-ask refresh"></i>
+                            <soul:button target="exchange" text="兑换金额" opType="function" tag="button" cssClass="btn btn-filter btn-outline btn-lg"/>
+                        </span>
+                    </c:if>
                 </div>
                 <div class="st-r-gn">
-                    <div class="sao-ewm">
-                        <span class="title">二维码</span>
-                        <span class="ewm-img"><img src="${resRoot}/images/ewm.png"></span>
-                    </div>
-                    <div class="lzdz">
-                        <span class="title">数字货币的地址 <button type="button" class="btn btn-filter btn-xs">复制</button></span>
-                        <textarea class="textarea" placeholder="">http://www.baidu.com?/=bl5rx </textarea>
-                    </div>
+                    <c:if test="${!empty i.address}">
+                        <div class="sao-ewm">
+                            <span class="title">二维码</span>
+                            <span class="ewm-img"><img src="${i.addressQrcodeUrl}" style="height: 104px;width: 104px;"/></span>
+                        </div>
+                        <div class="lzdz">
+                            <span class="title">
+                                地址
+                                <button type="button" class="btn btn-filter btn-xs" data-clipboard-text="${i.address}" name="copy">复制</button>
+                            </span>
+                            <textarea class="textarea" readonly>${i.address}</textarea>
+                        </div>
+                    </c:if>
+                    <c:if test="${empty i.address}">
+                        <div class="lzdz">
+                            <span class="title">
+                                还未生成地址
+                                <soul:button target="newAddress" text="生成地址" opType="function" cssClass="btn btn-filter btn-xs"/>
+                            </span>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>
     </c:forEach>
 </form>
+<soul:import res="site/fund/recharge/DigiccyPay"/>

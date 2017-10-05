@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.model.master.digiccy.po.UserDigiccy;
 import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyListVo;
+import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyVo;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +34,22 @@ public class DigiccyRechargeController extends RechargeBaseController {
     @RequestMapping("/newAddress")
     @ResponseBody
     public Map<String, Object> newAddress(String currency) {
+        UserDigiccyVo userDigiccyVo = new UserDigiccyVo();
+        userDigiccyVo.setSysUser(SessionManager.getUser());
+        userDigiccyVo.getSearch().setCurrency(currency);
+        userDigiccyVo.getSearch().setUserId(SessionManager.getUserId());
+        userDigiccyVo = ServiceTool.userDigiccyService().getDepositAddress(userDigiccyVo);
+        Map<String, Object> map = new HashMap<>();
+        map.put("state", userDigiccyVo.isSuccess());
+        if (userDigiccyVo.isSuccess()) {
+
+        }
+        return map;
+    }
+
+    @RequestMapping("/exchange")
+    @ResponseBody
+    public Map<String, Object> exchange(String currency) {
         return null;
     }
 }

@@ -25,7 +25,7 @@
                             <em>余额:</em>
                             <i class="orange"><fmt:formatNumber var="${i.amount}" pattern="#.########"/></i>
                             <i class="ico-ask refresh"></i>
-                            <soul:button target="exchange" text="兑换金额" opType="function" tag="button" cssClass="btn btn-filter btn-outline btn-lg"/>
+                            <soul:button target="exchange" currency="${i.currency}" text="兑换金额" opType="function" tag="button" cssClass="btn btn-filter btn-outline btn-lg"/>
                         </span>
                     </c:if>
                 </div>
@@ -47,7 +47,7 @@
                         <div class="lzdz">
                             <span class="title">
                                 还未生成地址
-                                <soul:button target="newAddress" text="生成地址" opType="function" cssClass="btn btn-filter btn-xs"/>
+                                <soul:button target="newAddress" currency="${i.currency}" text="生成地址" opType="function" cssClass="btn btn-filter btn-xs"/>
                             </span>
                         </div>
                     </c:if>

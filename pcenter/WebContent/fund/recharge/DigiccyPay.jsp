@@ -24,12 +24,12 @@
                         <span class="s-yue">
                             <em>余额:</em>
                             <i class="orange"><fmt:formatNumber var="${i.amount}" pattern="#.########"/></i>
-                            <i class="ico-ask refresh"></i>
-                            <soul:button target="exchange" currency="${i.currency}" text="兑换金额" opType="function" tag="button" cssClass="btn btn-filter btn-outline btn-lg"/>
+                            <soul:button target="refresh" text="" opType="function" cssClass="ico-ask refresh" currency="${i.currency}"/>
+                            <soul:button target="exchange" currency="${i.currency}" text="兑换金额" opType="function" cssClass="btn btn-filter btn-outline btn-lg ${i.amount>0?'':'hidebtn'}"/>
                         </span>
                     </c:if>
                 </div>
-                <div class="st-r-gn">
+                <div class="st-r-gn" id="${currency}">
                     <c:if test="${!empty i.address}">
                         <div class="sao-ewm">
                             <span class="title">二维码</span>
@@ -56,4 +56,17 @@
         </div>
     </c:forEach>
 </form>
+<script type="text/x-jsrender" id="addressRender">
+    <div class="sao-ewm">
+        <span class="title">二维码</span>
+        <span class="ewm-img"><img src="{{addressQrcodeUrl}" style="height: 104px;width: 104px;"/></span>
+    </div>
+    <div class="lzdz">
+        <span class="title">
+            地址
+            <button type="button" class="btn btn-filter btn-xs" data-clipboard-text="{{address}}" name="copy">复制</button>
+        </span>
+        <textarea class="textarea" readonly>{{address}}</textarea>
+    </div>
+</script>
 <soul:import res="site/fund/recharge/DigiccyPay"/>

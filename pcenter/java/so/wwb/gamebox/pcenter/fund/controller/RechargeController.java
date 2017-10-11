@@ -1,6 +1,5 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.query.sort.Direction;
 import org.soul.model.session.SessionKey;
@@ -40,6 +39,8 @@ public class RechargeController extends RechargeBaseController {
         model.addAttribute("customerService", getCustomerService());
         //快速充值地址
         fastRecharge(model);
+        //是否支持数字货币
+        model.addAttribute("digiccyAccountInfo", ParamTool.getDigiccyAccountInfo());
         return RECHARGE_URI;
     }
 

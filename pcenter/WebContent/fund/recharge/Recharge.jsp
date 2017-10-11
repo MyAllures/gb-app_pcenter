@@ -97,14 +97,16 @@
                 </a>
             </div>
         </c:if>
-        <div class="deposit-tab01">
-            <a href="/fund/recharge/digiccy/digiccyPay.html" nav-Target="mainFrame">
-                <img src="${resRoot}/images/deposit-tab-img9.png">
-                <span class="pay-title"><em>数字货币支付</em></span>
-            </a>
-        </div>
+        <c:if test="${!empty digiccyAccountInfo}">
+            <div class="deposit-tab01">
+                <a href="/fund/recharge/digiccy/digiccyPay.html" nav-Target="mainFrame">
+                    <img src="${resRoot}/images/deposit-tab-img9.png">
+                    <span class="pay-title"><em>数字货币支付</em></span>
+                </a>
+            </div>
+        </c:if>
     </div>
-    <c:if test="${map['online']<=0&&map['company']<=0&&map['scancode']<=0&&map['third']<=0&&map['bitcoin']<=0&&!isFastRecharge}">
+    <c:if test="${map['online']<=0&&map['company']<=0&&map['scancode']<=0&&map['third']<=0&&map['bitcoin']<=0&&!isFastRecharge&&empty digiccyAccountInfo}">
         <div class="rgeechar">
             <div class="title deposit-hint">
             <span class="tips">

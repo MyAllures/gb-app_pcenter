@@ -100,7 +100,12 @@ public class PlayerTransferController {
             searchAssets(model, new PlayerApiListVo());
             return "/fund/transfers/auto/Index";
         } else {
-            model.addAttribute("apiList", searchTransferApis());
+            if(SessionManager.isMockAccountModel()){
+                model.addAttribute("apiList", searchTransferApiByMock());
+            }else{
+                model.addAttribute("apiList", searchTransferApis());
+            }
+
             //验证规则
             model.addAttribute("validateRule", JsRuleCreator.create(PlayerTransferForm.class));
             model.addAttribute("isRefresh", isRefresh);
@@ -133,6 +138,25 @@ public class PlayerTransferController {
         return transableApis;
     }
 
+    private List<Api> searchTransferApiByMock(){
+        List<Api> transableApis = new ArrayList<>();
+        Map<String, Api> apis = Cache.getApi();
+        Map<String, SiteApi> siteApis = Cache.getSiteApi();
+        Api api;
+        SiteApi siteApi;
+        for (String id : siteApis.keySet()) {
+            if(ApiProviderEnum.PL.getCode().equals(id) || ApiProviderEnum.DWT.getCode().equals(id)){
+                api = apis.get(id);
+                siteApi = siteApis.get(id);
+                if (api != null && siteApi != null && !GameStatusEnum.DISABLE.getCode().equals(api.getSystemStatus()) && !GameStatusEnum.DISABLE.getCode().equals(siteApi.getStatus())) {
+                    transableApis.add(api);
+                }
+            }
+
+        }
+        return transableApis;
+    }
+
     /**
      * 查询玩家总资产和各api占比
      *
@@ -143,7 +167,10 @@ public class PlayerTransferController {
         listVo.getSearch().setPlayerId(SessionManager.getUserId());
         listVo = ServiceTool.playerApiService().fundRecord(listVo);
         model.addAttribute("player", listVo.getUserPlayer());
-
+        //模拟账号过滤不要的API
+        if(SessionManager.isMockAccountModel()){
+            listVo = filterPlayerApiByMock(listVo);
+        }
         model.addAttribute("playerApiListVo", listVo);
 
         //正在处理中取款金额
@@ -155,6 +182,21 @@ public class PlayerTransferController {
         PlayerTransferVo playerTransferVo = new PlayerTransferVo();
         playerTransferVo.getSearch().setUserId(SessionManager.getUserId());
         model.addAttribute("transfer", playerTransferService().queryProcessAmount(playerTransferVo));
+    }
+
+    private PlayerApiListVo filterPlayerApiByMock(PlayerApiListVo listVo){
+        if(listVo.getResult()==null){
+            return listVo;
+        }
+        List<PlayerApi> resList = new ArrayList<>();
+        for(PlayerApi playerApi : listVo.getResult()){
+            Integer apiId = playerApi.getApiId();
+            if(ApiProviderEnum.PL.getCode().equals(apiId.toString()) || ApiProviderEnum.DWT.getCode().equals(apiId.toString())){
+                resList.add(playerApi);
+            }
+        }
+        listVo.setResult(resList);
+        return listVo;
     }
 
 

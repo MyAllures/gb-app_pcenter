@@ -47,5 +47,11 @@
             <mvc:mapping path="/**"/>
             <bean class="so.wwb.gamebox.web.common.token.TokenValidInterceptor"/>
         </mvc:interceptor>
+
+
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="so.wwb.gamebox.web.common.demomodel.DemoModelInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
 </beans>

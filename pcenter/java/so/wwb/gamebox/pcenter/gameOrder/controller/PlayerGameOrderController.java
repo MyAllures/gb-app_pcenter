@@ -23,6 +23,8 @@ import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderVo;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
 import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
+import so.wwb.gamebox.web.common.demomodel.DemoModel;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -50,6 +52,7 @@ public class PlayerGameOrderController {
     private static final int DATE_INTERVAL = -40;
 
     @RequestMapping("/index")
+    @DemoModel(menuCode = DemoMenuEnum.TZJL)
     public String index(HttpServletRequest request, PlayerGameOrderListVo listVo, Model model) {
         //玩家中心可查询40天之内的订单
         Date today = SessionManager.getDate().getToday();

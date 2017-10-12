@@ -30,6 +30,8 @@ import so.wwb.gamebox.model.master.player.vo.*;
 import so.wwb.gamebox.pcenter.fund.form.SettingRealNameForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
+import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
+import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.common.token.Token;
 import so.wwb.gamebox.web.fund.controller.BaseWithdrawController;
 import so.wwb.gamebox.web.fund.form.WithdrawForm;
@@ -107,6 +109,7 @@ public class WithdrawController extends BaseWithdrawController {
      */
     @RequestMapping({"/withdrawList"})
     @Token(generate = true)
+    @DemoModel(menuCode = DemoMenuEnum.QKZQ)
     protected String withdrawList(Model model) {
         return withdraw(model);
     }

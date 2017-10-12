@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import so.wwb.gamebox.model.master.operation.vo.VPreferentialRecodeListVo;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
+import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
+import so.wwb.gamebox.web.common.demomodel.DemoModel;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,6 +27,7 @@ public class PreferentialController {
      * @return
      */
     @RequestMapping("/list")
+    @DemoModel(menuCode = DemoMenuEnum.YHJL)
     public String list(VPreferentialRecodeListVo vPreferentialRecodeListVo,Model model,HttpServletRequest request) {
         vPreferentialRecodeListVo.getSearch().setActivityVersion(SessionManager.getLocale().toString());
         vPreferentialRecodeListVo.getSearch().setUserId(SessionManager.getUserId());

@@ -19,6 +19,8 @@ import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
+import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
+import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
 
 import java.util.Date;
@@ -35,6 +37,7 @@ public class RechargeController extends RechargeBaseController {
     private static final String BANK_NOTICE_URI = "/fund/recharge/BankNotice";
 
     @RequestMapping("/recharge")
+    @DemoModel(menuCode = DemoMenuEnum.CKZQ)
     public String recharge(Model model) {
         model.addAttribute("map", ServiceTool.payAccountService().queryCount(new PayAccountListVo()));
         model.addAttribute("customerService", getCustomerService());

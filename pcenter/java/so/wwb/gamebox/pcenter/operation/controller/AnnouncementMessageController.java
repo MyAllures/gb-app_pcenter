@@ -56,6 +56,8 @@ import so.wwb.gamebox.pcenter.operation.form.PlayerAdvisoryForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
 import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
+import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
 
 import javax.servlet.http.HttpServletRequest;
@@ -636,6 +638,7 @@ public class AnnouncementMessageController {
      * @return
      */
     @RequestMapping("/gameNotice")
+    @DemoModel(menuCode = DemoMenuEnum.XXGG)
     public String gameNotice(VSystemAnnouncementListVo listVo, Model model, HttpServletRequest request) {
         if (listVo.getSearch().getStartTime() == null && listVo.getSearch().getEndTime() == null) {
             listVo.getSearch().setStartTime(DateTool.addMonths(SessionManager.getDate().getNow(), -1));

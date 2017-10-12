@@ -52,6 +52,8 @@ import so.wwb.gamebox.pcenter.tools.ServiceTool;
 import so.wwb.gamebox.web.bank.BankHelper;
 import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.SiteCustomerServiceHelper;
+import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
+import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.common.token.Token;
 import so.wwb.gamebox.web.common.token.TokenHandler;
 import so.wwb.gamebox.web.fund.form.AddBankcardForm;
@@ -89,6 +91,7 @@ public class PersonalInfoController {
      * @return
      */
     @RequestMapping("/index")
+    @DemoModel(menuCode = DemoMenuEnum.GRZL)
     @Token(generate = true)
     public String index(Model model) {
 

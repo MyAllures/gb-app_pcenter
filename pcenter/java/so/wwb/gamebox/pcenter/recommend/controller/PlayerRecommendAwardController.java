@@ -26,6 +26,8 @@ import so.wwb.gamebox.model.master.setting.po.GradientTemp;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
 import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
+import so.wwb.gamebox.web.common.demomodel.DemoModel;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -70,6 +72,7 @@ public class PlayerRecommendAwardController {
     }
 
     @RequestMapping("/recommend")
+    @DemoModel(menuCode = DemoMenuEnum.TJHY)
     public String recommend(Model model, String type, PlayerRecommendAwardListVo listVo, HttpServletRequest request) {
         if (RECORD_TYPE.equals(type)) {
             getRecord(listVo, model);

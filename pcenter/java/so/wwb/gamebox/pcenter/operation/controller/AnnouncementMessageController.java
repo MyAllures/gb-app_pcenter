@@ -104,6 +104,7 @@ public class AnnouncementMessageController {
      * @return
      */
     @RequestMapping("/messageList")
+    @DemoModel(menuCode = DemoMenuEnum.XXGG)
     public String messageList(VNoticeReceivedTextListVo listVo, VPlayerAdvisoryListVo aListVo, Model model, HttpServletRequest request) {
         listVo.getSearch().setReceiverId(SessionManager.getUserId());
         listVo = ServiceTool.noticeService().fetchReceivedSiteMsg(listVo);
@@ -266,6 +267,7 @@ public class AnnouncementMessageController {
      * @return
      */
     @RequestMapping("/systemNoticeHistory")
+    @DemoModel(menuCode = DemoMenuEnum.XXGG)
     public String systemNoticeHistory(HttpServletRequest request, VPlayerAdvisoryListVo aListVo, VSystemAnnouncementListVo vListVo, Model model) {
         if (vListVo.getSearch().getStartTime() == null && vListVo.getSearch().getEndTime() == null) {
             vListVo.getSearch().setStartTime(DateTool.addMonths(SessionManager.getDate().getNow(), -1));

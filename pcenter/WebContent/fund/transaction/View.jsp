@@ -216,6 +216,11 @@
                             <i style="font-size: medium">${isOther?command.result._describe['customBankName']:''}</i>
                         </h1>
                     </c:when>
+                    <c:when test="${command.result.fundType eq 'digiccy_scan'}">
+                        <h1>
+                            <i class="pay-third ${bankCode}"></i>
+                        </h1>
+                    </c:when>
                     <c:otherwise>
                         <h1>
                             <c:set var="isOther" value="${bankCode eq 'other_bank' && !empty command.result._describe['customBankName']}"/>
@@ -318,15 +323,27 @@
                                     </c:if>
                                 </c:if>
                                 <c:if test="${command.result.fundType != 'bitcoin_fast'}">
-                                    <tr>
-                                        <td  class="popalignr"><span class="darkgray">${views.fund['Deposit.deposit.rechargeAmount']}</span></td>
-                                        <td>
-                                            <c:set var="fee" value="${empty command.result._describe['poundage']?0:command.result._describe['poundage']}"></c:set>
-                                            <span class="orange">
-                                                ${siteCurrencySign}&nbsp;${soulFn:formatCurrency(command.result.rechargeAmount)}
-                                            </span>
-                                        </td>
-                                    </tr>
+                                    <c:if test="${!empty command.result._describe['bitAmount']}">
+                                        <tr>
+                                            <td  class="popalignr"><span class="darkgray">${command.result._describe['bankCode']}：</span></td>
+                                            <td>
+                                                <span class="orange">
+                                                    <span class="orange">${dicts.common.currency_symbol[command.result._describe['bankCode']]}<fmt:formatNumber value="${command.result._describe['bitAmount']}" pattern="#.########"/></span>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </c:if>
+                                    <c:if test="${command.result.rechargeAmount!=0}">
+                                        <tr>
+                                            <td  class="popalignr"><span class="darkgray">${views.fund['Deposit.deposit.rechargeAmount']}</span></td>
+                                            <td>
+                                                <span class="orange">
+                                                    ${siteCurrencySign}&nbsp;${soulFn:formatCurrency(command.result.rechargeAmount)}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </c:if>
+                                    <c:set var="fee" value="${empty command.result._describe['poundage']?0:command.result._describe['poundage']}"></c:set>
                                     <c:if test="${not empty command.result._describe['poundage']}">
                                         <tr>
                                             <td class="popalignr"><span class="darkgray">${command.result._describe['poundage']-0 > 0 ?views.fund['FundRecord.view.rebackPoundage']:views.fund['FundRecord.view.poundage']}：</span></td>

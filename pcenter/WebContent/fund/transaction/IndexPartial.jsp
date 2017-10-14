@@ -139,7 +139,9 @@
                 <td>
                     <span class="${_symbol eq '-'?'orange':'green'}">${_symbol}${soulFn:formatCurrency(pt.transactionMoney)}</span>
                     <c:if test="${pt._describe['bitAmount']>0}">
-                        </br>Ƀ<fmt:formatNumber value="${pt._describe['bitAmount']}" pattern="#.########"/>
+                        </br>
+                        <c:set var="digiccySymbol" value="${dicts.common.currency_symbol[_describe['bankCode']]}"/>
+                       ${empty digiccySymbol?'Ƀ':digiccySymbol}<fmt:formatNumber value="${pt._describe['bitAmount']}" pattern="#.########"/>
                     </c:if>
                 </td>
                 <td>${soulFn:formatCurrency(pt.balance)}</td>

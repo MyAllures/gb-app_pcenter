@@ -1,15 +1,23 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
+import org.soul.commons.lang.string.StringTool;
+import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
+import org.soul.commons.support._Module;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.master.digiccy.po.UserDigiccy;
 import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyListVo;
 import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyVo;
+import so.wwb.gamebox.model.master.fund.enums.RechargeStatusEnum;
+import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
+import so.wwb.gamebox.model.master.fund.po.PlayerRecharge;
 import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
+import so.wwb.gamebox.model.master.operation.po.VActivityMessage;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
 
@@ -18,14 +26,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 数字货币存款
  * Created by cherry on 17-10-3.
  */
 @Controller
 @RequestMapping("/fund/recharge/digiccy")
 public class DigiccyRechargeController extends RechargeBaseController {
     private static final String DIGICCY_PAY_URI = "/fund/recharge/DigiccyPay";
+    private static final String DIGICCY_PAY_SALE_URI = "/fund/recharge/DigiccyPaySale";
     private static final Log LOG = LogFactory.getLog(DigiccyRechargeController.class);
 
+    /**
+     * 数字货币列表展示
+     *
+     * @param model
+     * @return
+     */
     @RequestMapping("/digiccyPay")
     public String digiccyPay(Model model) {
         UserDigiccyListVo userDigiccyListVo = new UserDigiccyListVo();
@@ -35,6 +51,12 @@ public class DigiccyRechargeController extends RechargeBaseController {
         return DIGICCY_PAY_URI;
     }
 
+    /**
+     * 生成数字货币地址
+     *
+     * @param currency
+     * @return
+     */
     @RequestMapping("/newAddress")
     @ResponseBody
     public Map<String, Object> newAddress(String currency) {
@@ -56,6 +78,12 @@ public class DigiccyRechargeController extends RechargeBaseController {
         return map;
     }
 
+    /**
+     * 兑换金额
+     *
+     * @param currency
+     * @return
+     */
     @RequestMapping("/exchange")
     @ResponseBody
     public Map<String, Object> exchange(String currency) {
@@ -73,10 +101,18 @@ public class DigiccyRechargeController extends RechargeBaseController {
         Map<String, Object> map = new HashMap<>(3, 1f);
         map.put("state", playerRechargeVo.isSuccess());
         map.put("msg", playerRechargeVo.getErrMsg());
-        map.put("rechargeAmount", playerRechargeVo.getResult().getRechargeAmount());
+        if (playerRechargeVo.isSuccess()) {
+            map.put("transactionNo", playerRechargeVo.getResult().getTransactionNo());
+        }
         return map;
     }
 
+    /**
+     * 刷新货币余额
+     *
+     * @param currency
+     * @return
+     */
     @RequestMapping("/refresh")
     @ResponseBody
     public Map<String, Object> refresh(String currency) {
@@ -90,6 +126,63 @@ public class DigiccyRechargeController extends RechargeBaseController {
             map.put("amount", userDigiccy.getAmount());
         } else {
             map.put("amount", 0);
+        }
+        return map;
+    }
+
+    /**
+     * 优惠
+     *
+     * @param playerRechargeVo
+     * @param model
+     * @return
+     */
+    @RequestMapping("/sale")
+    public String sale(PlayerRechargeVo playerRechargeVo, Model model) {
+        playerRechargeVo = ServiceTool.playerRechargeService().searchPlayerRecharge(playerRechargeVo);
+        PlayerRecharge playerRecharge = playerRechargeVo.getResult();
+        List<VActivityMessage> sales;
+        if (playerRecharge != null && RechargeStatusEnum.ONLINE_SUCCESS.getCode().equals(playerRecharge.getRechargeStatus())) {
+            sales = searchSaleByAmount(playerRecharge.getRechargeAmount(), RechargeTypeEnum.DIGICCY_SCAN.getCode());
+        } else {
+            sales = searchSales(RechargeTypeEnum.DIGICCY_SCAN.getCode());
+        }
+        model.addAttribute("sales", sales);
+        model.addAttribute("playerRecharge", playerRecharge);
+        model.addAttribute("currencySign", getCurrencySign());
+        return DIGICCY_PAY_SALE_URI;
+    }
+
+    @RequestMapping("/saveSale")
+    @ResponseBody
+    public Map<String, Object> saveSale(PlayerRechargeVo playerRechargeVo) {
+        String transactionNo = playerRechargeVo.getSearch().getTransactionNo();
+        Integer activityId = playerRechargeVo.getActivityId();
+        Map<String, Object> map = new HashMap<>(2, 1f);
+        if (StringTool.isBlank(transactionNo)) {
+            LOG.info("保存数字货币优惠参数不全:没有指定交易号");
+            map.put("state", false);
+            map.put("msg", LocaleTool.tranMessage(Module.FUND, "Recharge.digiccyRecharge.applySaleFail", new Object[0]));
+            return map;
+        }
+        if (activityId == null) {
+            map.put("state", true);
+            LOG.info("保存数字货币优惠:玩家未选择优惠,交易号{0}", transactionNo);
+            map.put("msg", LocaleTool.tranMessage(Module.FUND, "Recharge.digiccyRecharge.applySaleSuccess", new Object[0]));
+            return map;
+        }
+        playerRechargeVo.setSysUser(SessionManager.getUser());
+        try {
+            playerRechargeVo = ServiceTool.playerRechargeService().saveDigiccyFavorable(playerRechargeVo);
+        } catch (Exception e) {
+            playerRechargeVo.setSuccess(false);
+            LOG.error(e);
+        }
+        map.put("state", playerRechargeVo.isSuccess());
+        if(playerRechargeVo.isSuccess()) {
+            map.put("msg", LocaleTool.tranMessage(Module.FUND, "Recharge.digiccyRecharge.applySaleSuccess", new Object[0]));
+        } else {
+            map.put("msg", LocaleTool.tranMessage(Module.FUND, "Recharge.digiccyRecharge.applySaleFail", new Object[0]));
         }
         return map;
     }

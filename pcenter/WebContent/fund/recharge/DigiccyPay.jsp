@@ -15,7 +15,7 @@
         <a href="/fund/playerRecharge/recharge.html" class="btn-gray btn btn-big pull-right" nav-Target="mainFrame">${views.fund_auto['返回上一级']}</a>
     </div>
     <c:forEach items="${userDigiccyList}" var="i">
-        <div class="account-list account-info-warp">
+        <div class="account-list account-info-warp sc-warp">
             <div class="sc-left-warp"><img src="${resRoot}/images/scqk-btb.png"></div>
             <div class="sc-right-warp">
                 <div class="st-r-tit">

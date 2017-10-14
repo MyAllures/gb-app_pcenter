@@ -11,7 +11,7 @@
     </div>
     <!--数字货币存款-->
     <div class="deposit-info-warp  clearfix">
-        <div class="titleline pull-left"><h2>数字货币存款</h2></div>
+        <div class="titleline pull-left"><h2>数字货币支付</h2></div>
         <a href="/fund/playerRecharge/recharge.html" class="btn-gray btn btn-big pull-right" nav-Target="mainFrame">${views.fund_auto['返回上一级']}</a>
     </div>
     <c:forEach items="${userDigiccyList}" var="i">

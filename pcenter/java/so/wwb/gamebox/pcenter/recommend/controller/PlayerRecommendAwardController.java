@@ -164,10 +164,13 @@ public class PlayerRecommendAwardController {
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
         userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
-        model.addAttribute("player", userPlayerVo.getResult());
-        String invitationCode = userPlayerVo.getResult().getRegistCode() + SessionManager.getUserId().toString();
-        model.addAttribute("invitationCode", Base36.encryptIgnoreCase(invitationCode));
-        LOG.info("玩家邀请码:[" + userPlayerVo.getResult().getRegistCode() + "][" + SessionManager.getUserId().toString() + "]" + Base36.encryptIgnoreCase(invitationCode));
+        if(userPlayerVo.getResult()!=null){
+            model.addAttribute("player", userPlayerVo.getResult());
+            String invitationCode = userPlayerVo.getResult().getRegistCode() + SessionManager.getUserId().toString();
+            model.addAttribute("invitationCode", Base36.encryptIgnoreCase(invitationCode));
+            LOG.info("玩家邀请码:[" + userPlayerVo.getResult().getRegistCode() + "][" + SessionManager.getUserId().toString() + "]" + Base36.encryptIgnoreCase(invitationCode));
+        }
+
         //查询玩家主货币
         String defaultCurrency = SessionManager.getUser().getDefaultCurrency();
         if (StringTool.isNotBlank(defaultCurrency)) {

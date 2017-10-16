@@ -25,6 +25,7 @@ import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.Const;
+import so.wwb.gamebox.model.enums.DemoModelEnum;
 import so.wwb.gamebox.model.master.enums.CommonStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransactionTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransactionWayEnum;
@@ -36,6 +37,8 @@ import so.wwb.gamebox.pcenter.fund.form.PlayerTransactionForm;
 import so.wwb.gamebox.pcenter.fund.form.PlayerTransactionSearchForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
+import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
+import so.wwb.gamebox.web.common.demomodel.DemoModel;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
@@ -77,7 +80,9 @@ public class PlayerTransactionController extends NoMappingCrudController<IVPlaye
     private static final int DATE_INTERVAL = -30;
 
     @RequestMapping("/list")
+    @DemoModel(menuCode = DemoMenuEnum.ZJJL)
     public String list(VPlayerTransactionListVo listVo, PlayerTransactionSearchForm form, BindingResult result, Model model, HttpServletRequest request) {
+
         /*查询当前登录玩家的资金记录*/
         initDate(listVo);
         SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.SETTING_SYSTEM_SETTINGS_IS_LOTTERY_SITE);

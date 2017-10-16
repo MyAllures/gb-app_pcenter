@@ -85,7 +85,9 @@ public class IndexController extends BaseIndexController {
     @RequestMapping(value = "index")
     protected String index(HttpServletRequest request, HttpServletResponse response, Model model) {
         /* 获取当前用户未接收的站内信 */
-        ServiceTool.noticeService().fetchUnReceivedMsgs(new NoticeVo());
+        NoticeVo noticeVo  = new NoticeVo();
+        noticeVo.setSearchUserId(SessionManager.getUserId());
+        ServiceTool.noticeService().fetchUnReceivedMsgs(noticeVo);
         content(null, request, response, model);
         model.addAttribute("isDebug", SystemTool.isDebug());
         SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.SETTING_SYSTEM_SETTINGS_IS_LOTTERY_SITE);

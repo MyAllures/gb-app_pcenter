@@ -63,7 +63,7 @@
                             <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-third ${i.key}"></i></span>
                             <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
                             <input type="hidden" class="onlinePayMax" value="${empty i.value.singleDepositMax?'99,999,999.00':soulFn:formatCurrency(i.value.singleDepositMax)}"/>
-                            <input type="hidden" class="onlinePayMin" value="${empty i.value.singleDepositMin?'1.00':soulFn:formatCurrency(i.value.singleDepositMin)}"/>
+                            <input type="hidden" class="onlinePayMin" value="${empty i.value.singleDepositMin?'0.01':soulFn:formatCurrency(i.value.singleDepositMin)}"/>
                         </label>
                     </c:forEach>
                 </div>
@@ -111,7 +111,7 @@
             <span class="deposit-info-title">${views.fund_auto['注意事项']}<img src="${resRoot}/images/online-pay3.png"></span>
             <ul class="attention-list">
                 <li>${views.fund_auto['请正确填写金额']}</li>
-                <li>${fn:replace(fn:replace(fn:replace(views.fund_auto['存款限额范围'], "{0}",siteCurrency ), "{1}", empty onlinePayMin?'1':soulFn:formatInteger(onlinePayMin).concat(soulFn:formatDecimals(onlinePayMin))),"{2}" , empty onlinePayMax?'99,999,999':soulFn:formatInteger(onlinePayMax).concat(soulFn:formatDecimals(onlinePayMax)))}</li>
+                <li>${fn:replace(fn:replace(fn:replace(views.fund_auto['存款限额范围'], "{0}",siteCurrency ), "{1}", empty onlinePayMin || onlinePayMin == '0'?'0.01':soulFn:formatInteger(onlinePayMin).concat(soulFn:formatDecimals(onlinePayMin))),"{2}" , empty onlinePayMax?'99,999,999':soulFn:formatInteger(onlinePayMax).concat(soulFn:formatDecimals(onlinePayMax)))}</li>
             </ul>
             <div>
             </div>

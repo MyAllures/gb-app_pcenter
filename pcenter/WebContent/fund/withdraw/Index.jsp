@@ -16,6 +16,11 @@
 </div>
 <c:set var="bankType" value="<%=UserBankcardTypeEnum.TYPE_BANK%>"/>
 <c:set var="btcType" value="<%=UserBankcardTypeEnum.TYPE_BTC%>"/>
+<c:set var="totalBalance" value="${not empty player.walletBalance?player.walletBalance:0}"></c:set>
+<c:if test="${not empty apiBalance}">
+    <c:set var="totalBalance" value="${totalBalance + apiBalance}"></c:set>
+</c:if>
+
 <div class="main-wrap">
     <c:choose>
         <c:when test="${isDemo}">
@@ -46,7 +51,7 @@
                 </div>
             </div>
         </c:when>
-        <c:when test="${(empty player.walletBalance) || (player.walletBalance < rank.withdrawMinNum || player.walletBalance <= 0)}">
+        <c:when test="${(empty totalBalance) || (totalBalance < rank.withdrawMinNum || totalBalance <= 0)}">
             <div class="withdraw-not">
                 <h1><i class="tipbig fail"></i></h1>
                 <div class="tiptext">
@@ -61,7 +66,7 @@
             </div>
         </c:when>
         <c:otherwise>
-            <c:if test="${player.walletBalance > 0 && player.walletBalance >= rank.withdrawMinNum}">
+            <c:if test="${totalBalance > 0 && totalBalance >= rank.withdrawMinNum}">
                 <div class="hintotal float-not">
                     <form id="transferForm" class="location" method="post">
                         <div id="validateRule" style="display: none">${validate}</div>
@@ -124,9 +129,9 @@
                             <label class="control-label">${isLottery.paramValue=='true'?views.home['index.account.totalAssets']:views.fund_auto['钱包余额']}：</label>
                             <div class="controls">
                                 <span class="orange fontmiddle">
-                                    <c:if test="${empty player.walletBalance}"><em>${currencySign}</em>0</c:if>
-                                    <c:if test="${not empty player.walletBalance}">
-                                        <em>${currencySign}</em>${soulFn:formatInteger(player.walletBalance)}${soulFn:formatDecimals(player.walletBalance)}
+                                    <c:if test="${empty totalBalance}"><em>${currencySign}</em>0</c:if>
+                                    <c:if test="${not empty totalBalance}">
+                                        <em>${currencySign}</em>${soulFn:formatInteger(totalBalance)}${soulFn:formatDecimals(totalBalance)}
                                     </c:if>
                                 </span>
                             </div>
@@ -134,7 +139,7 @@
                         <div class="control-group">
                             <label class="control-label" for="withdrawAmount">${views.fund_auto['取款金额']}：</label>
                             <div class="controls">
-                                <input type="hidden" name="walletBalance" value="${player.walletBalance}"/>
+                                <input type="hidden" name="walletBalance" value="${totalBalance}"/>
                                 <input type="hidden" name="rankId" value="${rank.id}">
                                 <input type="hidden" name="withdrawMaxNum" value="${rank.withdrawMaxNum}"/>
                                 <input type="hidden" name="withdrawMinNum" value="${rank.withdrawMinNum}"/>

@@ -56,6 +56,8 @@ import so.wwb.gamebox.pcenter.operation.form.PlayerAdvisoryForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
 import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
+import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
 
 import javax.servlet.http.HttpServletRequest;
@@ -102,6 +104,7 @@ public class AnnouncementMessageController {
      * @return
      */
     @RequestMapping("/messageList")
+    @DemoModel(menuCode = DemoMenuEnum.XXGG)
     public String messageList(VNoticeReceivedTextListVo listVo, VPlayerAdvisoryListVo aListVo, Model model, HttpServletRequest request) {
         listVo.getSearch().setReceiverId(SessionManager.getUserId());
         listVo = ServiceTool.noticeService().fetchReceivedSiteMsg(listVo);
@@ -264,6 +267,7 @@ public class AnnouncementMessageController {
      * @return
      */
     @RequestMapping("/systemNoticeHistory")
+    @DemoModel(menuCode = DemoMenuEnum.XXGG)
     public String systemNoticeHistory(HttpServletRequest request, VPlayerAdvisoryListVo aListVo, VSystemAnnouncementListVo vListVo, Model model) {
         if (vListVo.getSearch().getStartTime() == null && vListVo.getSearch().getEndTime() == null) {
             vListVo.getSearch().setStartTime(DateTool.addMonths(SessionManager.getDate().getNow(), -1));
@@ -636,6 +640,7 @@ public class AnnouncementMessageController {
      * @return
      */
     @RequestMapping("/gameNotice")
+    @DemoModel(menuCode = DemoMenuEnum.XXGG)
     public String gameNotice(VSystemAnnouncementListVo listVo, Model model, HttpServletRequest request) {
         if (listVo.getSearch().getStartTime() == null && listVo.getSearch().getEndTime() == null) {
             listVo.getSearch().setStartTime(DateTool.addMonths(SessionManager.getDate().getNow(), -1));

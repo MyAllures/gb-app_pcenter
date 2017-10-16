@@ -149,7 +149,14 @@ public class PlayerGameOrderController {
         Map<String, SiteApiTypeI18n> siteApiTypeI18nMap = Cache.getSiteApiTypeI18n();
         Map<Integer, String> apiTypes = new HashMap<>(siteApiTypeI18nMap.size(),1f);
         for (SiteApiTypeI18n siteApiTypeI18n : siteApiTypeI18nMap.values()) {
-            apiTypes.put(siteApiTypeI18n.getApiTypeId(), siteApiTypeI18n.getName());
+            if(SessionManager.isMockAccountModel()){
+                if(siteApiTypeI18n.getApiTypeId()==3||siteApiTypeI18n.getApiTypeId()==4){
+                    apiTypes.put(siteApiTypeI18n.getApiTypeId(), siteApiTypeI18n.getName());
+                }
+            }else{
+                apiTypes.put(siteApiTypeI18n.getApiTypeId(), siteApiTypeI18n.getName());
+
+            }
         }
         model.addAttribute("apiTypes", apiTypes);
     }
@@ -168,10 +175,21 @@ public class PlayerGameOrderController {
         Integer apiId;
         for (SiteGame siteGame : siteGames) {
             apiId = siteGame.getApiId();
-            if (gameTypes.get(apiId) == null) {
-                gameTypes.put(apiId, new HashMap<String, Integer>());
+            if(SessionManager.isMockAccountModel()){
+                if(apiId == 21 || apiId == 22){
+                    if (gameTypes.get(apiId) == null) {
+                        gameTypes.put(apiId, new HashMap<String, Integer>());
+                    }
+                    gameTypes.get(apiId).put(siteGame.getGameType(), siteGame.getApiTypeId());
+                }
+            }else{
+                if (gameTypes.get(apiId) == null) {
+                    gameTypes.put(apiId, new HashMap<String, Integer>());
+                }
+                gameTypes.get(apiId).put(siteGame.getGameType(), siteGame.getApiTypeId());
             }
-            gameTypes.get(apiId).put(siteGame.getGameType(), siteGame.getApiTypeId());
+
+
         }
         model.addAttribute("gameTypes", gameTypes);
     }

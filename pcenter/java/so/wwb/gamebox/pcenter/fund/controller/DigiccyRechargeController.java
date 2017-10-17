@@ -1,10 +1,11 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
+import org.soul.commons.collections.CollectionTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
-import org.soul.commons.support._Module;
+import org.soul.commons.query.sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import so.wwb.gamebox.model.master.operation.po.VActivityMessage;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -179,11 +181,36 @@ public class DigiccyRechargeController extends RechargeBaseController {
             LOG.error(e);
         }
         map.put("state", playerRechargeVo.isSuccess());
-        if(playerRechargeVo.isSuccess()) {
+        if (playerRechargeVo.isSuccess()) {
             map.put("msg", LocaleTool.tranMessage(Module.FUND, "Recharge.digiccyRecharge.applySaleSuccess", new Object[0]));
         } else {
             map.put("msg", LocaleTool.tranMessage(Module.FUND, "Recharge.digiccyRecharge.applySaleFail", new Object[0]));
         }
         return map;
+    }
+
+    @RequestMapping("/getBalances")
+    @ResponseBody
+    public List<Map<String, Object>> getBalances() {
+        UserDigiccyListVo userDigiccyListVo = new UserDigiccyListVo();
+        userDigiccyListVo.getSearch().setUserId(SessionManager.getUserId());
+        userDigiccyListVo.setPaging(null);
+        userDigiccyListVo.getQuery().addOrder(UserDigiccy.PROP_AMOUNT, Direction.DESC);
+        userDigiccyListVo = ServiceTool.userDigiccyService().search(userDigiccyListVo);
+        List<UserDigiccy> userDigiccies = userDigiccyListVo.getResult();
+        if (CollectionTool.isEmpty(userDigiccies)) {
+            return new ArrayList<>(0);
+        }
+        List<Map<String, Object>> list = new ArrayList<>(userDigiccies.size());
+        Map<String, Object> map;
+        String key = UserDigiccy.PROP_CURRENCY;
+        String amountKey = UserDigiccy.PROP_AMOUNT;
+        for (UserDigiccy userDigiccy : userDigiccies) {
+            map = new HashMap<>(2, 1f);
+            map.put(key, userDigiccy.getCurrency());
+            map.put(amountKey, userDigiccy.getAmount());
+            list.add(map);
+        }
+        return list;
     }
 }

@@ -15,19 +15,17 @@
         <a href="/fund/playerRecharge/recharge.html" class="btn-gray btn btn-big pull-right" nav-Target="mainFrame">${views.fund_auto['返回上一级']}</a>
     </div>
     <c:forEach items="${userDigiccyList}" var="i">
-        <div class="account-list account-info-warp sc-warp">
+        <div class="account-list account-info-warp sc-warp" name="account${i.currency}">
             <div class="sc-left-warp"><img src="${resRoot}/images/scqk-btb.png"></div>
             <div class="sc-right-warp">
                 <div class="st-r-tit">
                     <span class="s-title">${dicts.digiccy.digiccy_currency[i.currency]}</span>
-                    <c:if test="${!empty i.address}">
-                        <span class="s-yue">
-                            <em>余额:</em>
-                            <i class="orange"><fmt:formatNumber value="${empty i.amount?0:i.amount}" pattern="#.########"/></i>
-                            <soul:button target="refresh" text="" opType="function" cssClass="ico-ask refresh" currency="${i.currency}"/>
-                            <soul:button target="exchange" currency="${i.currency}" text="兑换金额" opType="function" cssClass="btn btn-filter btn-outline btn-lg ${i.amount>0?'':'hidebtn'}"/>
-                        </span>
-                    </c:if>
+                    <span class="s-yue" style="${!empty i.address?'':'display:none'}">
+                        <em>余额:</em>
+                        <i class="orange"><fmt:formatNumber value="${empty i.amount?0:i.amount}" pattern="#.########"/></i>
+                        <soul:button target="refresh" text="" opType="function" cssClass="ico-ask refresh" currency="${i.currency}"/>
+                        <soul:button target="exchange" currency="${i.currency}" text="兑换金额" opType="function" cssClass="btn btn-filter btn-outline btn-lg ${i.amount>0?'':'hidebtn'}"/>
+                    </span>
                 </div>
                     <div class="st-r-gn" id="${i.currency}">
                     <c:if test="${!empty i.address}">

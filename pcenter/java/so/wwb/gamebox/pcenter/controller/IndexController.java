@@ -193,6 +193,9 @@ public class IndexController extends BaseIndexController {
         sysUserVo.setSearch(new SysUserSo());
         sysUserVo.getSearch().setId(SessionManager.getUserId());
         sysUserVo = ServiceTool.sysUserService().get(sysUserVo);
+        if(userPlayerVo.getResult()==null){
+            return false;
+        }
         return CreateChannelEnum.TRANSFER.getCode().equals(userPlayerVo.getResult().getCreateChannel()) && StringTool.isBlank(sysUserVo.getResult().getDefaultTimezone());
     }
 

@@ -42,7 +42,7 @@
                                     <c:set var="gameType" value="${j.key}"/>
                                     <label class="fwn m-r-sm">
                                         <input type="checkbox" name="gameType" class="i-checks" api="${i.key}" apiname="${gbFn:getApiName(i.key.toString())}" data="${j.value}" typename="${gbFn:getGameTypeName(gameType)}" value="${gameType}"/>
-                                        <span class="m-l-xs">${gbFn:getGameTypeName(gameType)}</span>
+                                        <span class="m-l-xs">${dicts.game.game_type[gameType]}</span>
                                     </label>
                                 </c:forEach>
                             </td>

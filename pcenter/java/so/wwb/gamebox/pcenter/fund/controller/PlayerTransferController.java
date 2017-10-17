@@ -52,6 +52,8 @@ import so.wwb.gamebox.pcenter.tools.ServiceTool;
 import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.api.IApiBalanceService;
 import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
+import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.common.token.Token;
 import so.wwb.gamebox.web.common.token.TokenHandler;
 
@@ -95,6 +97,7 @@ public class PlayerTransferController {
 
     @RequestMapping("/transfers")
     @Token(generate = true)
+    @DemoModel(menuCode = DemoMenuEnum.EDZH)
     public String transfers(Model model, String isRefresh, HttpServletRequest request) {
         if (SessionManagerCommon.isAutoPay()) {
             searchAssets(model, new PlayerApiListVo());

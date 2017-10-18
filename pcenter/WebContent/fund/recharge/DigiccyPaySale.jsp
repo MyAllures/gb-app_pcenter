@@ -29,7 +29,7 @@
             <label class="col-xs-3 al-right">选择优惠：</label>
             <div class="col-xs-8 p-x">
                 <select name="activityId" class="selectwidth">
-                    <option>不参与优惠</option>
+                    <option value="">不参与优惠</option>
                     <c:forEach items="${sales}" var="i">
                         <option value="${i.id}">${i.classifyKeyName}&nbsp;&nbsp;${i.activityName}</option>
                     </c:forEach>

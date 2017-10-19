@@ -1,4 +1,5 @@
-<%@ page import="so.wwb.gamebox.model.master.fund.enums.RechargeStatusEnum" %><%--@elvariable id="playerRecharge" type="so.wwb.gamebox.model.master.fund.po.PlayerRecharge"--%>
+<%@ page import="so.wwb.gamebox.model.master.fund.enums.RechargeStatusEnum" %>
+<%--@elvariable id="playerRecharge" type="so.wwb.gamebox.model.master.fund.po.PlayerRecharge"--%>
 <%@page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
 <!DOCTYPE html>

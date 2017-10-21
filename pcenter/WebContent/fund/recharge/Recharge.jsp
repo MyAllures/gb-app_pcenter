@@ -101,7 +101,7 @@
             <div class="deposit-tab01">
                 <a href="/fund/recharge/digiccy/digiccyPay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img9.png">
-                    <span class="pay-title"><em>数字货币支付</em></span>
+                    <span class="pay-title"><em>${views.fund_auto['数字货币支付']}</em></span>
                 </a>
             </div>
         </c:if>

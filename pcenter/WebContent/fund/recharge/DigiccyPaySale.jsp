@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>选择优惠</title>
+    <title>${views.fund_auto['选择优惠']}</title>
     <%@ include file="/include/include.head.jsp" %>
 </head>
 <body>
@@ -14,23 +14,23 @@
     <div class="modal-body">
         <div class="form-group clearfix line-hi34 m-t-sm">
             <c:if test="${playerRecharge.rechargeStatus eq success}">
-                <label class="col-xs-3 al-right">兑换金额：</label>
+                <label class="col-xs-3 al-right">${views.fund_auto['兑换金额']}：</label>
                 <div class="col-xs-8 p-x">
                      ${currencySign}<i class="orange">${soulFn:formatCurrency(playerRecharge.rechargeAmount)}</i>
                 </div>
             </c:if>
             <c:if test="${playerRecharge.rechargeStatus != success}">
-                <label class="col-xs-3 al-right">兑换处理中:</label>
+                <label class="col-xs-3 al-right">${views.fund_auto['兑换处理中']}:</label>
                 <div class="col-xs-8 p-x">
                     &nbsp;${playerRecharge.payerBank}&nbsp;<i class="orange"><fmt:formatNumber value="${playerRecharge.bitAmount}" pattern="#.########"/></i>
                 </div>
             </c:if>
         </div>
         <div class="form-group clearfix line-hi34 m-t-sm">
-            <label class="col-xs-3 al-right">选择优惠：</label>
+            <label class="col-xs-3 al-right">${views.fund_auto['选择优惠']}：</label>
             <div class="col-xs-8 p-x">
                 <select name="activityId" class="selectwidth">
-                    <option value="">不参与优惠</option>
+                    <option value="">${views.fund_auto['不参与优惠']}</option>
                     <c:forEach items="${sales}" var="i">
                         <option value="${i.id}">${i.classifyKeyName}&nbsp;&nbsp;${i.activityName}</option>
                     </c:forEach>
@@ -41,8 +41,8 @@
 
     </div>
     <div class="modal-footer">
-        <soul:button target="closePage" text="取消" opType="function" cssClass="btn btn-gray" tag="button"/>
-        <soul:button target="${root}/fund/recharge/digiccy/saveSale.html" text="确认" callback="saveCallbak" opType="ajax" tag="button" cssClass="btn btn-filter" post="getCurrentFormData"/>
+        <soul:button target="closePage" text="${views.fund_auto['取消']}" opType="function" cssClass="btn btn-gray" tag="button"/>
+        <soul:button target="${root}/fund/recharge/digiccy/saveSale.html" text="${views.fund_auto['确认']}" callback="saveCallbak" opType="ajax" tag="button" cssClass="btn btn-filter" post="getCurrentFormData"/>
     </div>
 </form>
 </body>

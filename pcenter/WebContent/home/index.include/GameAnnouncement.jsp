@@ -16,7 +16,7 @@
                         <c:if test="${apis.value.apiId==s.apiId}">
                             <dd class="clearfix">
                                 <div class="item">
-                                    <h2 class="orange">${gbFn:getApiName((s.apiId).toString())}<c:if test="${s.gameId!=null}">——${gbFn:getGameName((s.gameId).toString())}</c:if></h2>
+                                    <h2 class="orange">${gbFn:getSiteApiName((s.apiId).toString())}<c:if test="${s.gameId!=null}">——${gbFn:getGameName((s.gameId).toString())}</c:if></h2>
                                     <p>
                                             <a href="/operation/pAnnouncementMessage/gameNoticeDetail.html?searchId=${gameAnnouncement.getSearchId(s.id)}"
                                                nav-target="mainFrame">${s.shortContentText80}"</a>

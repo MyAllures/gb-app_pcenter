@@ -20,7 +20,7 @@
                 <tbody>
                     <c:forEach items="${command.result}" var="i">
                         <tr>
-                            <td>${gbFn:getApiName(i.apiId.toString())}</td>
+                            <td>${gbFn:getSiteApiName(i.apiId.toString())}</td>
                             <td>${soulFn:formatCurrency(i.money)}</td>
                             <td>
                                 <c:choose>
@@ -28,7 +28,7 @@
                                         <span>${views.fund['Transfer.recoveryMoney.recoveryProcess']}</span>
                                     </c:when>
                                     <c:when test="${i.money>0}">
-                                        <soul:button target="${root}/fund/playerTransfer/recovery.html?type=singlePlayerApi&searchId=${command.getSearchId(i.id)}" text="${views.fund_auto['回收资金']}" opType="ajax" confirm="${fn:replace(views.fund['Transfer.recoveryMoney.confirmRecoveryApiMoney'], '{0}', gbFn:getApiName(i.apiId.toString()))}" callback="refresh"/>
+                                        <soul:button target="${root}/fund/playerTransfer/recovery.html?type=singlePlayerApi&searchId=${command.getSearchId(i.id)}" text="${views.fund_auto['回收资金']}" opType="ajax" confirm="${fn:replace(views.fund['Transfer.recoveryMoney.confirmRecoveryApiMoney'], '{0}', gbFn:getSiteApiName(i.apiId.toString()))}" callback="refresh"/>
                                     </c:when>
                                     <c:otherwise>
                                         <span>${views.fund['Transfer.recoveryMoney.recoveryMoney']}</span>

@@ -74,11 +74,11 @@
             <c:set value="gray" var="_style"></c:set>
             <c:choose>
                 <c:when test="${pt.fundType eq 'transfer_into'}">
-                    <c:set value="${gbFn:getApiName(pt._describe['API'].toString())} ${dicts.common.transaction_type[pt.transactionType]}${views.fund['FundRecord.record.to']} ${views.fund['FundRecord.record.wallet']}" var="_desc"></c:set>
+                    <c:set value="${gbFn:getSiteApiName(pt._describe['API'].toString())} ${dicts.common.transaction_type[pt.transactionType]}${views.fund['FundRecord.record.to']} ${views.fund['FundRecord.record.wallet']}" var="_desc"></c:set>
                     <%--转入--%>
                 </c:when>
                 <c:when test="${pt.fundType eq 'transfer_out'}">
-                    <c:set value="${views.fund['FundRecord.record.wallet']} ${dicts.common.transaction_type[pt.transactionType]}${views.fund['FundRecord.record.to']} ${gbFn:getApiName(pt._describe['API'].toString())}" var="_desc"></c:set>
+                    <c:set value="${views.fund['FundRecord.record.wallet']} ${dicts.common.transaction_type[pt.transactionType]}${views.fund['FundRecord.record.to']} ${gbFn:getSiteApiName(pt._describe['API'].toString())}" var="_desc"></c:set>
                     <%--转出--%>
                 </c:when>
             </c:choose>

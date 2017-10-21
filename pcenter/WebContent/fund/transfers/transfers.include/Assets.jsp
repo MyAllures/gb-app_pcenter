@@ -97,7 +97,7 @@
                     <i class="arr-down" style="display: none" name="${i.apiId}down"></i>
                     <i class="arr-up" style="display: none" name="${i.apiId}up"></i>
                     <span class="title">
-                         <a> ${gbFn:getApiName(i.apiId.toString())}</a>
+                         <a> ${gbFn:getSiteApiName(i.apiId.toString())}</a>
                     </span>
                     <c:choose>
                         <c:when test="${apis[i.apiId.toString()].systemStatus eq 'disable'||siteApis[i.apiId.toString()].systemStatus eq 'disable'}">

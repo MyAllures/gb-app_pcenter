@@ -23,11 +23,11 @@
             </tr>
             <tr>
                 <td height="34" class="datailname bold">${views.bet['History.view.apiProvide']}：</td>
-                <td class="arial">${gbFn:getApiName(command.gameRecordDetail['api'])}</td>
+                <td class="arial">${gbFn:getSiteApiName(command.gameRecordDetail['api'])}</td>
             </tr>
             <tr>
                 <td class="datailname bold">${views.bet['History.view.gametype']}：</td>
-                <td class="arial">${gbFn:getApiName(command.gameRecordDetail['api'])}
+                <td class="arial">${gbFn:getSiteApiName(command.gameRecordDetail['api'])}
                     <c:if test="${command.gameRecordDetail['gametype'] ne ''}">>>${gbFn:getGameTypeName(command.gameRecordDetail['gametype'])}</td></c:if>
             </tr>
             <tr>

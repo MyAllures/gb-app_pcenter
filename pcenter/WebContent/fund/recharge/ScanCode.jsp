@@ -44,20 +44,20 @@
                             <c:if test="${i.key=='wechatpay'}">
                                 <span class="radio">
                                     <input name="result.rechargeType" value="${'wechatpay_scan'}" type="radio" ${vs.index==0?'checked':''}>
-                                    <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
+                                    <%--<a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>--%>
                                 </span>
 
                             </c:if>
                             <c:if test="${i.key=='alipay'}">
                                 <span class="radio">
                                     <input name="result.rechargeType" value="${'alipay_scan'}" type="radio" ${vs.index==0?'checked':''}>
-                                    <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
+                                    <%--<a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>--%>
                                 </span>
                             </c:if>
                             <c:if test="${i.key=='qqwallet'}">
                                 <span class="radio">
                                     <input name="result.rechargeType" value="${'qqwallet_scan'}" type="radio" ${vs.index==0?'checked':''}>
-                                    <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
+                                    <%--<a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>--%>
                                 </span>
                             </c:if>
                             <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-third ${i.key}"></i></span>

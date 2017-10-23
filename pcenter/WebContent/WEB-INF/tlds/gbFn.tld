@@ -19,7 +19,7 @@
             * @return
             */
         </description>
-        <name>getApiName</name>
+        <name>getSiteApiName</name>
         <function-class>so.wwb.gamebox.model.CacheBase</function-class>
         <function-signature>java.lang.String getSiteApiName(java.lang.String)</function-signature>
     </function>

@@ -88,12 +88,13 @@ public class DigiccyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/exchange")
     @ResponseBody
-    public Map<String, Object> exchange(String currency) {
+    public Map<String, Object> exchange(String currency,Double bitAmount) {
         UserDigiccyVo userDigiccyVo = new UserDigiccyVo();
         userDigiccyVo.setSysUser(SessionManager.getUser());
         userDigiccyVo.getSearch().setCurrency(currency);
         userDigiccyVo.getSearch().setUserId(SessionManager.getUserId());
         PlayerRechargeVo playerRechargeVo = new PlayerRechargeVo();
+        playerRechargeVo.getSearch().setBitAmount(bitAmount);
         try {
             playerRechargeVo = ServiceTool.playerRechargeService().digiccyExchange(playerRechargeVo, userDigiccyVo);
         } catch (Exception e) {

@@ -74,7 +74,7 @@ public class UpdatePasswordController {
         //有错误直接返回
         if (result.hasErrors()) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.PRIVILEGE, "password.update.failed")));
+            map.put("msg",  LocaleTool.tranMessage(Module.PRIVILEGE, "password.update.failed"));
             return map;
         }
 
@@ -82,7 +82,7 @@ public class UpdatePasswordController {
         String newPwd = AuthTool.md5SysUserPassword(updatePasswordVo.getNewPassword(), SessionManager.getUserName());
         if (newPwd.equals(SessionManager.getUser().getPassword())) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.PRIVILEGE, "password.update.same")));
+            map.put("msg",  LocaleTool.tranMessage(Module.PRIVILEGE, "password.update.same"));
             return map;
         }
 
@@ -115,10 +115,10 @@ public class UpdatePasswordController {
         map.put("state", success);
         if (success) {
             SessionManager.refreshUser();
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.PRIVILEGE, "password.update.success")));
+            map.put("msg",  LocaleTool.tranMessage(Module.PRIVILEGE, "password.update.success"));
             map.put("stateCode", PrivilegeStatusEnum.CODE_100.getCode());
         } else {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.PRIVILEGE, "password.update.failed")));
+            map.put("msg",  LocaleTool.tranMessage(Module.PRIVILEGE, "password.update.failed"));
         }
         return map;
     }

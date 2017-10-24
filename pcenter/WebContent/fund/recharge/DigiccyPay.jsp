@@ -24,7 +24,6 @@
                         <em>${views.fund_auto['余额']}:</em>
                         <i class="orange"><fmt:formatNumber value="${empty i.amount?0:i.amount}" pattern="#.########"/></i>
                         <soul:button target="refresh" text="" opType="function" cssClass="ico-ask refresh" currency="${i.currency}"/>
-                        <input type="text" class="input" currency="${i.currency}" name="bitAmount" value=""/>
                         <soul:button target="exchange" currency="${i.currency}" text="${views.fund_auto['兑换金额']}" opType="function" cssClass="btn btn-filter btn-outline btn-lg ${i.amount>0?'':'hidebtn'}"/>
                     </span>
                 </div>

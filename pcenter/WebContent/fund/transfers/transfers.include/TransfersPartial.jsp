@@ -11,13 +11,13 @@
             <c:forEach items="${apiList}" var="i">
                 <c:choose>
                     <c:when test="${i.systemStatus eq 'maintain'||siteApis[i.id.toString()].systemStatus eq 'maintain'}">
-                        <option disabled name="maintain" style="background: #E8ECEF">${gbFn:getApiName(i.id.toString())}${views.fund['fund.transfer.api.maintain']}</option>
+                        <option disabled name="maintain" style="background: #E8ECEF">${gbFn:getSiteApiName(i.id.toString())}${views.fund['fund.transfer.api.maintain']}</option>
                     </c:when>
                     <c:when test="${i.transferable==false}">
-                        <option disabled style="background: #E8ECEF">${gbFn:getApiName(i.id.toString())}${views.fund['transfer.api.maintain.transferable']}</option>
+                        <option disabled style="background: #E8ECEF">${gbFn:getSiteApiName(i.id.toString())}${views.fund['transfer.api.maintain.transferable']}</option>
                     </c:when>
                     <c:otherwise>
-                        <option value="${i.id}">${gbFn:getApiName(i.id.toString())}</option>
+                        <option value="${i.id}">${gbFn:getSiteApiName(i.id.toString())}</option>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>
@@ -31,13 +31,13 @@
             <c:forEach items="${apiList}" var="i">
                 <c:choose>
                     <c:when test="${i.systemStatus eq 'maintain'||siteApis[i.id.toString()].systemStatus eq 'maintain'}">
-                        <option disabled name="maintain">${gbFn:getApiName(i.id.toString())}${views.fund['fund.transfer.api.maintain']}</option>
+                        <option disabled name="maintain">${gbFn:getSiteApiName(i.id.toString())}${views.fund['fund.transfer.api.maintain']}</option>
                     </c:when>
                     <c:when test="${i.transferable==false}">
-                        <option disabled style="background: #E8ECEF">${gbFn:getApiName(i.id.toString())}${views.fund['transfer.api.maintain.transferable']}</option>
+                        <option disabled style="background: #E8ECEF">${gbFn:getSiteApiName(i.id.toString())}${views.fund['transfer.api.maintain.transferable']}</option>
                     </c:when>
                     <c:otherwise>
-                        <option value="${i.id}">${gbFn:getApiName(i.id.toString())}</option>
+                        <option value="${i.id}">${gbFn:getSiteApiName(i.id.toString())}</option>
                     </c:otherwise>
                 </c:choose>
             </c:forEach>

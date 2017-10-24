@@ -25,7 +25,7 @@
                     <td><span class="orange">${pt.transactionMoney}</span></td>
                     <c:choose>
                         <c:when test="${pt.fundType eq 'transfer_into'}">
-                            <td>${gbFn:getApiName(pt._describe['API'].toString())}</td>
+                            <td>${gbFn:getSiteApiName(pt._describe['API'].toString())}</td>
                             <td>
                                     ${views.fund['FundRecord.record.playerWallet']}
                             </td>
@@ -35,7 +35,7 @@
                             <td>
                                     ${views.fund['FundRecord.record.playerWallet']}
                             </td>
-                            <td>${gbFn:getApiName(pt._describe['API'].toString())}</td>
+                            <td>${gbFn:getSiteApiName(pt._describe['API'].toString())}</td>
                             <%--转出--%>
                         </c:when>
                     </c:choose>

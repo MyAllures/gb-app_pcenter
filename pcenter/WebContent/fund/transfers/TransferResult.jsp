@@ -21,7 +21,7 @@
                             ${views.fund['Transfer.transferResult.yourWallet']}
                         </c:if>
                         <c:if test="${transferOut!='wallet'}">
-                            ${gbFn:getApiName(transferOut)}
+                            ${gbFn:getSiteApiName(transferOut)}
                         </c:if>
                     </p>
                     <p>${views.fund['Transfer.transfer.transferFailContent']}</p>

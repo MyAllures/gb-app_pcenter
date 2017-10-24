@@ -9,7 +9,7 @@
       <th width="19%">${views.bet['History.list.createTime']}</th>
       <th width="15%">
         <select callback="query" class="selectwidth" name="search.gameId" style="width: 150px">
-          <option value="">${gbFn:getApiName(command.search.apiId.toString())}</option>
+          <option value="">${gbFn:getSiteApiName(command.search.apiId.toString())}</option>
           <c:forEach items="${command.idList}" var="i">
             <option <c:if test="${command.search.gameId eq i.toString() }">selected="selected"</c:if> value="${i}">${gbFn:getGameName(i.toString())}</option>
           </c:forEach>
@@ -33,7 +33,7 @@
                 ${soulFn:formatDateTz(entry["bet_time"], DateFormat.DAY_SECOND,timeZone)}
             </td>
             <td class="gamegray">
-                ${gbFn:getApiName(entry["api_id"].toString())}
+                ${gbFn:getSiteApiName(entry["api_id"].toString())}
               <br/>
                 ${gbFn:getGameName(entry["game_id"].toString())}
             </td>

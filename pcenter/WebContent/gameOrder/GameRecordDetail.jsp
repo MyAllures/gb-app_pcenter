@@ -36,12 +36,12 @@
             </tr>
             <tr>
                 <td height="34" class="datailname bold">${views.bet['History.view.apiProvide']}：</td>
-                <td class="arial">${gbFn:getApiName(result.apiId)}</td>
+                <td class="arial">${gbFn:getSiteApiName(result.apiId)}</td>
             </tr>
             <tr>
                 <td class="datailname bold">${views.bet['History.view.gametype']}：</td>
                 <td class="arial">
-                    ${gbFn:getApiName(result.apiId)}
+                    ${gbFn:getSiteApiName(result.apiId)}
                     <c:if test="${!empty gbFn:getGameTypeName(result.gameType)}">
                         >>${gbFn:getGameTypeName(result.gameType)}
                     </c:if>

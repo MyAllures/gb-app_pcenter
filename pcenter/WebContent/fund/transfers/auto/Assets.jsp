@@ -66,7 +66,7 @@
                         <i class="api-logo-${i.apiId}"></i>
                     </p>
                     <p class="game-right">
-                        <span class="title">${gbFn:getApiName(i.apiId.toString())}</span>
+                        <span class="title">${gbFn:getSiteApiName(i.apiId.toString())}</span>
                         <c:set var="apiStatus" value="${apis[i.apiId.toString()].systemStatus}"/>
                         <c:set var="siteApiStatus" value="${siteApis[i.apiId.toString()].systemStatus}"/>
                         <c:set var="money" value="${empty i.money?0:i.money}"/>

@@ -357,6 +357,10 @@ public class PlayerTransferController {
         //api转账功能关闭
         if (api.getTransferable() == null || !api.getTransferable())
             return getErrorMessage(TransferResultStatusEnum.API_TRANSFER_SWITCH_COLSE.getCode(), playerTransferVo.getResult().getApiId());
+        //试玩模式下不支持转账
+        if(SessionManager.getDemoModelEnum()!=null){
+            return getErrorMessage(TransferResultStatusEnum.TRANSFER_DEMO_UNSUPPORTED.getCode(), playerTransferVo.getResult().getApiId());
+        }
         return null;
     }
 

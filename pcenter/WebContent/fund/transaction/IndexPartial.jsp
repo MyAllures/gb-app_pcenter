@@ -98,11 +98,11 @@
                     <c:choose>
                         <c:when test="${pt.fundType eq 'transfer_into'}">
                             <c:set value="+" var="_symbol"></c:set>
-                            <c:set value="${gbFn:getApiName(pt._describe['API'].toString())}${views.fund_auto['转入']}${views.fund['FundRecord.record.to']} ${views.fund['FundRecord.record.wallet']}" var="_desc"></c:set>
+                            <c:set value="${gbFn:getSiteApiName(pt._describe['API'].toString())}${views.fund_auto['转入']}${views.fund['FundRecord.record.to']} ${views.fund['FundRecord.record.wallet']}" var="_desc"></c:set>
                             <%--转入--%>
                         </c:when>
                         <c:when test="${pt.fundType eq 'transfer_out'}">
-                            <c:set value="${views.fund['FundRecord.record.wallet']}${views.fund_auto['转出']}${views.fund['FundRecord.record.to']} ${gbFn:getApiName(pt._describe['API'].toString())}" var="_desc"></c:set>
+                            <c:set value="${views.fund['FundRecord.record.wallet']}${views.fund_auto['转出']}${views.fund['FundRecord.record.to']} ${gbFn:getSiteApiName(pt._describe['API'].toString())}" var="_desc"></c:set>
                             <%--转出--%>
                         </c:when>
                     </c:choose>

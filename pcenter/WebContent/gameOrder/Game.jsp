@@ -17,7 +17,7 @@
             <soul:button target="checkAll" text="${views.common_report['全选']}" opType="function" tag="button" cssClass="btn btn-filter btn-xs"/>
             <soul:button target="clearAll" text="${views.gameOrder_auto['清空']}" opType="function" tag="button" cssClass="btn btn-outline btn-filter btn-xs m-l-xs m-r"/>
             <c:forEach items="${gameTypes}" var="i">
-                <soul:button target="choseApi" text="${gbFn:getApiName(i.key.toString())}" cssClass="btn btn-outline btn-filter btn-xs" opType="function" data="${i.key}"/>
+                <soul:button target="choseApi" text="${gbFn:getSiteApiName(i.key.toString())}" cssClass="btn btn-outline btn-filter btn-xs" opType="function" data="${i.key}"/>
             </c:forEach>
             <span class="dividing-line m-r-xs m-l-xs">|</span>
             <c:forEach items="${apiTypes}" var="i">
@@ -33,7 +33,7 @@
                                 <label>
                                     <input type="checkbox" name="api" class="i-checks" api="${i.key}" value="${i.key}">
                                     <span class="m-l-xs">
-                                        <b>${gbFn:getApiName(i.key.toString())}</b>
+                                        <b>${gbFn:getSiteApiName(i.key.toString())}</b>
                                     </span>
                                 </label>
                             </td>
@@ -41,7 +41,7 @@
                                 <c:forEach items="${i.value}" var="j">
                                     <c:set var="gameType" value="${j.key}"/>
                                     <label class="fwn m-r-sm">
-                                        <input type="checkbox" name="gameType" class="i-checks" api="${i.key}" apiname="${gbFn:getApiName(i.key.toString())}" data="${j.value}" typename="${gbFn:getGameTypeName(gameType)}" value="${gameType}"/>
+                                        <input type="checkbox" name="gameType" class="i-checks" api="${i.key}" apiname="${gbFn:getSiteApiName(i.key.toString())}" data="${j.value}" typename="${gbFn:getGameTypeName(gameType)}" value="${gameType}"/>
                                         <span class="m-l-xs">${dicts.game.game_type[gameType]}</span>
                                     </label>
                                 </c:forEach>

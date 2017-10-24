@@ -12,14 +12,14 @@
                 <select callback="query" class="selectwidth" name="search.apiId"  prompt="${views.player_auto['选择游戏']}">
                     <option value="">${views.column['game.order.all.api']}</option>
                     <c:forEach items="${command.idList}" var="i">
-                        <option <c:if test="${command.search.apiId eq i.toString() }"> selected="selected"</c:if> value="${i}">${gbFn:getApiName(i.toString())}</option>
+                        <option <c:if test="${command.search.apiId eq i.toString() }"> selected="selected"</c:if> value="${i}">${gbFn:getSiteApiName(i.toString())}</option>
                     </c:forEach>
                 </select>
             </c:if>
             <%-- 二级分类列表 --%>
             <c:if test="${!empty command.search.logType }">
                 <select callback="query" class="selectwidth" name="search.gameType" prompt="${views.player_auto['选择游戏']}">
-                    <option value="">${gbFn:getApiName(command.search.apiId.toString())}</option>
+                    <option value="">${gbFn:getSiteApiName(command.search.apiId.toString())}</option>
                     <c:forEach items="${command.apiSubGameClassfiedStatistics}" var="entry">
                         <option <c:if test="${command.search.apiId eq i.toString() }">selected="selected"</c:if> value="${entry['game_type']}">${gbFn:getGameTypeName(entry['game_type'])}</option>
                     </c:forEach>
@@ -44,7 +44,7 @@
               <c:forEach items="${command.gameOrderClassfiedStatistics}" var="entry" varStatus="status">
                   <tr>
                       <td class="blue">
-                          <soul:button target="queryLogOfApiGameType" apiid="${entry['api_id']}" gametype="${entry['game_type']}" text="${gbFn:getApiName(entry['api_id'].toString())}" opType="function"/>
+                          <soul:button target="queryLogOfApiGameType" apiid="${entry['api_id']}" gametype="${entry['game_type']}" text="${gbFn:getSiteApiName(entry['api_id'].toString())}" opType="function"/>
                       </td>
                       <td class="blue">
                           <b><soul:button target="queryByApi" apiid="${entry['api_id']}"  text="${soulFn:formatNumber(entry['bs'])}" opType="function"/></b>

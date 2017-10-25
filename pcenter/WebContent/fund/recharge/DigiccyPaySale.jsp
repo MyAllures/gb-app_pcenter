@@ -10,7 +10,7 @@
 </head>
 <body>
 <c:set var="success" value="<%=RechargeStatusEnum.ONLINE_SUCCESS.getCode()%>"/>
-<form>
+<form name="digiccyPaySaleForm">
     <div class="modal-body">
         <div class="form-group clearfix line-hi34 m-t-sm">
             <c:if test="${playerRecharge.rechargeStatus eq success}">
@@ -42,10 +42,10 @@
     </div>
     <div class="modal-footer">
         <soul:button target="closePage" text="${views.fund_auto['取消']}" opType="function" cssClass="btn btn-gray" tag="button"/>
-        <soul:button target="${root}/fund/recharge/digiccy/saveSale.html" text="${views.fund_auto['确认']}" callback="saveCallbak" opType="ajax" tag="button" cssClass="btn btn-filter" post="getCurrentFormData"/>
+        <soul:button target="applySale" text="${views.fund_auto['确认']}" callback="saveCallbak" opType="function" tag="button" cssClass="btn btn-filter" post="getCurrentFormData"/>
     </div>
 </form>
 </body>
 <%@ include file="/include/include.js.jsp" %>
-<soul:import type="edit"/>
+<soul:import res="site/fund/recharge/DigiccyPaySale"/>
 </html>

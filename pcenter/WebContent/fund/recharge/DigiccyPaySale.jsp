@@ -41,7 +41,6 @@
 
     </div>
     <div class="modal-footer">
-        <soul:button target="closePage" text="${views.fund_auto['取消']}" opType="function" cssClass="btn btn-gray" tag="button"/>
         <soul:button target="applySale" text="${views.fund_auto['确认']}" callback="saveCallbak" opType="function" tag="button" cssClass="btn btn-filter" post="getCurrentFormData"/>
     </div>
 </form>

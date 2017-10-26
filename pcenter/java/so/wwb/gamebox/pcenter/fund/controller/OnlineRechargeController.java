@@ -119,11 +119,11 @@ public class OnlineRechargeController extends RechargeBaseController {
     public String scanCode(Model model, String realNameDialog) {
         PlayerRank rank = getRank();
         //微信支付收款账号
-        PayAccount weChatPayAccount = getWeChatAlipay(rank, PayAccountAccountType.WECHAT.getCode());
+        PayAccount weChatPayAccount = getWeChatAlipay(rank, PayAccountAccountType.WECHAT.getCode(), RechargeTypeEnum.WECHATPAY_SCAN.getCode());
         //支付宝收款账号
-        PayAccount alipayPayAccount = getWeChatAlipay(rank, PayAccountAccountType.ALIPAY.getCode());
+        PayAccount alipayPayAccount = getWeChatAlipay(rank, PayAccountAccountType.ALIPAY.getCode(), RechargeTypeEnum.ALIPAY_SCAN.getCode());
         //QQ钱包收款账号
-        PayAccount qqWalletPayAccount = getWeChatAlipay(rank, PayAccountAccountType.QQWALLET.getCode());
+        PayAccount qqWalletPayAccount = getWeChatAlipay(rank, PayAccountAccountType.QQWALLET.getCode(), RechargeTypeEnum.QQWALLET_SCAN.getCode());
         Map<String, PayAccount> payAccountMap = new HashMap<>(3, 1f);
         if (weChatPayAccount != null) {
             payAccountMap.put(WECHATPAY, weChatPayAccount);
@@ -476,7 +476,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         }
         List<String> channels = (List<String>) CollectionTool.intersection(currencyChannels, bankChannels);
         payAccounts = CollectionQueryTool.inQuery(payAccounts, PayAccount.PROP_BANK_CODE, channels);
-        return getPayAccountBySort(rank, payAccounts);
+        return getPayAccountBySort(rank, payAccounts, RechargeTypeEnum.ONLINE_DEPOSIT.getCode());
     }
 
     /**
@@ -489,11 +489,11 @@ public class OnlineRechargeController extends RechargeBaseController {
     private PayAccount getScanCodePayAccount(PlayerRank rank, String rechargeType) {
         PayAccount payAccount = null;
         if (RechargeTypeEnum.ALIPAY_SCAN.getCode().equals(rechargeType)) {
-            payAccount = getWeChatAlipay(rank, PayAccountAccountType.ALIPAY.getCode());
+            payAccount = getWeChatAlipay(rank, PayAccountAccountType.ALIPAY.getCode(), rechargeType);
         } else if (RechargeTypeEnum.WECHATPAY_SCAN.getCode().equals(rechargeType)) {
-            payAccount = getWeChatAlipay(rank, PayAccountAccountType.WECHAT.getCode());
+            payAccount = getWeChatAlipay(rank, PayAccountAccountType.WECHAT.getCode(), rechargeType);
         } else if (RechargeTypeEnum.QQWALLET_SCAN.getCode().equals(rechargeType)) {
-            payAccount = getWeChatAlipay(rank, PayAccountAccountType.QQWALLET.getCode());
+            payAccount = getWeChatAlipay(rank, PayAccountAccountType.QQWALLET.getCode(), rechargeType);
         }
         return payAccount;
     }
@@ -543,7 +543,7 @@ public class OnlineRechargeController extends RechargeBaseController {
                 continue;
             }
             accounts = CollectionQueryTool.inQuery(payAccounts, PayAccount.PROP_BANK_CODE, channels);
-            payAccount = getPayAccountBySort(rank, accounts);
+            payAccount = getPayAccountBySort(rank, accounts, RechargeTypeEnum.ONLINE_DEPOSIT.getCode());
             if (payAccount != null) {
                 payAccountMap.put(bank.getBankName(), payAccount);
             }
@@ -558,10 +558,12 @@ public class OnlineRechargeController extends RechargeBaseController {
      * @param accounts
      * @return
      */
-    private PayAccount getPayAccountBySort(PlayerRank rank, List<PayAccount> accounts) {
+    private PayAccount getPayAccountBySort(PlayerRank rank, List<PayAccount> accounts, String rechargeType) {
         if (CollectionTool.isNotEmpty(accounts)) {
             //轮流打开，根据最后一条线上支付存款记录确认收款账号
             if (rank.getIsTakeTurns() == null || rank.getIsTakeTurns()) {
+                PlayerRechargeVo playerRechargeVo = new PlayerRechargeVo();
+                playerRechargeVo.getSearch().setRechargeType(rechargeType);
                 Integer payAccountId = playerRechargeService().searchLastPayAccountId(new PlayerRechargeVo());
                 if (payAccountId == null) {
                     return accounts.get(0);
@@ -589,9 +591,9 @@ public class OnlineRechargeController extends RechargeBaseController {
      * @param accountType
      * @return
      */
-    private PayAccount getWeChatAlipay(PlayerRank rank, String accountType) {
+    private PayAccount getWeChatAlipay(PlayerRank rank, String accountType, String rechargeType) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), accountType, TerminalEnum.PC.getCode());
-        return getPayAccountBySort(rank, payAccounts);
+        return getPayAccountBySort(rank, payAccounts, rechargeType);
     }
 
     /**

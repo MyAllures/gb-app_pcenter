@@ -39,6 +39,7 @@
                         <c:forEach items="${payAccountMap}" var="i" varStatus="vs">
                             <c:if test="${vs.index==0}">
                                 <c:set var="onlinePayMax" value="${i.value.singleDepositMax}"/>
+                                <input type="hidden" id="randomAmount" value="${i.value.randomAmount}"/>
                                 <c:choose>
                                     <c:when test="${empty i.value.singleDepositMin}">
                                         <c:set var="onlinePayMin" value='1.00'/>
@@ -88,6 +89,14 @@
                         <div class="controls">
                             <input type="text" class="input" name="result.rechargeAmount" id="result.rechargeAmount" autocomplete="off">
                             <span class="fee"></span>
+                        </div>
+                    </div>
+                    <!--随机额度提示-->
+                    <div class=" control-group" id="randomAmountMsg">
+                        <label class="control-label"></label>
+                        <div class="controls">
+                            <i class="mark plaintsmall"></i>
+                            <input style="width: 200px;" type="randomAmountMsg"  name="randomAmountMsg" value="当前支付方式已开启随机额度！" disabled/>
                         </div>
                     </div>
                     <%@include file="sale.jsp"%>

@@ -44,20 +44,20 @@
                             <c:if test="${i.key=='wechatpay'}">
                                 <span class="radio">
                                     <input name="result.rechargeType" value="${'wechatpay_scan'}" type="radio" ${vs.index==0?'checked':''}>
-                                    <%--<a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>--%>
+                                    <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
                                 </span>
 
                             </c:if>
                             <c:if test="${i.key=='alipay'}">
                                 <span class="radio">
                                     <input name="result.rechargeType" value="${'alipay_scan'}" type="radio" ${vs.index==0?'checked':''}>
-                                    <%--<a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>--%>
+                                    <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
                                 </span>
                             </c:if>
                             <c:if test="${i.key=='qqwallet'}">
                                 <span class="radio">
                                     <input name="result.rechargeType" value="${'qqwallet_scan'}" type="radio" ${vs.index==0?'checked':''}>
-                                    <%--<a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>--%>
+                                    <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
                                 </span>
                             </c:if>
                             <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-third ${i.key}"></i></span>
@@ -84,6 +84,14 @@
                 <div class="controls">
                     <input type="text" class="input" name="result.rechargeAmount" id="result.rechargeAmount" autocomplete="off"/>
                     <span class="fee"></span>
+                </div>
+            </div>
+            <!--随机额度提示-->
+            <div class=" control-group" id="randomAmountMsg">
+                <label class="control-label"></label>
+                <div class="controls">
+                    <i class="mark plaintsmall"></i>
+                    <input style="width: 200px;" type="randomAmountMsg"  name="randomAmountMsg" value="当前支付方式已开启随机额度！" disabled/>
                 </div>
             </div>
             <!--优惠-->

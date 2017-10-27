@@ -34,7 +34,6 @@ import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.sys.po.VSysSiteDomain;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
-import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
 import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
 import so.wwb.gamebox.model.master.enums.DepositWayEnum;
@@ -214,13 +213,15 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         PlayerRank rank = getRank();
         PayAccount payAccount = getOnlinePayAccount(rank, playerRecharge.getPayerBank());
-        boolean randomAmount = payAccount.getRandomAmount();
-        if (randomAmount){
-            Double rechargeAmount = playerRecharge.getRechargeAmount();
-            if (rechargeAmount.intValue() == rechargeAmount){
-                double random = Double.parseDouble(RandomStringTool.random(2,11,99,false,true))*0.01;
-                rechargeAmount+= random;
-                playerRecharge.setRechargeAmount(rechargeAmount);
+        if (payAccount.getRandomAmount()!=null) {
+            boolean randomAmount = payAccount.getRandomAmount();
+            if (randomAmount) {
+                Double rechargeAmount = playerRecharge.getRechargeAmount();
+                if (rechargeAmount.intValue() == rechargeAmount) {
+                    double random = Double.parseDouble(RandomStringTool.random(2, 11, 99, false, true)) * 0.01;
+                    rechargeAmount += random;
+                    playerRecharge.setRechargeAmount(rechargeAmount);
+                }
             }
         }
         playerRecharge.setRechargeType(RechargeTypeEnum.ONLINE_DEPOSIT.getCode());
@@ -250,13 +251,15 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         PlayerRank rank = getRank();
         PayAccount payAccount = getScanCodePayAccount(rank, playerRecharge.getRechargeType());
-        boolean randomAmount = payAccount.getRandomAmount();
-        if (randomAmount){
-            Double rechargeAmount = playerRecharge.getRechargeAmount();
-            if (rechargeAmount.intValue() == rechargeAmount){
-                double random = Double.parseDouble(RandomStringTool.random(2,11,99,false,true))*0.01;
-                rechargeAmount+= random;
-                playerRecharge.setRechargeAmount(rechargeAmount);
+        if (payAccount.getRandomAmount()!=null) {
+            boolean randomAmount = payAccount.getRandomAmount();
+            if (randomAmount) {
+                Double rechargeAmount = playerRecharge.getRechargeAmount();
+                if (rechargeAmount.intValue() == rechargeAmount) {
+                    double random = Double.parseDouble(RandomStringTool.random(2, 11, 99, false, true)) * 0.01;
+                    rechargeAmount += random;
+                    playerRecharge.setRechargeAmount(rechargeAmount);
+                }
             }
         }
         return commonSubmit(playerRechargeVo, payAccount);

@@ -196,11 +196,11 @@
                         <div class="hintbank">
                             <c:if test="${i.value.bankName=='bitcoin'}">
                                 <i class="pay-third ${i.value.bankName}"></i>
-                                ${soulFn:overlayString(i.value.bankcardNumber)}
+                                ${i.value.bankcardNumber}
                             </c:if>
                             <c:if test="${i.value.bankName!='bitcoin'}">
                                 <i class="pay-bank ${i.value.bankName}"></i>
-                                ${soulFn:overlayString(i.value.bankcardNumber)}
+                                ${i.value.bankcardNumber}
                                 <span>${soulFn:overlayName(i.value.bankcardMasterName)}</span>
                             </c:if>
                         </div>

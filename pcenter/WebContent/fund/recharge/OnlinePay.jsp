@@ -91,14 +91,7 @@
                             <span class="fee"></span>
                         </div>
                     </div>
-                    <!--随机额度提示-->
-                    <div class=" control-group" id="randomAmountMsg">
-                        <label class="control-label"></label>
-                        <div class="controls">
-                            <i class="mark plaintsmall"></i>
-                            <input style="width: 200px;" type="randomAmountMsg"  name="randomAmountMsg" value="当前支付方式已开启随机额度！" disabled/>
-                        </div>
-                    </div>
+
                     <%@include file="sale.jsp"%>
                     <%@include file="CaptchaCode.jsp"%>
                     <div class=" control-group">
@@ -115,8 +108,12 @@
             <div class="left-ico-message">
                 <span class="deposit-info-title">${views.fund_auto['注意事项']}<img src="${resRoot}/images/online-pay3.png"></span>
                 <ul class="attention-list">
-                    <li>${fn:replace(fn:replace(fn:replace(views.fund_auto['在线快速存储单笔限额范围'], "{0}",siteCurrency ), "{1}", onlinePayMin),"{2}" , empty onlinePayMax?'99,999,999.00':soulFn:formatCurrency(onlinePayMax))}
+                    <li>1.${fn:replace(fn:replace(fn:replace(views.fund_auto['在线快速存储单笔限额范围'], "{0}",siteCurrency ), "{1}", onlinePayMin),"{2}" , empty onlinePayMax?'99,999,999.00':soulFn:formatCurrency(onlinePayMax))}
                     </li>
+                    <!--随机额度提示-->
+                    <div name="randomAmountMsg">
+                    <li>2.${views.fund_auto['随机额度提示信息']}</li>
+                    </div>
                 </ul>
             </div>
         </div>

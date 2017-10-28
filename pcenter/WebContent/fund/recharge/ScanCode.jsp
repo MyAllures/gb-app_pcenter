@@ -86,14 +86,7 @@
                     <span class="fee"></span>
                 </div>
             </div>
-            <!--随机额度提示-->
-            <div class=" control-group" id="randomAmountMsg">
-                <label class="control-label"></label>
-                <div class="controls">
-                    <i class="mark plaintsmall"></i>
-                    <input style="width: 200px;" type="randomAmountMsg"  name="randomAmountMsg" value="当前支付方式已开启随机额度！" disabled/>
-                </div>
-            </div>
+
             <!--优惠-->
             <%@include file="sale.jsp"%>
             <c:set var="rechargeCount" value="<%=SessionManager.getRechargeCount()%>"/>
@@ -120,6 +113,10 @@
             <ul class="attention-list">
                 <li>${views.fund_auto['请正确填写金额']}</li>
                 <li>${fn:replace(fn:replace(fn:replace(views.fund_auto['存款限额范围'], "{0}",siteCurrency ), "{1}", empty onlinePayMin || onlinePayMin == '0'?'0.01':soulFn:formatInteger(onlinePayMin).concat(soulFn:formatDecimals(onlinePayMin))),"{2}" , empty onlinePayMax?'99,999,999':soulFn:formatInteger(onlinePayMax).concat(soulFn:formatDecimals(onlinePayMax)))}</li>
+                <!--随机额度提示-->
+                <div name="randomAmountMsg">
+                <li>${views.fund_auto['扫码随机额度提示']}</li>
+                </div>
             </ul>
             <div>
             </div>

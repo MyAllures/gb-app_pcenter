@@ -1,4 +1,5 @@
 <%--@elvariable id="payAccountMap" type="java.util.Map<java.lang.String,so.wwb.gamebox.model.master.content.po.PayAccount>"--%>
+<%--@elvariable id="accounts" type="java.util.List<java.lang.String,so.wwb.gamebox.model.master.content.po.PayAccount>"--%>
 <%--@elvariable id="rank" type="so.wwb.gamebox.model.master.player.po.PlayerRank"--%>
 <%--@elvariable id="playerRechargeVo" type="so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
@@ -39,14 +40,24 @@
                 <span class="deposit-info-title">${views.fund_auto['步骤1']}<img src="${resRoot}/images/online-pay1.png"></span>
                 <div class="bank-deposit">
                     <div class="bank-total">
-                        <c:forEach items="${payAccountMap}" var="i" varStatus="vs">
-                            <c:set var="bankName" value="${displayAccounts?i.value.aliasName:dicts.common.bankname[i.key]}"/>
-                            <label class="bank ${vs.index==0?'select':''}">
-                                <span class="radio"><input name="result.payAccountId" value="${i.value.id}" type="radio" ${vs.index==0?'checked':''}></span>
-                                <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-bank ${i.key}"></i></span>
-                                <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
-                            </label>
-                        </c:forEach>
+                        <c:if test="${!displayAccounts}">
+                            <c:forEach items="${payAccountMap}" var="i" varStatus="vs">
+                                <label class="bank ${vs.index==0?'select':''}">
+                                    <span class="radio"><input name="result.payAccountId" value="${i.value.id}" type="radio" ${vs.index==0?'checked':''}></span>
+                                    <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-bank ${i.key}"></i></span>
+                                    <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
+                                </label>
+                            </c:forEach>
+                        </c:if>
+                        <c:if test="${displayAccounts}">
+                            <c:forEach items="${accounts}" var="i" varStatus="vs">
+                                <label class="bank ${vs.index==0?'select':''}">
+                                    <span class="radio"><input name="result.payAccountId" value="${i.value.id}" type="radio" ${vs.index==0?'checked':''}></span>
+                                    <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-bank ${i.key}"></i></span>
+                                    <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
+                                </label>
+                            </c:forEach>
+                        </c:if>
                     </div>
                     <div class="clear"></div>
                 </div>

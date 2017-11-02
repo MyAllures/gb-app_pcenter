@@ -8,6 +8,7 @@
 <form>
     <input type="hidden" name="result.payAccountId" value="${playerRechargeVo.result.payAccountId}"/>
     <input type="hidden" name="result.rechargeAmount" value="${playerRechargeVo.result.rechargeAmount}"/>
+    <input type="hidden" name="result.payerName" value="${playerRechargeVo.result.payerName}"/>
     <input type="hidden" name="activityId" value="${playerRechargeVo.activityId}"/>
     <div id="validateRule" style="display: none">${validateRule}</div>
     <div class="notice">
@@ -24,7 +25,7 @@
     <div class="account-list account-info-warp">
         <div class="left-ico-message clearfix">
             <h4>${views.fund_auto['请用存款至下方银行账户']}：</h4>
-            <span class="deposit-info-title">${views.fund_auto['步骤2']}<img src="${resRoot}/images/online-pay1.png"></span>
+            <span class="deposit-info-title">${views.fund_auto['步骤3']}<img src="${resRoot}/images/online-pay1.png"></span>
             <div class="bank-paidtotal">
                 <ul>
                     <li>
@@ -116,13 +117,7 @@
     <div class="account-list account-info-warp">
         <div class="left-ico-message">
             <h4>${views.fund_auto['完成存款申请']}</h4>
-            <span class="deposit-info-title">${views.fund_auto['步骤3']}<img src="${resRoot}/images/online-pay3.png"></span>
-            <div class="control-group">
-                <label class="control-label" for="result.payerName">${views.fund_auto['存款人姓名']}：</label>
-                <div class="controls">
-                    <input type="text" id="result.payerName" name="result.payerName" placeholder="${views.fund_auto['您转账时使用的银行卡姓名']}" class="input" style="width:270px;">
-                </div>
-            </div>
+            <span class="deposit-info-title">${views.fund_auto['步骤4']}<img src="${resRoot}/images/online-pay3.png"></span>
             <ul class="attention-list">
                 <li class="red">1、${views.fund_auto['存款提醒1']}</li>
                 <li>2、${views.fund_auto['存款提醒2']} </li>

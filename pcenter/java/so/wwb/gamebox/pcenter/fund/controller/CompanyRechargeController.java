@@ -90,9 +90,15 @@ public class CompanyRechargeController extends RechargeBaseController {
     public String onlineBankFirst(Model model, PlayerRechargeVo playerRechargeVo) {
         //玩家可用收款账号
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode());
+        SysParam param = ParamTool.getSysParam(SiteParamEnum.CONTENT_PAY_ACCOUNT_OPEN_ACCOUNTS);
+        boolean display = param != null && "true".equals(param.getParamValue());
         //获取公司入款收款账号
-        Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
-        model.addAttribute("payAccountMap", payAccountMap);
+        if (!display) {
+            Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
+            model.addAttribute("payAccountMap", payAccountMap);
+        } else {
+            model.addAttribute("accounts", payAccounts);
+        }
         model.addAttribute("rank", getRank());
         model.addAttribute("sales", searchSales(ActivityDepositWay.COMPANY));
         model.addAttribute("currency", getCurrencySign());
@@ -100,6 +106,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         model.addAttribute("validateRule", JsRuleCreator.create(OnlineBankForm.class));
         model.addAttribute("playerRechargeVo", playerRechargeVo);
         model.addAttribute("isRealName", isRealName());
+        model.addAttribute("displayAccounts", display);
         return ONLINE_BANK_FIRST;
     }
 
@@ -460,11 +467,13 @@ public class CompanyRechargeController extends RechargeBaseController {
     private Map<String, PayAccount> getCompanyPayAccount(List<PayAccount> accounts) {
         Map<String, PayAccount> payAccountMap = new HashMap<>();
         for (PayAccount payAccount : accounts) {
-            if (payAccountMap.get(payAccount.getBankCode()) == null) {
-                payAccountMap.put(payAccount.getBankCode(), payAccount);
-            }
+            payAccountMap.put(payAccount.getBankCode(), payAccount);
         }
         return payAccountMap;
+    }
+
+    private Map<String, List<PayAccount>> getCompanyPayAccounts(List<PayAccount> accounts) {
+        return CollectionTool.groupByProperty(accounts, PayAccount.PROP_BANK_CODE, String.class);
     }
 
     /**
@@ -515,7 +524,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         //推送消息给前端
         MessageVo message = new MessageVo();
         message.setSubscribeType(CometSubscribeType.MCENTER_RECHARGE_REMINDER.getCode());
-        Map<String, Object> map = new HashMap<>(3,1f);
+        Map<String, Object> map = new HashMap<>(3, 1f);
         map.put("date", recharge.getCreateTime() == null ? new Date() : recharge.getCreateTime());
         map.put("currency", getCurrencySign());
         map.put("type", recharge.getRechargeTypeParent());

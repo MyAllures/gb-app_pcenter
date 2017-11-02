@@ -37,22 +37,36 @@
             <div class="left-ico-message">
                 <h4>${views.fund_auto['请选择银行']}</h4>
                 <span class="deposit-info-title">${views.fund_auto['步骤1']}<img src="${resRoot}/images/online-pay1.png"></span>
-                <div class="control-grouptwo">
-                    <label class="control-left">${views.fund_auto['存入银行']}：</label>
-                    <div class="controls">
-                        <select name="result.payAccountId" class="selectwidth">
-                            <c:forEach items="${payAccountMap}" var="i">
-                                <c:set var="isOther" value="${i.key=='other_bank'}"/>
-                                <option value="${i.value.id}" ${playerRechargeVo.result.payAccountId==i.value.id?'selected':''}>${isOther?i.value.customBankName:dicts.common.bankname[i.key]}</option>
-                            </c:forEach>
-                        </select>
+                <div class="bank-deposit">
+                    <div class="bank-total">
+                        <c:forEach items="${payAccountMap}" var="i" varStatus="vs">
+                            <c:set var="bankName" value="${displayAccounts?i.value.aliasName:dicts.common.bankname[i.key]}"/>
+                            <label class="bank ${vs.index==0?'select':''}">
+                                <span class="radio"><input name="result.payAccountId" value="${i.value.id}" type="radio" ${vs.index==0?'checked':''}></span>
+                                <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-bank ${i.key}"></i></span>
+                                <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
+                            </label>
+                        </c:forEach>
                     </div>
+                    <div class="clear"></div>
                 </div>
+            </div>
+        </div>
+        <div class="account-list account-info-warp">
+            <div class="left-ico-message">
+                <h4>请填写存款金额：</h4>
+                <span class="deposit-info-title">${views.fund_auto['步骤2']}<img src="${resRoot}/images/online-pay2.png"></span>
                 <div class="control-group">
                     <label class="control-label" for="result.rechargeAmount">${views.fund_auto['存款金额']}：</label>
                     <div class="controls">
                         <input type="text" value="${playerRechargeVo.result.rechargeAmount}" class="input" name="result.rechargeAmount" id="result.rechargeAmount" autocomplete="off">
                         <span class="fee"></span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="result.payerName">${views.fund_auto['存款人姓名']}：</label>
+                    <div class="controls">
+                        <input type="text" id="result.payerName" name="result.payerName" placeholder="${views.fund_auto['您转账时使用的银行卡姓名']}" class="input">
                     </div>
                 </div>
                 <%@include file="sale.jsp"%>

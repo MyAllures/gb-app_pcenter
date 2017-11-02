@@ -100,7 +100,7 @@ public class CompanyRechargeController extends RechargeBaseController {
             Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
             model.addAttribute("payAccountMap", payAccountMap);
         } else {
-            model.addAttribute("accounts", payAccounts);
+            model.addAttribute("accounts", getCompanyPayAccounts(payAccounts));
         }
         model.addAttribute("rank", getRank());
         model.addAttribute("sales", searchSales(ActivityDepositWay.COMPANY));
@@ -475,9 +475,9 @@ public class CompanyRechargeController extends RechargeBaseController {
         return payAccountMap;
     }
 
-    private Map<String, List<PayAccount>> getCompanyPayAccounts(List<PayAccount> accounts) {
+    private List<PayAccount> getCompanyPayAccounts(List<PayAccount> accounts) {
         Map<String, Integer> countMap = new HashMap<>();
-        Map<String,String> i18n = I18nTool.getDictMapByEnum(SessionManager.getLocale(), DictEnum.BANKNAME);
+        Map<String, String> i18n = I18nTool.getDictMapByEnum(SessionManager.getLocale(), DictEnum.BANKNAME);
         for (PayAccount payAccount : accounts) {
             if (StringTool.isBlank(payAccount.getAliasName())) {
                 if (countMap.get(payAccount.getBankCode()) == null) {
@@ -485,10 +485,10 @@ public class CompanyRechargeController extends RechargeBaseController {
                 } else {
                     countMap.put(payAccount.getBankCode(), countMap.get(payAccount.getBankCode()) + 1);
                 }
-                payAccount.setAliasName(i18n.get(payAccount.getBankCode()));
+                payAccount.setAliasName(i18n.get(payAccount.getBankCode()) + countMap.get(payAccount.getBankCode()));
             }
         }
-        return CollectionTool.groupByProperty(accounts, PayAccount.PROP_BANK_CODE, String.class);
+        return accounts;
     }
 
     /**

@@ -1,5 +1,5 @@
 <%--@elvariable id="payAccountMap" type="java.util.Map<java.lang.String,so.wwb.gamebox.model.master.content.po.PayAccount>"--%>
-<%--@elvariable id="accounts" type="java.util.List<java.lang.String,so.wwb.gamebox.model.master.content.po.PayAccount>"--%>
+<%--@elvariable id="accounts" type="java.util.List<so.wwb.gamebox.model.master.content.po.PayAccount>"--%>
 <%--@elvariable id="rank" type="so.wwb.gamebox.model.master.player.po.PlayerRank"--%>
 <%--@elvariable id="playerRechargeVo" type="so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
@@ -25,7 +25,7 @@
         </div>
         <a href="/fund/playerRecharge/recharge.html" class="btn-gray btn btn-big pull-right" nav-Target="mainFrame">${views.fund_auto['返回上一级']}</a>
     </div>
-    <c:if test="${fn:length(payAccountMap)<=0}">
+    <c:if test="${(fn:length(payAccountMap)<=0&&!displayAccounts)||(fn:length(accounts)<=0&&displayAccounts)}">
         <div class="account-list account-info-warp">
             <div class="left-ico-message">
                 <h2 class="m-bigl m-t-sm">${views.fund_auto['暂无收款账户，请选择其他存款方式！']}</h2>
@@ -33,7 +33,7 @@
             </div>
         </div>
     </c:if>
-    <c:if test="${fn:length(payAccountMap)>0}">
+    <c:if test="${(fn:length(payAccountMap)>0&&!displayAccounts)||(fn:length(accounts)>0&&displayAccounts)}">
         <div class="account-list account-info-warp">
             <div class="left-ico-message">
                 <h4>${views.fund_auto['请选择银行']}</h4>
@@ -52,10 +52,9 @@
                         <c:if test="${displayAccounts}">
                             <c:forEach items="${accounts}" var="i" varStatus="vs">
                                 <label class="bank ${vs.index==0?'select':''}">
-
                                     <span class="radio"><input name="result.payAccountId" value="${i.id}" type="radio" ${vs.index==0?'checked':''}></span>
                                     <span class="radio-bank" title="${dicts.common.bankname[i.bankCode]}"><i class="pay-bank ${i.bankCode}"></i></span>
-                                    <span class="bank-logo-name">${dicts.common.bankname[i.bankCode]}</span>
+                                    <span class="bank-logo-name">${i.aliasName}</span>
                                 </label>
                             </c:forEach>
                         </c:if>

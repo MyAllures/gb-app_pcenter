@@ -3,6 +3,8 @@ package so.wwb.gamebox.pcenter.fund.controller;
 import org.soul.commons.collections.CollectionTool;
 import org.soul.commons.currency.CurrencyTool;
 import org.soul.commons.data.json.JsonTool;
+import org.soul.commons.lang.string.I18nTool;
+import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
@@ -16,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteI18nEnum;
 import so.wwb.gamebox.model.SiteParamEnum;
@@ -473,6 +476,18 @@ public class CompanyRechargeController extends RechargeBaseController {
     }
 
     private Map<String, List<PayAccount>> getCompanyPayAccounts(List<PayAccount> accounts) {
+        Map<String, Integer> countMap = new HashMap<>();
+        Map<String,String> i18n = I18nTool.getDictMapByEnum(SessionManager.getLocale(), DictEnum.BANKNAME);
+        for (PayAccount payAccount : accounts) {
+            if (StringTool.isBlank(payAccount.getAliasName())) {
+                if (countMap.get(payAccount.getBankCode()) == null) {
+                    countMap.put(payAccount.getBankCode(), 1);
+                } else {
+                    countMap.put(payAccount.getBankCode(), countMap.get(payAccount.getBankCode()) + 1);
+                }
+                payAccount.setAliasName(i18n.get(payAccount.getBankCode()));
+            }
+        }
         return CollectionTool.groupByProperty(accounts, PayAccount.PROP_BANK_CODE, String.class);
     }
 

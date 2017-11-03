@@ -30,9 +30,11 @@ import so.wwb.gamebox.model.CacheBase;
 import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.enums.GameStatusEnum;
 import so.wwb.gamebox.model.company.setting.po.Api;
 import so.wwb.gamebox.model.company.site.po.SiteApi;
+import so.wwb.gamebox.model.enums.DemoModelEnum;
 import so.wwb.gamebox.model.gameapi.enums.ApiProviderEnum;
 import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
 import so.wwb.gamebox.model.master.fund.enums.FundTypeEnum;
@@ -358,7 +360,16 @@ public class PlayerTransferController {
         if (api.getTransferable() == null || !api.getTransferable())
             return getErrorMessage(TransferResultStatusEnum.API_TRANSFER_SWITCH_COLSE.getCode(), playerTransferVo.getResult().getApiId());
         //试玩模式下不支持转账
-        if(SessionManager.getDemoModelEnum()!=null){
+        if (SessionManagerCommon.getDemoModelEnum() != null) {
+            DemoModelEnum demoModel = SessionManagerCommon.getDemoModelEnum();
+            if (demoModel != null) {
+                //平台试玩免转不可用
+                //纯彩票试玩免转不可用
+                if (DemoModelEnum.MODEL_4_MOCK_ACCOUNT.equals(demoModel) && (apiId == Integer.valueOf(ApiProviderEnum.PL.getCode()) || apiId == Integer.valueOf(ApiProviderEnum.DWT.getCode()))) {
+                    //模拟账号且是自主体育可用
+                    return null;
+                }
+            }
             return getErrorMessage(TransferResultStatusEnum.TRANSFER_DEMO_UNSUPPORTED.getCode(), playerTransferVo.getResult().getApiId());
         }
         return null;

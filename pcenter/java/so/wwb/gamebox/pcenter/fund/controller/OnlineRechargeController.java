@@ -94,7 +94,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         //层级
         PlayerRank rank = getRank();
         //玩家可用收款账号
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), TerminalEnum.PC.getCode(),null);
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), TerminalEnum.PC.getCode(), null);
         model.addAttribute("payAccountMap", getOnlinePayAccountMap(rank, banks, payAccounts));
         model.addAttribute("username", SessionManager.getUserName());
         model.addAttribute("currency", getCurrencySign());
@@ -213,7 +213,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         PlayerRank rank = getRank();
         PayAccount payAccount = getOnlinePayAccount(rank, playerRecharge.getPayerBank());
-        if (payAccount.getRandomAmount()!=null) {
+        if (payAccount.getRandomAmount() != null) {
             boolean randomAmount = payAccount.getRandomAmount();
             if (randomAmount) {
                 Double rechargeAmount = playerRecharge.getRechargeAmount();
@@ -251,7 +251,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         PlayerRank rank = getRank();
         PayAccount payAccount = getScanCodePayAccount(rank, playerRecharge.getRechargeType());
-        if (payAccount.getRandomAmount()!=null) {
+        if (payAccount.getRandomAmount() != null) {
             boolean randomAmount = payAccount.getRandomAmount();
             if (randomAmount) {
                 Double rechargeAmount = playerRecharge.getRechargeAmount();
@@ -451,7 +451,7 @@ public class OnlineRechargeController extends RechargeBaseController {
      * @return
      */
     private PayAccount getOnlinePayAccount(PlayerRank rank, String bankCode) {
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), TerminalEnum.PC.getCode());
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), TerminalEnum.PC.getCode(), null);
         IOnlinePayService payService = ServiceTool.onlinePayService();
         //获取可用渠道货币
         Map<String, Set<String>> channelBankCode = null;

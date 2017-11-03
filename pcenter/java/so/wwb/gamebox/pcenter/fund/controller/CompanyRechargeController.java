@@ -92,7 +92,7 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("/onlineBankFirst")
     public String onlineBankFirst(Model model, PlayerRechargeVo playerRechargeVo) {
         //玩家可用收款账号
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode());
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode(), null);
         SysParam param = ParamTool.getSysParam(SiteParamEnum.CONTENT_PAY_ACCOUNT_OPEN_ACCOUNTS);
         boolean display = param != null && "true".equals(param.getParamValue());
         //获取公司入款收款账号
@@ -151,7 +151,7 @@ public class CompanyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/bitCoinFirst")
     public String bitCoinFirst(Model model) {
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode());
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
         //获取公司入款收款账号
         Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
         //调整顺序微信、支付宝、比特币、其他
@@ -175,7 +175,7 @@ public class CompanyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/electronicPayFirst")
     public String electronicPayFirst(Model model) {
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode());
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
         //获取公司入款收款账号
         Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
         //调整顺序微信、支付宝、其他
@@ -266,7 +266,7 @@ public class CompanyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/atmCounterFirst")
     public String atmCountFirst(Model model) {
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode());
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode(), true);
         Map<String, List<PayAccount>> payAccountMap = CollectionTool.groupByProperty(payAccounts, PayAccount.PROP_BANK_CODE, String.class);
         model.addAttribute("payAccountMap", payAccountMap);
         model.addAttribute("rank", getRank());

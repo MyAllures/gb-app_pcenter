@@ -21,20 +21,9 @@ import javax.validation.constraints.Pattern;
  */
 @Comment("网银支付验证")
 public class OnlineBankForm implements IForm {
-    private String result_payAccountId;
     private String result_rechargeAmount;
     private String result_payerName;
     private String $code;
-
-    @Comment("存入银行")
-    @NotBlank(message = "fund.rechargeForm.payAccountIdNotBlank")
-    public String getResult_payAccountId() {
-        return result_payAccountId;
-    }
-
-    public void setResult_payAccountId(String result_payAccountId) {
-        this.result_payAccountId = result_payAccountId;
-    }
 
     @Comment("存款金额")
     @NotBlank(message = "fund.rechargeForm.rechargeAmountNotBlank")

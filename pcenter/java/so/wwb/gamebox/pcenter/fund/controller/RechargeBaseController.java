@@ -251,7 +251,7 @@ public abstract class RechargeBaseController {
     /**
      * 查询收款账号
      */
-    public List<PayAccount> searchPayAccount(String type, String accountType, String terminal) {
+    public List<PayAccount> searchPayAccount(String type, String accountType, String terminal, Boolean supportAtmCounter) {
         PayAccountListVo listVo = new PayAccountListVo();
         Map<String, Object> map = new HashMap<>(3, 1f);
         map.put("playerId", SessionManager.getUserId());
@@ -261,6 +261,7 @@ public abstract class RechargeBaseController {
         if (StringTool.isNotBlank(terminal)) {
             map.put("terminal", terminal);
         }
+        map.put("supportAtmCounter", supportAtmCounter);
         listVo.setConditions(map);
         return ServiceTool.payAccountService().searchPayAccountByRank(listVo);
     }
@@ -272,8 +273,8 @@ public abstract class RechargeBaseController {
      * @param accountType
      * @return
      */
-    public List<PayAccount> searchPayAccount(String type, String accountType) {
-        return searchPayAccount(type, accountType, null);
+    public List<PayAccount> searchPayAccount(String type, String accountType, Boolean supportAtmCounter) {
+        return searchPayAccount(type, accountType, null, supportAtmCounter);
     }
 
     /**

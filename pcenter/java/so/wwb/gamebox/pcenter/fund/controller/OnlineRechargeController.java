@@ -94,7 +94,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         //层级
         PlayerRank rank = getRank();
         //玩家可用收款账号
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), TerminalEnum.PC.getCode());
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), TerminalEnum.PC.getCode(),null);
         model.addAttribute("payAccountMap", getOnlinePayAccountMap(rank, banks, payAccounts));
         model.addAttribute("username", SessionManager.getUserName());
         model.addAttribute("currency", getCurrencySign());

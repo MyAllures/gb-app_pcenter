@@ -573,7 +573,7 @@ public class OnlineRechargeController extends RechargeBaseController {
             if (rank.getIsTakeTurns() == null || rank.getIsTakeTurns()) {
                 PlayerRechargeVo playerRechargeVo = new PlayerRechargeVo();
                 playerRechargeVo.getSearch().setRechargeType(rechargeType);
-                Integer payAccountId = playerRechargeService().searchLastPayAccountId(new PlayerRechargeVo());
+                Integer payAccountId = playerRechargeService().searchLastPayAccountId(playerRechargeVo);
                 if (payAccountId == null) {
                     return accounts.get(0);
                 } else {

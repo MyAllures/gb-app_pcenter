@@ -24,6 +24,7 @@ import so.wwb.gamebox.model.SiteI18nEnum;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
+import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
@@ -93,8 +94,8 @@ public class CompanyRechargeController extends RechargeBaseController {
     public String onlineBankFirst(Model model, PlayerRechargeVo playerRechargeVo) {
         //玩家可用收款账号
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode(), null);
-        SysParam param = ParamTool.getSysParam(SiteParamEnum.CONTENT_PAY_ACCOUNT_OPEN_ACCOUNTS);
-        boolean display = param != null && "true".equals(param.getParamValue());
+        PlayerRank rank = getRank();
+        boolean display = rank != null && rank.getDisplayCompanyAccount() != null && rank.getDisplayCompanyAccount();
         //获取公司入款收款账号
         if (!display) {
             Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
@@ -102,7 +103,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         } else {
             model.addAttribute("accounts", getCompanyPayAccounts(payAccounts));
         }
-        model.addAttribute("rank", getRank());
+        model.addAttribute("rank", rank);
         model.addAttribute("sales", searchSales(ActivityDepositWay.COMPANY));
         model.addAttribute("currency", getCurrencySign());
         //验证规则
@@ -178,17 +179,27 @@ public class CompanyRechargeController extends RechargeBaseController {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
         //获取公司入款收款账号
         Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
-        //调整顺序微信、支付宝、其他
-        List<PayAccount> payAccountList = new ArrayList<>(payAccountMap.size());
-        addPayAccount(payAccountList, payAccountMap, WECHATPAY);
-        addPayAccount(payAccountList, payAccountMap, ALIPAY);
-        for (PayAccount payAccount : payAccountMap.values()) {
-            if (!WECHATPAY.equals(payAccount.getBankCode()) && !ALIPAY.equals(payAccount.getBankCode()) && !BITCOIN.equals(payAccount.getBankCode())) {
-                payAccountList.add(payAccount);
+        PlayerRank rank = getRank();
+        boolean display = rank != null && rank.getDisplayCompanyAccount() != null && rank.getDisplayCompanyAccount();
+        List<PayAccount> payAccountList;
+        if (display) {
+            payAccountList = getCompanyPayAccounts(payAccounts);
+        } else {
+            //调整顺序微信、支付宝、qq钱包、京东钱包、百度钱包、１码付、其他
+            payAccountList = new ArrayList<>(payAccountMap.size());
+            addPayAccount(payAccountList, payAccountMap, WECHATPAY);
+            addPayAccount(payAccountList, payAccountMap, ALIPAY);
+            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.QQWALLET.getCode());
+            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.JDWALLET.getCode());
+            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.BDWALLET.getCode());
+            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.ONECODEPAY.getCode());
+            for (PayAccount payAccount : payAccountMap.values()) {
+                if (BankCodeEnum.OTHER.getCode().equals(payAccount.getBankCode())) {
+                    payAccountList.add(payAccount);
+                }
             }
         }
         model.addAttribute("payAccountList", payAccountList);
-        PlayerRank rank = getRank();
         //是否隐藏收款账号
         isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
         model.addAttribute("rank", rank);

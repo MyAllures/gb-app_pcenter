@@ -200,6 +200,7 @@ public class CompanyRechargeController extends RechargeBaseController {
             }
         }
         model.addAttribute("payAccountList", payAccountList);
+        model.addAttribute("display", display);
         //是否隐藏收款账号
         isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
         model.addAttribute("rank", rank);

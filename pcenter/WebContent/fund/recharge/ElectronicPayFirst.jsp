@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="deposit-info-warp  clearfix">
-        <div class="titleline pull-left"><h2>${views.fund_auto['电子支付']}</h2></div>
+        <div class="titleline pull-left"><h2>${views.fucomnd_auto['电子支付']}</h2></div>
         <a href="/fund/playerRecharge/recharge.html" class="btn-gray btn btn-big pull-right" nav-Target="mainFrame">${views.fund_auto['返回上一级']}</a>
     </div>
     <c:if test="${fn:length(payAccountList)<=0}">
@@ -33,9 +33,28 @@
                     <div class="bank-total">
                         <c:forEach items="${payAccountList}" varStatus="vs" var="i">
                             <label class="bank ${vs.index==0?'select':''}">
+                                <c:set var="name" value="${display?i.aliasName:dicts.common.bankname[i.bankCode]}"/>
                                 <span class="radio"><input name="result.payAccountId" value="${i.id}" type="radio" ${vs.index==0?'checked':''}></span>
-                                <span class="radio-bank" title="${dicts.common.bankname[i.bankCode]}"><i class="pay-third ${i.bankCode}"></i></span>
-                                <span class="bank-logo-name">${dicts.common.bankname[i.bankCode]}</span>
+                                <span class="radio-bank" title="${name}"><i class="pay-third ${i.bankCode}"></i></span>
+                                <span class="bank-logo-name">${name}</span>
+                                <c:choose>
+                                    <c:when test="${i.bankCode eq 'wechatpay'}">
+                                        <c:set var="accountLabel" value="${views.fund_auto['您的']}${dicts.common.bank_nickname[payAccount.bankCode]}："/>
+                                    </c:when>
+                                    <c:when test="${i.bankCode eq 'qqwallet'}">
+                                        <c:set var="accountLabel" value="${views.fund_auto['您的']}QQ号码:"/>
+                                    </c:when>
+                                    <c:when test="${i.bankCode eq 'onecodepay'}"></c:when>
+                                    <c:otherwise>
+                                        <c:set var="accountLabel" value=" ${views.fund_auto['您的']} ${dicts.common.bankname[payAccount.bankCode]}${views.fund_auto['账号']}："/>
+                                    </c:otherwise>
+                                </c:choose>
+                                <span style="display: none">
+                                    ${accountLabel}
+                                </span>
+                                <c:if test="${v.index==0}">
+                                    <c:set var="firstAccountLabel" value="${accountLabel}"/>
+                                </c:if>
                             </label>
                         </c:forEach>
                     </div>
@@ -48,61 +67,38 @@
                 <div class="left-ico-message clearfix accountMap" id="payAccount${i.id}" style="${vs.index==0?'':'display:none'}">
                     <h4>${fn:replace(views.fund_auto['请存款至以下账户'], "{0}",dicts.common.bankname[i.bankCode])}：</h4>
                     <span class="deposit-info-title">${views.fund_auto['步骤2']}<img src="${resRoot}/images/online-pay2.png"></span>
-                    <div class="left-warp">
-                        <div class="bank-paidtotal">
-                            <ul>
-                                <li>
-                                    <div class="bankinfo bankinfo-m">
-                                        <c:set var="flag" value="${empty i.customBankName||dicts.common.bankname[i.bankCode]==i.customBankName}"/>
-                                        <h1><i class="${flag?'pay-third ':''} ${flag?i.bankCode:''}" style="font-size: small;">${flag?'':i.customBankName}</i></h1>
-                                        <c:choose>
-                                            <c:when test="${isHide}">
-                                               <span class="orange select">
-                                                    <i class="orange fontsbig">${views.fund_auto['账号代码']}：${i.code}</i>
-                                                    <i class="m-bigl">
-                                                        <soul:button target="customerService" text="${(empty hideContent.value) ? views.fund_auto['联系客服获取账号'] : hideContent.value}" url="${customerService}" opType="function"/>
-                                                    </i>
-                                               </span>
-                                            </c:when>
-                                            <c:otherwise>
-                                              <span class="orange paidname select" data-clipboard-target="bankCard${i.id}" data-clipboard-text="Default clipboard text from attribute" name="copy">
-                                                <em class="bank-number" id="bankCard${i.id}">${i.account}</em>
-                                                <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
-                                            </span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <span class="paidname select" data-clipboard-target="fullName${i.id}" data-clipboard-text="Default clipboard text from attribute" name="copy">
-                                            <em class="gray">${views.fund_auto['姓名']}：</em>
-                                            <em class="gathering-name" id="fullName${i.id}">${i.fullName}</em>
-                                           <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
-                                        </span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <c:if test="${!empty i.remark}">
-                            <div>
-                                <p style="margin: 15px 23px">${i.remark}</p>
-                            </div>
-                        </c:if>
-                        <div class=" control-group">
-                            <c:if test="${!empty banks[i.bankCode].website}">
-                                <a href="${banks[i.bankCode].website}" target="_blank" type="button" class="btn btn-outline btn-filter m-l">${fn:replace(views.fund_auto['去转账'],"{0}", dicts.common.bankname[i.bankCode])}</a>
-                            </c:if>
-                            <c:if test="${!vs.last}">
-                                <a href="javascript:;" data-href="/commonPage/help.html?pageNumber=1&pagingKey=hpdc&dataChildren=62" class="m-l openPage">${fn:replace(views.fund_auto['是否查看转账演示'],"{0}", dicts.common.bankname[i.bankCode])}</a>
+                    <div class="control-group" style="${empty firstAccountLabel?'display:none':''}">
+                        <label class="control-label" for="result.payerBankcard">${firstAccountLabel}</label>
+                        <div class="controls">
+                            <input type="text" class="input" value="${payerBankcard}" id="result.payerBankcard" name="result.payerBankcard" autocomplete="off" placeholder="${views.fund_auto['昵称']}">
+                            <c:if test="${payAccount.bankCode=='alipay'}">
+                                <div class="controls">
+                                    <p style="color:#AAAAAA;">${views.fund_auto['支付宝转账到支付宝']}${views.fund_auto['请填写']}<span style="color:#FF7744;">${views.fund_auto['昵称']}</span>；</p>
+                                    <p style="color:#AAAAAA;">${views.fund_auto['支付宝转账到银行卡']}${views.fund_auto['请填写']}<span style="color:#FF7744;">${views.fund_auto['真实姓名']}</span>；</p>
+                                </div>
                             </c:if>
                         </div>
                     </div>
-                    <c:if test="${! empty i.qrCodeUrl}">
-                        <div class="pull-left">
-                        <span class="two-dimension">
-                            <img src="${soulFn:getThumbPath(domain,i.qrCodeUrl,176,176)}" style="width: 176px;height: 176px;"/>
-                            <em><img src="${resRoot}/images/two-dimension-ico.png" class="pull-left">${dicts.common.bankname[i.bankCode]}${views.fund_auto['扫一扫付款']}</em>
-                        </span>
-                            <span><img src="${resRoot}/images/two-dimension123.png"></span>
+                    <div class="control-group">
+                        <label class="control-label">${views.fund_auto['金额']}：</label>
+                        <div class="controls">
+                            <input type="text" class="input" name="result.rechargeAmount" autocomplete="off">
+                            <span class="fee"></span>
                         </div>
-                    </c:if>
+                    </div>
+                    <%@include file="sale.jsp" %>
+                    <div class="control-group">
+                        <label class="control-label"></label>
+                        <div class="controls co-gray">
+                                ${payAccount.bankCode=='alipay'? views.fund_auto['请填写订单号非商户订单号']:''}
+                        </div>
+                    </div>
+                    <%@include file="CaptchaCode.jsp" %>
+                    <div class=" control-group">
+                        <label class="control-label"></label>
+                        <soul:button target="commonRecharge.confirm" precall="validateForm" text="${views.fund_auto['提交申请']}" opType="function"
+                                     cssClass="btn-blue btn large-big disabled _submit"/>
+                    </div>
                 </div>
             </c:forEach>
         </div>

@@ -52,8 +52,8 @@
                         <c:if test="${displayAccounts}">
                             <c:forEach items="${accounts}" var="i" varStatus="vs">
                                 <label class="bank ${vs.index==0?'select':''}">
-                                    <span class="radio"><input name="result.payAccountId" value="${i.id}" type="radio" ${vs.index==0?'checked':''}></span>
-                                    <span class="radio-bank" title="${dicts.common.bankname[i.bankCode]}"><i class="pay-bank ${i.bankCode}"></i></span>
+                                    <span class="radio"><input name="result.payAccountId" type="radio" value="${i.id}" ${vs.index==0?'checked':''}/></span>
+                                    <span class="radio-bank" title="${i.aliasName}"><i class="pay-bank sm ${i.bankCode}"></i><font class="diy-pay-title">${i.aliasName}</font></span>
                                     <span class="bank-logo-name">${i.aliasName}</span>
                                 </label>
                             </c:forEach>

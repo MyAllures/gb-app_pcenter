@@ -359,17 +359,11 @@ public class PlayerTransferController {
         //api转账功能关闭
         if (api.getTransferable() == null || !api.getTransferable())
             return getErrorMessage(TransferResultStatusEnum.API_TRANSFER_SWITCH_COLSE.getCode(), playerTransferVo.getResult().getApiId());
-        //试玩模式下不支持转账
-        if (SessionManagerCommon.getDemoModelEnum() != null) {
-            DemoModelEnum demoModel = SessionManagerCommon.getDemoModelEnum();
-            if (demoModel != null) {
-                //平台试玩免转不可用
-                //纯彩票试玩免转不可用
-                if (DemoModelEnum.MODEL_4_MOCK_ACCOUNT.equals(demoModel) && (apiId == Integer.valueOf(ApiProviderEnum.PL.getCode()) || apiId == Integer.valueOf(ApiProviderEnum.DWT.getCode()))) {
-                    //模拟账号且是自主体育可用
-                    return null;
-                }
-            }
+        //模拟账号且是自主api可用,其他试玩模式下不支持转账
+        if(!(DemoModelEnum.MODEL_4_MOCK_ACCOUNT.equals(SessionManagerCommon.getDemoModelEnum())&&(
+                apiId==Integer.valueOf(ApiProviderEnum.PL.getCode()) ||
+                        apiId==Integer.valueOf(ApiProviderEnum.DWT.getCode())))){
+            //模拟账号且是自主可用
             return getErrorMessage(TransferResultStatusEnum.TRANSFER_DEMO_UNSUPPORTED.getCode(), playerTransferVo.getResult().getApiId());
         }
         return null;

@@ -24,6 +24,7 @@ import so.wwb.gamebox.model.SiteI18nEnum;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
+import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
@@ -200,13 +201,6 @@ public class CompanyRechargeController extends RechargeBaseController {
         return ELECTRONIC_PAY_FIRST;
     }
 
-    private void addPayAccount(List<PayAccount> payAccountList, Map<String, PayAccount> payAccountMap, String bankCode) {
-        PayAccount payAccount = payAccountMap.get(bankCode);
-        if (payAccount != null) {
-            payAccountList.add(payAccount);
-        }
-    }
-
     /**
      * 电子支付步奏2-回执单
      *
@@ -218,10 +212,17 @@ public class CompanyRechargeController extends RechargeBaseController {
     public String electronicPaySecond(Model model, PlayerRechargeVo playerRechargeVo) {
         PayAccount payAccount = getPayAccount(playerRechargeVo.getResult().getPayAccountId());
         String rechargeType = RechargeTypeEnum.OTHER_FAST.getCode();
-        if (WECHATPAY.equals(payAccount.getBankCode())) {
+        String bankCode = payAccount.getBankCode();
+        if (WECHATPAY.equals(bankCode)) {
             rechargeType = RechargeTypeEnum.WECHATPAY_FAST.getCode();
-        } else if (ALIPAY.equals(payAccount.getBankCode())) {
+        } else if (ALIPAY.equals(bankCode)) {
             rechargeType = RechargeTypeEnum.ALIPAY_FAST.getCode();
+        } else if (BankCodeEnum.JDWALLET.getCode().equals(bankCode)) {
+            rechargeType = RechargeTypeEnum.JDWALLET_FAST.getCode();
+        } else if(BankCodeEnum.BDWALLET.getCode().equals(bankCode)) {
+            rechargeType = RechargeTypeEnum.BDWALLET_FAST.getCode();
+        } else if(BankCodeEnum.ONECODEPAY.getCode().equals(bankCode)) {
+            rechargeType = RechargeTypeEnum.ONECODEPAY_FAST.getCode();
         }
         playerRechargeVo.getResult().setRechargeType(rechargeType);
         model.addAttribute("sales", searchSales(rechargeType));

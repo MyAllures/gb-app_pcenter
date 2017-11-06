@@ -184,6 +184,13 @@ public class CompanyRechargeController extends RechargeBaseController {
         List<PayAccount> payAccountList;
         if (display) {
             payAccountList = getCompanyPayAccounts(payAccounts);
+            Iterator<PayAccount> payAccountIterator = payAccountList.iterator();
+            while (payAccountIterator.hasNext()) {
+                PayAccount payAccount = payAccountIterator.next();
+                if(BITCOIN.equals(payAccount.getBankCode())) {
+                    payAccountList.remove(payAccount);
+                }
+            }
         } else {
             //调整顺序微信、支付宝、qq钱包、京东钱包、百度钱包、１码付、其他
             payAccountList = new ArrayList<>(payAccountMap.size());

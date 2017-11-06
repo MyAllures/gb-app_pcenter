@@ -24,7 +24,6 @@ import so.wwb.gamebox.model.SiteI18nEnum;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
-import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
@@ -98,8 +97,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         boolean display = rank != null && rank.getDisplayCompanyAccount() != null && rank.getDisplayCompanyAccount();
         //获取公司入款收款账号
         if (!display) {
-            Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
-            model.addAttribute("payAccountMap", payAccountMap);
+            model.addAttribute("accounts", getCompanyPayAccount(payAccounts));
         } else {
             model.addAttribute("accounts", getCompanyPayAccounts(payAccounts));
         }
@@ -154,11 +152,9 @@ public class CompanyRechargeController extends RechargeBaseController {
     public String bitCoinFirst(Model model) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
         //获取公司入款收款账号
-        Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
-        //调整顺序微信、支付宝、比特币、其他
-        List<PayAccount> payAccountList = new ArrayList<>(payAccountMap.size());
-        addPayAccount(payAccountList, payAccountMap, BITCOIN);
-        model.addAttribute("payAccountList", payAccountList);
+        List<PayAccount> payAccountList = getCompanyPayAccount(payAccounts);
+        Map<String, List<PayAccount>> payAccountMap = CollectionTool.groupByProperty(payAccountList, PayAccount.PROP_BANK_CODE, String.class);
+        model.addAttribute("payAccountList", payAccountMap.get(BITCOIN));
         PlayerRank rank = getRank();
         //是否隐藏收款账号
         isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
@@ -178,7 +174,6 @@ public class CompanyRechargeController extends RechargeBaseController {
     public String electronicPayFirst(Model model) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
         //获取公司入款收款账号
-        Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
         PlayerRank rank = getRank();
         boolean display = rank != null && rank.getDisplayCompanyAccount() != null && rank.getDisplayCompanyAccount();
         List<PayAccount> payAccountList;
@@ -187,24 +182,13 @@ public class CompanyRechargeController extends RechargeBaseController {
             Iterator<PayAccount> payAccountIterator = payAccountList.iterator();
             while (payAccountIterator.hasNext()) {
                 PayAccount payAccount = payAccountIterator.next();
-                if(BITCOIN.equals(payAccount.getBankCode())) {
+                if (BITCOIN.equals(payAccount.getBankCode())) {
                     payAccountIterator.remove();
                 }
             }
         } else {
-            //调整顺序微信、支付宝、qq钱包、京东钱包、百度钱包、１码付、其他
-            payAccountList = new ArrayList<>(payAccountMap.size());
-            addPayAccount(payAccountList, payAccountMap, WECHATPAY);
-            addPayAccount(payAccountList, payAccountMap, ALIPAY);
-            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.QQWALLET.getCode());
-            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.JDWALLET.getCode());
-            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.BDWALLET.getCode());
-            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.ONECODEPAY.getCode());
-            for (PayAccount payAccount : payAccountMap.values()) {
-                if (BankCodeEnum.OTHER.getCode().equals(payAccount.getBankCode())) {
-                    payAccountList.add(payAccount);
-                }
-            }
+            //根据金流顺序直接展示电子支付(不根据原有的微信、支付宝顺序展示)
+            payAccountList = getCompanyPayAccount(payAccounts);
         }
         model.addAttribute("payAccountList", payAccountList);
         model.addAttribute("display", display);
@@ -481,17 +465,21 @@ public class CompanyRechargeController extends RechargeBaseController {
     }
 
     /**
-     * 获取公司入款收款账号Map（根据固定顺序获取收款账户）
+     * 获取公司入款收款账号（根据固定顺序获取收款账户）
      *
      * @param accounts
      * @return
      */
-    private Map<String, PayAccount> getCompanyPayAccount(List<PayAccount> accounts) {
-        Map<String, PayAccount> payAccountMap = new HashMap<>();
+    private List<PayAccount> getCompanyPayAccount(List<PayAccount> accounts) {
+        List<String> bankCodes = new ArrayList<>();
+        List<PayAccount> payAccounts = new ArrayList<>();
         for (PayAccount payAccount : accounts) {
-            payAccountMap.put(payAccount.getBankCode(), payAccount);
+            if (!bankCodes.contains(payAccount.getBankCode())) {
+                payAccounts.add(payAccount);
+                bankCodes.add(payAccount.getBankCode());
+            }
         }
-        return payAccountMap;
+        return payAccounts;
     }
 
     private List<PayAccount> getCompanyPayAccounts(List<PayAccount> accounts) {

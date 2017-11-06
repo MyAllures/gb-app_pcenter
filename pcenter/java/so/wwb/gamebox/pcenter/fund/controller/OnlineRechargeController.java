@@ -519,6 +519,12 @@ public class OnlineRechargeController extends RechargeBaseController {
             payAccount = getWeChatAlipay(rank, PayAccountAccountType.WECHAT.getCode(), rechargeType);
         } else if (RechargeTypeEnum.QQWALLET_SCAN.getCode().equals(rechargeType)) {
             payAccount = getWeChatAlipay(rank, PayAccountAccountType.QQWALLET.getCode(), rechargeType);
+        } else if (RechargeTypeEnum.JDPAY_SCAN.getCode().equals(rechargeType)) {
+            payAccount = getWeChatAlipay(rank, PayAccountAccountType.JD_PAY.getCode(), rechargeType);
+        } else if (RechargeTypeEnum.BDWALLET_SAN.getCode().equals(rechargeType)) {
+            payAccount = getWeChatAlipay(rank, PayAccountAccountType.BAIFU_PAY.getCode(), rechargeType);
+        }else if (RechargeTypeEnum.UNION_PAY_SCAN.getCode().equals(rechargeType)) {
+            payAccount = getWeChatAlipay(rank, PayAccountAccountType.UNION_PAY.getCode(), rechargeType);
         }
         return payAccount;
     }

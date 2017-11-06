@@ -188,7 +188,7 @@ public class CompanyRechargeController extends RechargeBaseController {
             while (payAccountIterator.hasNext()) {
                 PayAccount payAccount = payAccountIterator.next();
                 if(BITCOIN.equals(payAccount.getBankCode())) {
-                    payAccountList.remove(payAccount);
+                    payAccountIterator.remove();
                 }
             }
         } else {

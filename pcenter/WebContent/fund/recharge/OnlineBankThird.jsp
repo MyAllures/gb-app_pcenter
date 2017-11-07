@@ -63,9 +63,6 @@
             <c:when test="${type=='online_bank'}">
                 <c:set var="url" value="onlineBankSubmit"/>
             </c:when>
-            <c:when test="${type=='other_fast'||type=='alipay_fast'||type=='wechatpay_fast'}">
-                <c:set var="url" value="electronicPaySubmit"/>
-            </c:when>
             <c:when test="${type=='bitcoin_fast'}">
                 <c:set var="url" value="bitCoinSubmit"/>
             </c:when>
@@ -73,7 +70,7 @@
                 <c:set var="url" value="atmCounterSubmit"/>
             </c:when>
             <c:otherwise>
-                <c:set var="url" value="onlineBankSubmit"/>
+                <c:set var="url" value="electronicPaySubmit"/>
             </c:otherwise>
         </c:choose>
         <soul:button target="submit" data="${url}" text="${views.fund_auto['已存款确认提交']}" opType="function" cssClass="btn btn-filter"/>

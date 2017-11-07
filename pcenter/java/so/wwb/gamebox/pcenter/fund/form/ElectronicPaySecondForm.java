@@ -19,7 +19,7 @@ import javax.validation.constraints.Pattern;
  * Created by Cherry on 16-6-24.
  */
 @Comment("电子支付验证")
-public class ElectronicPayForm implements IForm {
+public class ElectronicPaySecondForm implements IForm {
     private String result_rechargeAmount;
     private String result_payerBankcard;
     private String result_bankOrder;
@@ -57,17 +57,6 @@ public class ElectronicPayForm implements IForm {
 
     public void setResult_bankOrder(String result_bankOrder) {
         this.result_bankOrder = result_bankOrder;
-    }
-
-    @Comment("验证码")
-    @Depends(message = "fund.rechargeForm.code.notBlank", operator = {Operator.GE}, property = {"$rechargeCount"}, value = {"3"}, jsValueExp = {"parseInt($(\"[name=rechargeCount]\").val())"})
-    @Remote(message = "fund.rechargeForm.code.correct", checkMethod = "checkCaptcha", checkClass = RechargeController.class)
-    public String get$code() {
-        return $code;
-    }
-
-    public void set$code(String $code) {
-        this.$code = $code;
     }
 
 }

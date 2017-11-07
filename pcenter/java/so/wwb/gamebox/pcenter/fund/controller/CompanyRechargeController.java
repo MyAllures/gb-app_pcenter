@@ -487,17 +487,23 @@ public class CompanyRechargeController extends RechargeBaseController {
     private List<PayAccount> getCompanyPayAccounts(List<PayAccount> accounts) {
         Map<String, Integer> countMap = new HashMap<>();
         Map<String, String> i18n = I18nTool.getDictMapByEnum(SessionManager.getLocale(), DictEnum.BANKNAME);
+        Map<String, List<PayAccount>> accountMap = CollectionTool.groupByProperty(accounts, PayAccount.PROP_BANK_CODE, String.class);
         for (PayAccount payAccount : accounts) {
             if (StringTool.isBlank(payAccount.getAliasName())) {
-                if (countMap.get(payAccount.getBankCode()) == null) {
-                    countMap.put(payAccount.getBankCode(), 1);
+                String bankCode = payAccount.getBankCode();
+                if (countMap.get(bankCode) == null) {
+                    countMap.put(bankCode, 1);
                 } else {
-                    countMap.put(payAccount.getBankCode(), countMap.get(payAccount.getBankCode()) + 1);
+                    countMap.put(bankCode, countMap.get(bankCode) + 1);
                 }
-                if (BankCodeEnum.OTHER.getCode().equals(payAccount.getBankCode()) || BankCodeEnum.OTHER_BANK.getCode().equals(payAccount.getBankCode())) {
+                if (BankCodeEnum.OTHER.getCode().equals(bankCode) || BankCodeEnum.OTHER_BANK.getCode().equals(bankCode)) {
                     payAccount.setAliasName(payAccount.getCustomBankName());
                 } else {
-                    payAccount.setAliasName(i18n.get(payAccount.getBankCode()) + countMap.get(payAccount.getBankCode()));
+                    if (accountMap.get(bankCode).size() > 1) {
+                        payAccount.setAliasName(i18n.get(bankCode) + countMap.get(bankCode));
+                    } else {
+                        payAccount.setAliasName(i18n.get(bankCode));
+                    }
                 }
             }
         }

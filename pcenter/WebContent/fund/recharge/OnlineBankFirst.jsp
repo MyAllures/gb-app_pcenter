@@ -25,7 +25,7 @@
         </div>
         <a href="/fund/playerRecharge/recharge.html" class="btn-gray btn btn-big pull-right" nav-Target="mainFrame">${views.fund_auto['返回上一级']}</a>
     </div>
-    <c:if test="${(fn:length(accounts)<=0&&displayAccounts)}">
+    <c:if test="${(fn:length(accounts)<=0)}">
         <div class="account-list account-info-warp">
             <div class="left-ico-message">
                 <h2 class="m-bigl m-t-sm">${views.fund_auto['暂无收款账户，请选择其他存款方式！']}</h2>
@@ -33,7 +33,7 @@
             </div>
         </div>
     </c:if>
-    <c:if test="${(fn:length(accounts)>0&&displayAccounts)}">
+    <c:if test="${(fn:length(accounts)>0)}">
         <div class="account-list account-info-warp">
             <div class="left-ico-message">
                 <h4>${views.fund_auto['请选择银行']}</h4>

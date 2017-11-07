@@ -44,7 +44,7 @@
                                 </c:if>
                                 <span class="radio"><input name="result.payAccountId" data-title="${i.bankCode eq 'alipay'}" data-label="${i.bankCode eq 'onecodepay'}" data-type="${i.rechargeType}" value="${i.id}" type="radio" ${vs.index==0?'checked':''}></span>
                                 <span class="radio-bank" title="${name}">
-                                    <i class="pay-third ${display?'sm ':''} ${i.bankCode}"></i>
+                                    <i class="pay-third ${display||i.bankCode eq 'other'?'sm ':''} ${i.bankCode}"></i>
                                     <c:if test="${display || i.bankCode eq 'other'}">
                                         <font class="diy-pay-title">${name}</font>
                                     </c:if>

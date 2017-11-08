@@ -200,7 +200,7 @@
                         <h3>${views.fund['FundRecord.view.tips']}</h3>
                     </c:when>
                     <%--扫码支付、电子支付--%>
-                    <c:when test="${fundType eq 'alipay_scan'||fundType eq 'other_fast' || fundType eq 'wechatpay_scan'||fundType eq 'wechatpay_fast' || fundType eq 'alipay_fast' ||fundType eq 'bitcoin_fast'||fundType eq 'qqwallet_scan'||fundType eq 'onecodepay_fast'||fundType eq 'jdwallet_fast'||fundType eq 'bdwallet_fast'||fundType eq 'union_pay_scan'||fundType eq 'bdwallet_san'||fundType eq 'jdpay_scan'}">
+                    <c:when test="${fundType eq 'alipay_scan'||fundType eq 'other_fast' || fundType eq 'wechatpay_scan'||fundType eq 'wechatpay_fast' || fundType eq 'alipay_fast' ||fundType eq 'bitcoin_fast'||fundType eq 'qqwallet_fast'||fundType eq 'qqwallet_scan'||fundType eq 'onecodepay_fast'||fundType eq 'jdwallet_fast'||fundType eq 'bdwallet_fast'||fundType eq 'union_pay_scan'||fundType eq 'bdwallet_san'||fundType eq 'jdpay_scan'}">
                         <h1>
                             <c:set var="scanCss" value="${bankCode}"/>
                             <c:if test="${fundType eq 'alipay_scan'||fundType eq 'alipay_fast'}">

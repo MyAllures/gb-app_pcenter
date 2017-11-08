@@ -26,7 +26,7 @@ public class ElectronicPayForm implements IForm {
     private String $code;
 
     @Comment("存款金额")
-    @NotBlank(message = "fund.rechargeForm.rechargeAmountNotBlank")
+    @NotBlank
     @Pattern(message = "fund.rechargeForm.rechargeAmountCorrect", regexp = FormValidRegExps.MONEY)
     @Remote(message = "fund.rechargeForm.rechargeAmountOver", checkClass = CompanyRechargeController.class, checkMethod = "checkAmount")
     @Max(message = "fund.rechargeForm.rechargeAmountMax", value = 99999999)
@@ -39,7 +39,7 @@ public class ElectronicPayForm implements IForm {
     }
 
     @Comment("存款账号")
-    @Depends(message = "fund.rechargeForm.payerBankcardNotBlank", property = "result.rechargeType", operator = {Operator.NE}, value = {RechargeTypeEnum.RECHARGE_TYPE_ONECODEPAY_FASE})
+    @Depends(property = "result.rechargeType", operator = {Operator.NE}, value = {RechargeTypeEnum.RECHARGE_TYPE_ONECODEPAY_FASE})
     @Length(message = "fund.rechargeForm.payerBankcardLength", max = 20)
     public String getResult_payerBankcard() {
         return result_payerBankcard;

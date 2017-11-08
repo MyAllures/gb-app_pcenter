@@ -69,7 +69,9 @@
                     <c:if test="${!empty banks[payAccount.bankCode].website}">
                         <a href="${banks[payAccount.bankCode].website}" target="_blank" type="button" class="btn btn-outline btn-filter m-l">${fn:replace(views.fund_auto['去转账'],"{0}", dicts.common.bankname[payAccount.bankCode])}</a>
                     </c:if>
-                    <a href="javascript:;" data-href="/commonPage/help.html?pageNumber=1&pagingKey=hpdc&dataChildren=62" class="m-l openPage">${fn:replace(views.fund_auto['是否查看转账演示'],"{0}", dicts.common.bankname[payAccount.bankCode])}</a>
+                    <c:if test="${payAccount.bankCode eq 'alipay'}">
+                        <a href="javascript:;" data-href="/commonPage/help.html?pageNumber=1&pagingKey=hpdc&dataChildren=62" class="m-l openPage">${fn:replace(views.fund_auto['是否查看转账演示'],"{0}", dicts.common.bankname[payAccount.bankCode])}</a>
+                    </c:if>
                 </div>
             </div>
             <c:if test="${! empty payAccount.qrCodeUrl}">

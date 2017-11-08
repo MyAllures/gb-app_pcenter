@@ -54,9 +54,9 @@
                                     <c:when test="${i.bankCode eq 'wechatpay'}">
                                         <c:set var="accountLabel" value="${views.fund_auto['您的']}${dicts.common.bank_nickname[i.bankCode]}："/>
                                     </c:when>
-                                   <%-- <c:when test="${i.bankCode eq 'qqwallet'}">
-                                        <c:set var="accountLabel" value="${views.fund_auto['您的']}QQ号码:"/>
-                                    </c:when>--%>
+                                    <c:when test="${i.bankCode eq 'qqwallet'}">
+                                        <c:set var="accountLabel" value="${views.fund_auto['您的']}QQ号码："/>
+                                    </c:when>
                                     <c:when test="${i.bankCode eq 'onecodepay'}">
                                         <c:set var="accountLabel" value=""/>
                                     </c:when>
@@ -96,9 +96,9 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label">${views.fund_auto['金额']}：</label>
+                    <label class="control-label" for="result.rechargeAmount">${views.fund_auto['金额']}：</label>
                     <div class="controls">
-                        <input type="text" class="input" name="result.rechargeAmount" autocomplete="off">
+                        <input type="text" class="input" name="result.rechargeAmount" id="result.rechargeAmount" autocomplete="off">
                         <span class="fee"></span>
                     </div>
                 </div>

@@ -247,7 +247,7 @@ public class CompanyRechargeController extends RechargeBaseController {
             rechargeType = RechargeTypeEnum.BDWALLET_FAST.getCode();
         } else if (BankCodeEnum.ONECODEPAY.getCode().equals(bankCode)) {
             rechargeType = RechargeTypeEnum.ONECODEPAY_FAST.getCode();
-        } else if(BankCodeEnum.QQWALLET.getCode().equals(bankCode)) {
+        } else if (BankCodeEnum.QQWALLET.getCode().equals(bankCode)) {
             rechargeType = RechargeTypeEnum.QQWALLET_FAST.getCode();
         }
         playerRechargeVo.getResult().setRechargeType(rechargeType);
@@ -294,7 +294,25 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("/atmCounterFirst")
     public String atmCountFirst(Model model) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode(), true);
-        Map<String, List<PayAccount>> payAccountMap = CollectionTool.groupByProperty(payAccounts, PayAccount.PROP_BANK_CODE, String.class);
+        Map<String, List<PayAccount>> payAccountMap = new HashMap<>();
+        String bankCode;
+        String otherBank = BankCodeEnum.OTHER_BANK.getCode();
+        //其他银行在atm存款不能全部归属于其他银行，否则下拉框选择无法判定
+        for (PayAccount payAccount : payAccounts) {
+            bankCode = payAccount.getBankCode();
+            if (otherBank.equals(bankCode)) {
+                if (payAccountMap.get(payAccount.getCustomBankName()) == null) {
+                    payAccountMap.put(payAccount.getCustomBankName(), new ArrayList<PayAccount>());
+                }
+                payAccountMap.get(payAccount.getCustomBankName()).add(payAccount);
+            } else {
+                if (payAccountMap.get(bankCode) == null) {
+                    payAccountMap.put(bankCode, new ArrayList<PayAccount>());
+                }
+                payAccountMap.get(bankCode).add(payAccount);
+            }
+        }
+        CollectionTool.groupByProperty(payAccounts, PayAccount.PROP_BANK_CODE, String.class);
         model.addAttribute("payAccountMap", payAccountMap);
         model.addAttribute("rank", getRank());
         model.addAttribute("currency", getCurrencySign());

@@ -247,6 +247,8 @@ public class CompanyRechargeController extends RechargeBaseController {
             rechargeType = RechargeTypeEnum.BDWALLET_FAST.getCode();
         } else if (BankCodeEnum.ONECODEPAY.getCode().equals(bankCode)) {
             rechargeType = RechargeTypeEnum.ONECODEPAY_FAST.getCode();
+        } else if(BankCodeEnum.QQWALLET.getCode().equals(bankCode)) {
+            rechargeType = RechargeTypeEnum.QQWALLET_FAST.getCode();
         }
         playerRechargeVo.getResult().setRechargeType(rechargeType);
         model.addAttribute("playerRechargeVo", playerRechargeVo);

@@ -117,7 +117,7 @@
                     <li class="red">${views.fund_auto['扫码存款提醒']}</li>
                     <li>${fn:replace(fn:replace(fn:replace(views.fund_auto['扫码存款限额范围'], "{0}",siteCurrency ), "{1}", empty rank.onlinePayMin || rank.onlinePayMin == '0'?'0.01':soulFn:formatCurrency(rank.onlinePayMin)),"{2}" , empty rank.onlinePayMax?'99,999,999.00':soulFn:formatCurrency(rank.onlinePayMax))}
                     </li>
-                    <li>支付成功后，请等待几秒钟，提示[<span class="red">支付成功</span>]按确认键后再关闭支付窗口，点击下一步进行支付信息提交</li>
+                    <li>${views.fund_auto['支付成功后']}</li>
                 </ul>
             </div>
         </div>

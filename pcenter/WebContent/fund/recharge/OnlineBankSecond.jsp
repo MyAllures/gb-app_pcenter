@@ -10,6 +10,7 @@
     <input type="hidden" name="result.rechargeAmount" value="${playerRechargeVo.result.rechargeAmount}"/>
     <input type="hidden" name="result.payerName" value="${playerRechargeVo.result.payerName}"/>
     <input type="hidden" name="activityId" value="${playerRechargeVo.activityId}"/>
+    <input type="hidden" name="result.rechargeType" value="${playerRechargeVo.result.rechargeType}"/>
     <div id="validateRule" style="display: none">${validateRule}</div>
     <div class="notice">
         <div class="notice-left"> <em class="path"></em>

@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="deposit-info-warp  clearfix">
-        <div class="titleline pull-left"><h2>${views.fucomnd_auto['电子支付']}</h2></div>
+        <div class="titleline pull-left"><h2>${views.fund_auto['电子支付']}</h2></div>
         <a href="/fund/playerRecharge/recharge.html" class="btn-gray btn btn-big pull-right" nav-Target="mainFrame">${views.fund_auto['返回上一级']}</a>
     </div>
     <c:if test="${fn:length(payAccountList)<=0}">

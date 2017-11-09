@@ -3,6 +3,8 @@ package so.wwb.gamebox.pcenter.fund.controller;
 import org.soul.commons.collections.CollectionTool;
 import org.soul.commons.currency.CurrencyTool;
 import org.soul.commons.data.json.JsonTool;
+import org.soul.commons.lang.string.I18nTool;
+import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
@@ -16,11 +18,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteI18nEnum;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
+import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
@@ -89,17 +93,24 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("/onlineBankFirst")
     public String onlineBankFirst(Model model, PlayerRechargeVo playerRechargeVo) {
         //玩家可用收款账号
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode());
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode(), null);
+        PlayerRank rank = getRank();
+        boolean display = rank != null && rank.getDisplayCompanyAccount() != null && rank.getDisplayCompanyAccount();
         //获取公司入款收款账号
-        Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
-        model.addAttribute("payAccountMap", payAccountMap);
-        model.addAttribute("rank", getRank());
+        if (!display) {
+            Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
+            model.addAttribute("payAccountMap", payAccountMap);
+        } else {
+            model.addAttribute("accounts", getCompanyPayAccounts(payAccounts));
+        }
+        model.addAttribute("rank", rank);
         model.addAttribute("sales", searchSales(ActivityDepositWay.COMPANY));
         model.addAttribute("currency", getCurrencySign());
         //验证规则
         model.addAttribute("validateRule", JsRuleCreator.create(OnlineBankForm.class));
         model.addAttribute("playerRechargeVo", playerRechargeVo);
         model.addAttribute("isRealName", isRealName());
+        model.addAttribute("displayAccounts", display);
         return ONLINE_BANK_FIRST;
     }
 
@@ -141,7 +152,7 @@ public class CompanyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/bitCoinFirst")
     public String bitCoinFirst(Model model) {
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode());
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
         //获取公司入款收款账号
         Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
         //调整顺序微信、支付宝、比特币、其他
@@ -165,20 +176,31 @@ public class CompanyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/electronicPayFirst")
     public String electronicPayFirst(Model model) {
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode());
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
         //获取公司入款收款账号
         Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
-        //调整顺序微信、支付宝、其他
-        List<PayAccount> payAccountList = new ArrayList<>(payAccountMap.size());
-        addPayAccount(payAccountList, payAccountMap, WECHATPAY);
-        addPayAccount(payAccountList, payAccountMap, ALIPAY);
-        for (PayAccount payAccount : payAccountMap.values()) {
-            if (!WECHATPAY.equals(payAccount.getBankCode()) && !ALIPAY.equals(payAccount.getBankCode()) && !BITCOIN.equals(payAccount.getBankCode())) {
-                payAccountList.add(payAccount);
+        PlayerRank rank = getRank();
+        boolean display = rank != null && rank.getDisplayCompanyAccount() != null && rank.getDisplayCompanyAccount();
+        List<PayAccount> payAccountList;
+        if (display) {
+            payAccountList = getCompanyPayAccounts(payAccounts);
+        } else {
+            //调整顺序微信、支付宝、qq钱包、京东钱包、百度钱包、１码付、其他
+            payAccountList = new ArrayList<>(payAccountMap.size());
+            addPayAccount(payAccountList, payAccountMap, WECHATPAY);
+            addPayAccount(payAccountList, payAccountMap, ALIPAY);
+            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.QQWALLET.getCode());
+            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.JDWALLET.getCode());
+            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.BDWALLET.getCode());
+            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.ONECODEPAY.getCode());
+            for (PayAccount payAccount : payAccountMap.values()) {
+                if (BankCodeEnum.OTHER.getCode().equals(payAccount.getBankCode())) {
+                    payAccountList.add(payAccount);
+                }
             }
         }
         model.addAttribute("payAccountList", payAccountList);
-        PlayerRank rank = getRank();
+        model.addAttribute("display", display);
         //是否隐藏收款账号
         isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
         model.addAttribute("rank", rank);
@@ -256,7 +278,7 @@ public class CompanyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/atmCounterFirst")
     public String atmCountFirst(Model model) {
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode());
+        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode(), true);
         Map<String, List<PayAccount>> payAccountMap = CollectionTool.groupByProperty(payAccounts, PayAccount.PROP_BANK_CODE, String.class);
         model.addAttribute("payAccountMap", payAccountMap);
         model.addAttribute("rank", getRank());
@@ -460,11 +482,25 @@ public class CompanyRechargeController extends RechargeBaseController {
     private Map<String, PayAccount> getCompanyPayAccount(List<PayAccount> accounts) {
         Map<String, PayAccount> payAccountMap = new HashMap<>();
         for (PayAccount payAccount : accounts) {
-            if (payAccountMap.get(payAccount.getBankCode()) == null) {
-                payAccountMap.put(payAccount.getBankCode(), payAccount);
-            }
+            payAccountMap.put(payAccount.getBankCode(), payAccount);
         }
         return payAccountMap;
+    }
+
+    private List<PayAccount> getCompanyPayAccounts(List<PayAccount> accounts) {
+        Map<String, Integer> countMap = new HashMap<>();
+        Map<String, String> i18n = I18nTool.getDictMapByEnum(SessionManager.getLocale(), DictEnum.BANKNAME);
+        for (PayAccount payAccount : accounts) {
+            if (StringTool.isBlank(payAccount.getAliasName())) {
+                if (countMap.get(payAccount.getBankCode()) == null) {
+                    countMap.put(payAccount.getBankCode(), 1);
+                } else {
+                    countMap.put(payAccount.getBankCode(), countMap.get(payAccount.getBankCode()) + 1);
+                }
+                payAccount.setAliasName(i18n.get(payAccount.getBankCode()) + countMap.get(payAccount.getBankCode()));
+            }
+        }
+        return accounts;
     }
 
     /**
@@ -515,7 +551,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         //推送消息给前端
         MessageVo message = new MessageVo();
         message.setSubscribeType(CometSubscribeType.MCENTER_RECHARGE_REMINDER.getCode());
-        Map<String, Object> map = new HashMap<>(3,1f);
+        Map<String, Object> map = new HashMap<>(3, 1f);
         map.put("date", recharge.getCreateTime() == null ? new Date() : recharge.getCreateTime());
         map.put("currency", getCurrencySign());
         map.put("type", recharge.getRechargeTypeParent());

@@ -41,25 +41,10 @@
                             <c:set var="onlinePayMin" value="${i.value.singleDepositMin}"/>
                         </c:if>
                         <label class="bank ${vs.index==0?'select':''}">
-                            <c:if test="${i.key=='wechatpay'}">
-                                <span class="radio">
-                                    <input name="result.rechargeType" value="${'wechatpay_scan'}" type="radio" ${vs.index==0?'checked':''}>
-                                    <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
-                                </span>
-
-                            </c:if>
-                            <c:if test="${i.key=='alipay'}">
-                                <span class="radio">
-                                    <input name="result.rechargeType" value="${'alipay_scan'}" type="radio" ${vs.index==0?'checked':''}>
-                                    <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
-                                </span>
-                            </c:if>
-                            <c:if test="${i.key=='qqwallet'}">
-                                <span class="radio">
-                                    <input name="result.rechargeType" value="${'qqwallet_scan'}" type="radio" ${vs.index==0?'checked':''}>
-                                    <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
-                                </span>
-                            </c:if>
+                            <span class="radio">
+                                <input name="result.rechargeType" value="${i.value.rechargeType}" type="radio" ${vs.index==0?'checked':''}>
+                                <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
+                            </span>
                             <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-third ${i.key}"></i></span>
                             <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
                             <input type="hidden" class="onlinePayMax" value="${empty i.value.singleDepositMax?'99,999,999.00':soulFn:formatCurrency(i.value.singleDepositMax)}"/>

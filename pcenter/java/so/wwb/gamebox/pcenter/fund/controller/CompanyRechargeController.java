@@ -140,6 +140,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         model.addAttribute("bankList", searchBank(BankEnum.TYPE_BANK.getCode()));
         //生成存款金额
         playerRechargeVo.getResult().setRechargeAmount(generalAmount(playerRechargeVo.getResult().getRechargeAmount()));
+        playerRechargeVo.getResult().setRechargeType(RechargeTypeEnum.ONLINE_BANK.getCode());
         model.addAttribute("playerRechargeVo", playerRechargeVo);
         model.addAttribute("validateRule", JsRuleCreator.create(OnlineBankSecondForm.class));
         return ONLINE_BANK_SECOND;

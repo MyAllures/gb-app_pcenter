@@ -25,7 +25,7 @@
         </div>
         <a href="/fund/playerRecharge/recharge.html" class="btn-gray btn btn-big pull-right" nav-Target="mainFrame">${views.fund_auto['返回上一级']}</a>
     </div>
-    <c:if test="${(fn:length(payAccountMap)<=0&&!displayAccounts)||(fn:length(accounts)<=0&&displayAccounts)}">
+    <c:if test="${(fn:length(accounts)<=0)}">
         <div class="account-list account-info-warp">
             <div class="left-ico-message">
                 <h2 class="m-bigl m-t-sm">${views.fund_auto['暂无收款账户，请选择其他存款方式！']}</h2>
@@ -33,7 +33,7 @@
             </div>
         </div>
     </c:if>
-    <c:if test="${(fn:length(payAccountMap)>0&&!displayAccounts)||(fn:length(accounts)>0&&displayAccounts)}">
+    <c:if test="${(fn:length(accounts)>0)}">
         <div class="account-list account-info-warp">
             <div class="left-ico-message">
                 <h4>${views.fund_auto['请选择银行']}</h4>
@@ -41,11 +41,11 @@
                 <div class="bank-deposit">
                     <div class="bank-total">
                         <c:if test="${!displayAccounts}">
-                            <c:forEach items="${payAccountMap}" var="i" varStatus="vs">
+                            <c:forEach items="${accounts}" var="i" varStatus="vs">
                                 <label class="bank ${vs.index==0?'select':''}">
-                                    <span class="radio"><input name="result.payAccountId" value="${i.value.id}" type="radio" ${vs.index==0?'checked':''}></span>
-                                    <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-bank ${i.key}"></i></span>
-                                    <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
+                                    <span class="radio"><input name="result.payAccountId" value="${i.id}" type="radio" ${vs.index==0?'checked':''}></span>
+                                    <span class="radio-bank" title="${dicts.common.bankname[i.bankCode]}"><i class="pay-bank ${i.bankCode}"></i></span>
+                                    <span class="bank-logo-name">${dicts.common.bankname[i.bankCode]}</span>
                                 </label>
                             </c:forEach>
                         </c:if>
@@ -65,7 +65,7 @@
         </div>
         <div class="account-list account-info-warp">
             <div class="left-ico-message">
-                <h4>请填写存款金额：</h4>
+                <h4>${views.fund_auto['请填写存款金额']}：</h4>
                 <span class="deposit-info-title">${views.fund_auto['步骤2']}<img src="${resRoot}/images/online-pay2.png"></span>
                 <div class="control-group">
                     <label class="control-label" for="result.rechargeAmount">${views.fund_auto['存款金额']}：</label>

@@ -81,6 +81,8 @@ public class CompanyRechargeController extends RechargeBaseController {
     private static final String BIT_COIN_FIRST = "/fund/recharge/BitCoinFirst";
     //比特币支付步骤2
     private static final String BIT_COIN_SECOND = "/fund/recharge/BitCoinSecond";
+    //存款验证未通过
+    private static final String RECHARGE_FAIL = "/fund/recharge/RechargeFail";
 
     private static Log LOG = LogFactory.getLog(CompanyRechargeController.class);
 
@@ -98,8 +100,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         boolean display = rank != null && rank.getDisplayCompanyAccount() != null && rank.getDisplayCompanyAccount();
         //获取公司入款收款账号
         if (!display) {
-            Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
-            model.addAttribute("payAccountMap", payAccountMap);
+            model.addAttribute("accounts", getCompanyPayAccount(payAccounts));
         } else {
             model.addAttribute("accounts", getCompanyPayAccounts(payAccounts));
         }
@@ -139,6 +140,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         model.addAttribute("bankList", searchBank(BankEnum.TYPE_BANK.getCode()));
         //生成存款金额
         playerRechargeVo.getResult().setRechargeAmount(generalAmount(playerRechargeVo.getResult().getRechargeAmount()));
+        playerRechargeVo.getResult().setRechargeType(RechargeTypeEnum.ONLINE_BANK.getCode());
         model.addAttribute("playerRechargeVo", playerRechargeVo);
         model.addAttribute("validateRule", JsRuleCreator.create(OnlineBankSecondForm.class));
         return ONLINE_BANK_SECOND;
@@ -154,11 +156,9 @@ public class CompanyRechargeController extends RechargeBaseController {
     public String bitCoinFirst(Model model) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
         //获取公司入款收款账号
-        Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
-        //调整顺序微信、支付宝、比特币、其他
-        List<PayAccount> payAccountList = new ArrayList<>(payAccountMap.size());
-        addPayAccount(payAccountList, payAccountMap, BITCOIN);
-        model.addAttribute("payAccountList", payAccountList);
+        List<PayAccount> payAccountList = getCompanyPayAccount(payAccounts);
+        Map<String, List<PayAccount>> payAccountMap = CollectionTool.groupByProperty(payAccountList, PayAccount.PROP_BANK_CODE, String.class);
+        model.addAttribute("payAccountList", payAccountMap.get(BITCOIN));
         PlayerRank rank = getRank();
         //是否隐藏收款账号
         isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
@@ -178,42 +178,48 @@ public class CompanyRechargeController extends RechargeBaseController {
     public String electronicPayFirst(Model model) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
         //获取公司入款收款账号
-        Map<String, PayAccount> payAccountMap = getCompanyPayAccount(payAccounts);
         PlayerRank rank = getRank();
         boolean display = rank != null && rank.getDisplayCompanyAccount() != null && rank.getDisplayCompanyAccount();
         List<PayAccount> payAccountList;
         if (display) {
             payAccountList = getCompanyPayAccounts(payAccounts);
         } else {
-            //调整顺序微信、支付宝、qq钱包、京东钱包、百度钱包、１码付、其他
-            payAccountList = new ArrayList<>(payAccountMap.size());
-            addPayAccount(payAccountList, payAccountMap, WECHATPAY);
-            addPayAccount(payAccountList, payAccountMap, ALIPAY);
-            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.QQWALLET.getCode());
-            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.JDWALLET.getCode());
-            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.BDWALLET.getCode());
-            addPayAccount(payAccountList, payAccountMap, BankCodeEnum.ONECODEPAY.getCode());
-            for (PayAccount payAccount : payAccountMap.values()) {
-                if (BankCodeEnum.OTHER.getCode().equals(payAccount.getBankCode())) {
-                    payAccountList.add(payAccount);
+            //根据金流顺序直接展示电子支付(不根据原有的微信、支付宝顺序展示)
+            payAccountList = getCompanyPayAccount(payAccounts);
+        }
+        //确认存款类型
+        if (CollectionTool.isNotEmpty(payAccountList)) {
+            Iterator<PayAccount> payAccountIterator = payAccountList.iterator();
+            while (payAccountIterator.hasNext()) {
+                PayAccount payAccount = payAccountIterator.next();
+                if (BITCOIN.equals(payAccount.getBankCode())) {
+                    payAccountIterator.remove();
+                }
+                String bankCode = payAccount.getBankCode();
+                if (WECHATPAY.equals(bankCode)) {
+                    payAccount.setRechargeType(RechargeTypeEnum.WECHATPAY_FAST.getCode());
+                } else if (QQWALLET.equals(bankCode)) {
+                    payAccount.setRechargeType(RechargeTypeEnum.QQWALLET_FAST.getCode());
+                } else if (ALIPAY.equals(bankCode)) {
+                    payAccount.setRechargeType(RechargeTypeEnum.ALIPAY_FAST.getCode());
+                } else if (BankCodeEnum.JDWALLET.getCode().equals(bankCode)) {
+                    payAccount.setRechargeType(RechargeTypeEnum.JDWALLET_FAST.getCode());
+                } else if (BankCodeEnum.BDWALLET.getCode().equals(bankCode)) {
+                    payAccount.setRechargeType(RechargeTypeEnum.BDWALLET_FAST.getCode());
+                } else if (BankCodeEnum.ONECODEPAY.getCode().equals(bankCode)) {
+                    payAccount.setRechargeType(RechargeTypeEnum.ONECODEPAY_FAST.getCode());
+                } else {
+                    payAccount.setRechargeType(RechargeTypeEnum.OTHER_FAST.getCode());
                 }
             }
         }
         model.addAttribute("payAccountList", payAccountList);
         model.addAttribute("display", display);
-        //是否隐藏收款账号
-        isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
         model.addAttribute("rank", rank);
         model.addAttribute("currency", getCurrencySign());
         model.addAttribute("isRealName", isRealName());
+        model.addAttribute("validateRule", JsRuleCreator.create(ElectronicPayForm.class));
         return ELECTRONIC_PAY_FIRST;
-    }
-
-    private void addPayAccount(List<PayAccount> payAccountList, Map<String, PayAccount> payAccountMap, String bankCode) {
-        PayAccount payAccount = payAccountMap.get(bankCode);
-        if (payAccount != null) {
-            payAccountList.add(payAccount);
-        }
     }
 
     /**
@@ -224,25 +230,35 @@ public class CompanyRechargeController extends RechargeBaseController {
      * @return
      */
     @RequestMapping("/electronicPaySecond")
-    public String electronicPaySecond(Model model, PlayerRechargeVo playerRechargeVo) {
+    public String electronicPaySecond(Model model, PlayerRechargeVo playerRechargeVo, @FormModel @Valid ElectronicPaySecondForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            LOG.info("电子支付验证未通过");
+            return RECHARGE_FAIL;
+        }
         PayAccount payAccount = getPayAccount(playerRechargeVo.getResult().getPayAccountId());
         String rechargeType = RechargeTypeEnum.OTHER_FAST.getCode();
-        if (WECHATPAY.equals(payAccount.getBankCode())) {
+        String bankCode = payAccount.getBankCode();
+        if (WECHATPAY.equals(bankCode)) {
             rechargeType = RechargeTypeEnum.WECHATPAY_FAST.getCode();
-        } else if (ALIPAY.equals(payAccount.getBankCode())) {
+        } else if (ALIPAY.equals(bankCode)) {
             rechargeType = RechargeTypeEnum.ALIPAY_FAST.getCode();
+        } else if (BankCodeEnum.JDWALLET.getCode().equals(bankCode)) {
+            rechargeType = RechargeTypeEnum.JDWALLET_FAST.getCode();
+        } else if (BankCodeEnum.BDWALLET.getCode().equals(bankCode)) {
+            rechargeType = RechargeTypeEnum.BDWALLET_FAST.getCode();
+        } else if (BankCodeEnum.ONECODEPAY.getCode().equals(bankCode)) {
+            rechargeType = RechargeTypeEnum.ONECODEPAY_FAST.getCode();
+        } else if (BankCodeEnum.QQWALLET.getCode().equals(bankCode)) {
+            rechargeType = RechargeTypeEnum.QQWALLET_FAST.getCode();
         }
         playerRechargeVo.getResult().setRechargeType(rechargeType);
-        model.addAttribute("sales", searchSales(rechargeType));
         model.addAttribute("playerRechargeVo", playerRechargeVo);
-        model.addAttribute("sales", searchSales(rechargeType));
         //验证规则
-        model.addAttribute("validateRule", JsRuleCreator.create(ElectronicPayForm.class));
-        model.addAttribute("rank", getRank());
+        model.addAttribute("validateRule", JsRuleCreator.create(ElectronicPaySecondForm.class));
         model.addAttribute("payAccount", payAccount);
         playerRechargeVo.getResult().setPlayerId(SessionManager.getUserId());
-        //上一次填写的账号/昵称
-        model.addAttribute("payerBankcard", playerRechargeService().searchLastPayerBankcard(playerRechargeVo));
+        //是否隐藏收款账号
+        isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
         return ELECTRONIC_PAY_SECOND;
     }
 
@@ -279,7 +295,25 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("/atmCounterFirst")
     public String atmCountFirst(Model model) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode(), true);
-        Map<String, List<PayAccount>> payAccountMap = CollectionTool.groupByProperty(payAccounts, PayAccount.PROP_BANK_CODE, String.class);
+        Map<String, List<PayAccount>> payAccountMap = new HashMap<>();
+        String bankCode;
+        String otherBank = BankCodeEnum.OTHER_BANK.getCode();
+        //其他银行在atm存款不能全部归属于其他银行，否则下拉框选择无法判定
+        for (PayAccount payAccount : payAccounts) {
+            bankCode = payAccount.getBankCode();
+            if (otherBank.equals(bankCode)) {
+                if (payAccountMap.get(payAccount.getCustomBankName()) == null) {
+                    payAccountMap.put(payAccount.getCustomBankName(), new ArrayList<PayAccount>());
+                }
+                payAccountMap.get(payAccount.getCustomBankName()).add(payAccount);
+            } else {
+                if (payAccountMap.get(bankCode) == null) {
+                    payAccountMap.put(bankCode, new ArrayList<PayAccount>());
+                }
+                payAccountMap.get(bankCode).add(payAccount);
+            }
+        }
+        CollectionTool.groupByProperty(payAccounts, PayAccount.PROP_BANK_CODE, String.class);
         model.addAttribute("payAccountMap", payAccountMap);
         model.addAttribute("rank", getRank());
         model.addAttribute("currency", getCurrencySign());
@@ -351,29 +385,8 @@ public class CompanyRechargeController extends RechargeBaseController {
 
     @RequestMapping("electronicPaySubmit")
     @Token(valid = true)
-    public String electronicPaySubmit(PlayerRechargeVo playerRechargeVo, HttpServletRequest request, @FormModel @Valid ElectronicPayForm form, BindingResult result, Model model) {
-        boolean flag = rechargePre(result, form.get$code());
-        if (!flag) {
-            playerRechargeVo.setSuccess(false);
-            model.addAttribute("customerService", getCustomerService());
-            return ONLINE_FAIL;
-        }
-        PlayerRecharge playerRecharge = playerRechargeVo.getResult();
-        PayAccount payAccount = getPayAccount(playerRecharge.getPayAccountId());
-        if (payAccount == null) {
-            playerRechargeVo.setSuccess(false);
-            model.addAttribute("customerService", getCustomerService());
-            return ONLINE_FAIL;
-        }
-        String rechargeType = RechargeTypeEnum.OTHER_FAST.getCode();
-        if (WECHATPAY.equals(payAccount.getBankCode())) {
-            rechargeType = RechargeTypeEnum.WECHATPAY_FAST.getCode();
-        } else if (ALIPAY.equals(payAccount.getBankCode())) {
-            rechargeType = RechargeTypeEnum.ALIPAY_FAST.getCode();
-        }
-
-        playerRechargeVo = saveRecharge(playerRechargeVo, payAccount, RechargeTypeParentEnum.COMPANY_DEPOSIT.getCode(), rechargeType);
-        return depositAfter(playerRechargeVo, model);
+    public String electronicPaySubmit(PlayerRechargeVo playerRechargeVo, HttpServletRequest request, @FormModel @Valid ElectronicPaySecondForm form, BindingResult result, Model model) {
+        return companySubmit(playerRechargeVo, playerRechargeVo.getResult().getRechargeType(), result);
     }
 
     @RequestMapping("bitCoinSubmit")
@@ -474,30 +487,45 @@ public class CompanyRechargeController extends RechargeBaseController {
     }
 
     /**
-     * 获取公司入款收款账号Map（根据固定顺序获取收款账户）
+     * 获取公司入款收款账号（根据固定顺序获取收款账户）
      *
      * @param accounts
      * @return
      */
-    private Map<String, PayAccount> getCompanyPayAccount(List<PayAccount> accounts) {
-        Map<String, PayAccount> payAccountMap = new HashMap<>();
+    private List<PayAccount> getCompanyPayAccount(List<PayAccount> accounts) {
+        List<String> bankCodes = new ArrayList<>();
+        List<PayAccount> payAccounts = new ArrayList<>();
         for (PayAccount payAccount : accounts) {
-            payAccountMap.put(payAccount.getBankCode(), payAccount);
+            if (!bankCodes.contains(payAccount.getBankCode())) {
+                payAccounts.add(payAccount);
+                bankCodes.add(payAccount.getBankCode());
+            }
         }
-        return payAccountMap;
+        return payAccounts;
     }
+
 
     private List<PayAccount> getCompanyPayAccounts(List<PayAccount> accounts) {
         Map<String, Integer> countMap = new HashMap<>();
         Map<String, String> i18n = I18nTool.getDictMapByEnum(SessionManager.getLocale(), DictEnum.BANKNAME);
+        Map<String, List<PayAccount>> accountMap = CollectionTool.groupByProperty(accounts, PayAccount.PROP_BANK_CODE, String.class);
         for (PayAccount payAccount : accounts) {
             if (StringTool.isBlank(payAccount.getAliasName())) {
-                if (countMap.get(payAccount.getBankCode()) == null) {
-                    countMap.put(payAccount.getBankCode(), 1);
+                String bankCode = payAccount.getBankCode();
+                if (countMap.get(bankCode) == null) {
+                    countMap.put(bankCode, 1);
                 } else {
-                    countMap.put(payAccount.getBankCode(), countMap.get(payAccount.getBankCode()) + 1);
+                    countMap.put(bankCode, countMap.get(bankCode) + 1);
                 }
-                payAccount.setAliasName(i18n.get(payAccount.getBankCode()) + countMap.get(payAccount.getBankCode()));
+                if (BankCodeEnum.OTHER.getCode().equals(bankCode) || BankCodeEnum.OTHER_BANK.getCode().equals(bankCode)) {
+                    payAccount.setAliasName(payAccount.getCustomBankName());
+                } else {
+                    if (accountMap.get(bankCode).size() > 1) {
+                        payAccount.setAliasName(i18n.get(bankCode) + countMap.get(bankCode));
+                    } else {
+                        payAccount.setAliasName(i18n.get(bankCode));
+                    }
+                }
             }
         }
         return accounts;

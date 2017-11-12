@@ -1,5 +1,6 @@
 package so.wwb.gamebox.pcenter.fund.form;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.soul.commons.query.enums.Operator;
 import org.soul.commons.validation.form.constraints.Depends;
@@ -18,22 +19,11 @@ import javax.validation.constraints.Pattern;
 /**
  * Created by Cherry on 16-6-24.
  */
-@Comment("扫码支付验证")
+@Comment("网银支付验证")
 public class OnlineBankForm implements IForm {
-    private String result_payAccountId;
     private String result_rechargeAmount;
     private String result_payerName;
     private String $code;
-
-    @Comment("存入银行")
-    @NotBlank(message = "fund.rechargeForm.payAccountIdNotBlank")
-    public String getResult_payAccountId() {
-        return result_payAccountId;
-    }
-
-    public void setResult_payAccountId(String result_payAccountId) {
-        this.result_payAccountId = result_payAccountId;
-    }
 
     @Comment("存款金额")
     @NotBlank(message = "fund.rechargeForm.rechargeAmountNotBlank")
@@ -47,6 +37,18 @@ public class OnlineBankForm implements IForm {
 
     public void setResult_rechargeAmount(String result_rechargeAmount) {
         this.result_rechargeAmount = result_rechargeAmount;
+    }
+
+    @Comment("存款人")
+    @NotBlank
+    @Pattern(message = "fund.rechargeForm.payerName.pattern", regexp = so.wwb.gamebox.model.common.RegExpConstants.REALNAME)
+    @Length(min = 2, max = 30)
+    public String getResult_payerName() {
+        return result_payerName;
+    }
+
+    public void setResult_payerName(String result_payerName) {
+        this.result_payerName = result_payerName;
     }
 
     @Comment("验证码")

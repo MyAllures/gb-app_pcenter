@@ -193,30 +193,43 @@
             </div>
             <div class="moneydetail">
                 <c:set var="bankCode" value="${command.result._describe['bankCode']}" />
+                <c:set var="fundType" value="${command.result.fundType}"/>
                 <c:choose>
                     <%--人工存提--%>
-                    <c:when test="${command.result.fundType eq 'artificial_deposit'}">
+                    <c:when test="${fundType eq 'artificial_deposit'}">
                         <h3>${views.fund['FundRecord.view.tips']}</h3>
                     </c:when>
                     <%--扫码支付、电子支付--%>
-                    <c:when test="${command.result.fundType eq 'alipay_scan'||command.result.fundType eq 'other_fast' || command.result.fundType eq 'wechatpay_scan'||command.result.fundType eq 'wechatpay_fast' || command.result.fundType eq 'alipay_fast' ||command.result.fundType eq 'bitcoin_fast'||command.result.fundType eq 'qqwallet_scan'}">
+                    <c:when test="${fundType eq 'alipay_scan'||fundType eq 'other_fast' || fundType eq 'wechatpay_scan'||fundType eq 'wechatpay_fast' || fundType eq 'alipay_fast' ||fundType eq 'bitcoin_fast'||fundType eq 'qqwallet_fast'||fundType eq 'qqwallet_scan'||fundType eq 'onecodepay_fast'||fundType eq 'jdwallet_fast'||fundType eq 'bdwallet_fast'||fundType eq 'union_pay_scan'||fundType eq 'bdwallet_san'||fundType eq 'jdpay_scan'}">
                         <h1>
                             <c:set var="scanCss" value="${bankCode}"/>
-                            <c:if test="${command.result.fundType eq 'alipay_scan'||command.result.fundType eq 'alipay_fast'}">
+                            <c:if test="${fundType eq 'alipay_scan'||fundType eq 'alipay_fast'}">
                                 <c:set var="scanCss" value="alipay"/>
                             </c:if>
-                            <c:if test="${command.result.fundType eq 'wechatpay_scan'||command.result.fundType eq 'wechatpay_fast'}">
+                            <c:if test="${fundType eq 'wechatpay_scan'||fundType eq 'wechatpay_fast'}">
                                 <c:set var="scanCss" value="wechatpay"/>
                             </c:if>
-                            <c:if test="${command.result.fundType eq 'qqwallet_scan'}">
+                            <c:if test="${fundType eq 'qqwallet_scan'|| fundType eq 'qqwallet_fast'}">
                                 <c:set var="scanCss" value="qqwallet"/>
+                            </c:if>
+                            <c:if test="${fundType eq 'jdpay_scan'|| fundType eq 'jdwallet_fast'}">
+                                <c:set var="scanCss" value="jdwallet"/>
+                            </c:if>
+                            <c:if test="${fundType eq 'bdwallet_san'|| fundType eq 'bdwallet_fast'}">
+                                <c:set var="scanCss" value="bdwallet"/>
+                            </c:if>
+                            <c:if test="${fundType eq 'union_pay_scan'}">
+                                <c:set var="scanCss" value="unionpay"/>
+                            </c:if>
+                            <c:if test="${fundType eq 'onecodepay_fast'}">
+                                <c:set var="scanCss" value="onecodepay"/>
                             </c:if>
                             <c:set var="isOther" value="${bankCode eq 'other' && !empty command.result._describe['customBankName']}"/>
                             <i class="${isOther?'':'pay-third '}${scanCss}"></i>
                             <i style="font-size: medium">${isOther?command.result._describe['customBankName']:''}</i>
                         </h1>
                     </c:when>
-                    <c:when test="${command.result.fundType eq 'digiccy_scan'}">
+                    <c:when test="${fundType eq 'digiccy_scan'}">
                         <h1>
                             <i class="pay-third ${bankCode}"></i>
                         </h1>

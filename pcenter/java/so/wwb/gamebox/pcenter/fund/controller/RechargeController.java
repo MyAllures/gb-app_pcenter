@@ -15,6 +15,7 @@ import so.wwb.gamebox.model.master.content.enums.CttAnnouncementTypeEnum;
 import so.wwb.gamebox.model.master.content.po.CttAnnouncement;
 import so.wwb.gamebox.model.master.content.vo.CttAnnouncementListVo;
 import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
+import so.wwb.gamebox.model.master.operation.po.VActivityMessage;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.tools.ServiceTool;
@@ -23,6 +24,7 @@ import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by cherry on 16-9-12.
@@ -100,5 +102,24 @@ public class RechargeController extends RechargeBaseController {
     @ResponseBody
     public boolean checkCaptcha(@RequestParam("code") String code) {
         return !StringTool.isEmpty(code) && code.equalsIgnoreCase((String) SessionManager.getAttribute(SessionKey.S_CAPTCHA_PREFIX + CaptchaUrlEnum.CODE_RECHARGE.getSuffix()));
+    }
+
+    /**
+     * 根据存款方式获取
+     *
+     * @param amount
+     * @param rechargeType
+     * @return
+     */
+    @RequestMapping("/sale")
+    @ResponseBody
+    public List<VActivityMessage> sale(Double amount, String rechargeType) {
+        List<VActivityMessage> vActivityMessages;
+        if (amount == null) {
+            vActivityMessages = searchSales(rechargeType);
+        } else {
+            vActivityMessages = searchSaleByAmount(amount, rechargeType);
+        }
+        return vActivityMessages;
     }
 }

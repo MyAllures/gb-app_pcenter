@@ -19,14 +19,14 @@ import javax.validation.constraints.Pattern;
  * Created by Cherry on 16-6-24.
  */
 @Comment("电子支付验证")
-public class ElectronicPayForm implements IForm {
+public class ElectronicPaySecondForm implements IForm {
     private String result_rechargeAmount;
     private String result_payerBankcard;
     private String result_bankOrder;
     private String $code;
 
     @Comment("存款金额")
-    @NotBlank
+    @NotBlank(message = "fund.rechargeForm.rechargeAmountNotBlank")
     @Pattern(message = "fund.rechargeForm.rechargeAmountCorrect", regexp = FormValidRegExps.MONEY)
     @Remote(message = "fund.rechargeForm.rechargeAmountOver", checkClass = CompanyRechargeController.class, checkMethod = "checkAmount")
     @Max(message = "fund.rechargeForm.rechargeAmountMax", value = 99999999)
@@ -39,7 +39,7 @@ public class ElectronicPayForm implements IForm {
     }
 
     @Comment("存款账号")
-    @Depends(property = "result.rechargeType", operator = {Operator.NE}, value = {RechargeTypeEnum.RECHARGE_TYPE_ONECODEPAY_FASE})
+    @Depends(message = "fund.rechargeForm.payerBankcardNotBlank", property = "result.rechargeType", operator = {Operator.NE}, value = {RechargeTypeEnum.RECHARGE_TYPE_ONECODEPAY_FASE})
     @Length(message = "fund.rechargeForm.payerBankcardLength", max = 20)
     public String getResult_payerBankcard() {
         return result_payerBankcard;
@@ -57,17 +57,6 @@ public class ElectronicPayForm implements IForm {
 
     public void setResult_bankOrder(String result_bankOrder) {
         this.result_bankOrder = result_bankOrder;
-    }
-
-    @Comment("验证码")
-    @Depends(message = "fund.rechargeForm.code.notBlank", operator = {Operator.GE}, property = {"$rechargeCount"}, value = {"3"}, jsValueExp = {"parseInt($(\"[name=rechargeCount]\").val())"})
-    @Remote(message = "fund.rechargeForm.code.correct", checkMethod = "checkCaptcha", checkClass = RechargeController.class)
-    public String get$code() {
-        return $code;
-    }
-
-    public void set$code(String $code) {
-        this.$code = $code;
     }
 
 }

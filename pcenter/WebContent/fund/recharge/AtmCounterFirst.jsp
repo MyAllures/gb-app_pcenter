@@ -67,7 +67,7 @@
                                 <c:if test="${vs.index==0}">
                                     <c:set var="payAccountId" value="${i.value.get(0).id}"/>
                                 </c:if>
-                                <c:set var="isOther" value="${i.key=='other_bank'}"/>
+                                <c:set var="isOther" value="${i.value.get(0).bankCode=='other_bank'}"/>
                                 <option value="${i.key}" ${vs.index==0?'selected':''}>${isOther?i.value.get(0).customBankName:dicts.common.bankname[i.key]}</option>
                             </c:forEach>
                         </select>

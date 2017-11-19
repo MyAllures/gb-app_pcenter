@@ -19,9 +19,4 @@
     </div>
 </form>
 <soul:import res="site/fund/transfers/auto/Index"/>
-<script src="${resComRoot}/js/pcenterJS/global-1.1.0.min.js"></script>
-<script>
-    $(function() {
-        Util.ToolTip.init();
-    });
 </script>

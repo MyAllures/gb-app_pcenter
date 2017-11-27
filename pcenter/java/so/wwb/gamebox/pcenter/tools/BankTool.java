@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
+import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.po.BankExtend;
 import so.wwb.gamebox.model.company.vo.BankExtendVo;

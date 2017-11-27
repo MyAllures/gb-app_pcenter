@@ -5,7 +5,6 @@ import org.soul.commons.query.enums.Operator;
 import org.soul.commons.validation.form.constraints.Depends;
 import org.soul.commons.validation.form.constraints.Remote;
 import org.soul.commons.validation.form.support.Comment;
-import org.soul.commons.validation.form.support.RegExpConstants;
 import org.soul.web.support.IForm;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.fund.controller.CompanyRechargeController;

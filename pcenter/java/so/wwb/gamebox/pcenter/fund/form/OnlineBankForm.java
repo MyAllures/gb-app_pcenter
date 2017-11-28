@@ -7,6 +7,7 @@ import org.soul.commons.validation.form.constraints.Depends;
 import org.soul.commons.validation.form.constraints.Remote;
 import org.soul.commons.validation.form.support.Comment;
 import org.soul.web.support.IForm;
+import so.wwb.gamebox.model.common.RegExpConstants;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.fund.controller.CompanyRechargeController;
 import so.wwb.gamebox.pcenter.fund.controller.RechargeController;
@@ -40,7 +41,7 @@ public class OnlineBankForm implements IForm {
 
     @Comment("存款人")
     @NotBlank
-    @Pattern(message = "fund.rechargeForm.payerName.pattern", regexp = so.wwb.gamebox.model.common.RegExpConstants.REALNAME)
+    @Pattern(message = "fund.rechargeForm.payerName.pattern", regexp = RegExpConstants.PAYERNAME)
     @Length(min = 2, max = 30)
     public String getResult_payerName() {
         return result_payerName;

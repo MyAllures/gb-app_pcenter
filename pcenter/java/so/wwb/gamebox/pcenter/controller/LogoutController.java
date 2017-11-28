@@ -6,7 +6,6 @@ import org.soul.commons.spring.utils.SpringTool;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.shiro.common.delegate.PassportDelegate;
 
 import javax.servlet.http.HttpServletRequest;

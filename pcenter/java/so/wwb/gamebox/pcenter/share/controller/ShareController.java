@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.site.po.SiteCustomerService;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
@@ -25,7 +26,6 @@ import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.share.form.RealNameConfirmForm;
 import so.wwb.gamebox.pcenter.share.form.RealNameForm;
 import so.wwb.gamebox.pcenter.tools.BankTool;
-import so.wwb.gamebox.pcenter.tools.ServiceTool;
 import so.wwb.gamebox.web.cache.Cache;
 
 import javax.servlet.http.HttpServletRequest;

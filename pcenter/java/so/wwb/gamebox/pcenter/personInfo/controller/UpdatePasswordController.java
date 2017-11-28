@@ -2,13 +2,13 @@ package so.wwb.gamebox.pcenter.personInfo.controller;
 
 import org.soul.commons.lang.DateTool;
 import org.soul.commons.lang.string.StringTool;
+import org.soul.commons.locale.DateQuickPicker;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.validation.form.PasswordRule;
 import org.soul.model.log.audit.enums.OpMode;
 import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.vo.SysUserVo;
 import org.soul.model.session.SessionKey;
-import org.soul.commons.locale.DateQuickPicker;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +16,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.common.security.AuthTool;
 import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.common.PrivilegeStatusEnum;
 import so.wwb.gamebox.model.master.player.vo.UpdatePasswordVo;
 import so.wwb.gamebox.pcenter.personInfo.form.UpdatePasswordForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
-import so.wwb.gamebox.pcenter.tools.ServiceTool;
-import so.wwb.gamebox.web.ServiceToolBase;
 import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
 import so.wwb.gamebox.web.shiro.common.filter.KickoutFilter;
@@ -257,7 +256,7 @@ public class UpdatePasswordController {
         sysUser.setLoginErrorTimes(times);
         sysUserVo.setResult(sysUser);
         sysUserVo.setProperties(SysUser.PROP_FREEZE_START_TIME, SysUser.PROP_FREEZE_END_TIME,SysUser.PROP_LOGIN_ERROR_TIMES);
-        ServiceToolBase.sysUserService().updateOnly(sysUserVo);
+        ServiceTool.sysUserService().updateOnly(sysUserVo);
         SessionManagerCommon.refreshUser();
     }
 

@@ -10,7 +10,6 @@ import org.soul.web.support.IForm;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.fund.controller.CompanyRechargeController;
-import so.wwb.gamebox.pcenter.fund.controller.RechargeController;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Pattern;

@@ -7,6 +7,7 @@ import org.soul.commons.lang.DateTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.RandomStringTool;
 import org.soul.commons.lang.string.StringTool;
+import org.soul.commons.locale.DateQuickPicker;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
@@ -26,7 +27,6 @@ import org.soul.model.security.privilege.vo.SysUserProtectionVo;
 import org.soul.model.security.privilege.vo.SysUserVo;
 import org.soul.model.sys.po.SysDict;
 import org.soul.model.sys.po.SysParam;
-import org.soul.commons.locale.DateQuickPicker;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
@@ -34,6 +34,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.common.security.AuthTool;
 import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.Module;
@@ -59,8 +60,6 @@ import so.wwb.gamebox.model.master.player.vo.*;
 import so.wwb.gamebox.pcenter.accountManagement.form.*;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.session.SessionManager;
-import so.wwb.gamebox.pcenter.tools.ServiceTool;
-import so.wwb.gamebox.web.ServiceToolBase;
 import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.privilege.controller.PrivilegeController;
@@ -622,7 +621,7 @@ public class AccountSettingsController {
 		Integer userId = SessionManagerCommon.getUserId();
 		SysUserVo userVo = new SysUserVo();
 		userVo.getSearch().setId(userId);
-		userVo = ServiceToolBase.sysUserService().get(userVo);
+		userVo = ServiceTool.sysUserService().get(userVo);
 		if (userVo.getResult() != null) {
 			return userVo.getResult();
 		}
@@ -733,7 +732,7 @@ public class AccountSettingsController {
 		userPlayerVo.setStartTime(startTime);
 		userPlayerVo.setEndTime(endTime);
 		userPlayerVo.setSysUser(getCurrentUser());
-		ServiceToolBase.userPlayerService().updateUserErrorTimes(userPlayerVo);
+		ServiceTool.userPlayerService().updateUserErrorTimes(userPlayerVo);
 		SessionManager.refreshUser();
 	}
 
@@ -743,7 +742,7 @@ public class AccountSettingsController {
 		SysUser user = getCurrentUser();
 		accountVo.setResult(user);
 		accountVo.setChooseFreezeTime(FreezeTime.THREE.getCode());
-		UserPlayer userPlayer = ServiceToolBase.userPlayerService().freezeAccountBalance(accountVo);
+		UserPlayer userPlayer = ServiceTool.userPlayerService().freezeAccountBalance(accountVo);
 		sendNotice(user, userPlayer);
 	}
 

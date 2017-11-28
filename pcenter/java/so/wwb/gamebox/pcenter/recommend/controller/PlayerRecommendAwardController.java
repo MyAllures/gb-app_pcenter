@@ -2,7 +2,6 @@ package so.wwb.gamebox.pcenter.recommend.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.soul.commons.data.json.JsonTool;
-import org.soul.commons.dubbo.DubboTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
@@ -12,6 +11,7 @@ import org.soul.model.sys.po.SysParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.iservice.master.report.IPlayerRecommendAwardService;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteI18nEnum;
@@ -24,7 +24,6 @@ import so.wwb.gamebox.model.master.report.po.PlayerRecommendAward;
 import so.wwb.gamebox.model.master.report.vo.PlayerRecommendAwardListVo;
 import so.wwb.gamebox.model.master.setting.po.GradientTemp;
 import so.wwb.gamebox.pcenter.session.SessionManager;
-import so.wwb.gamebox.pcenter.tools.ServiceTool;
 import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
 import so.wwb.gamebox.web.common.demomodel.DemoModel;
@@ -56,7 +55,7 @@ public class PlayerRecommendAwardController {
     }
 
     private IPlayerRecommendAwardService getService() {
-        return DubboTool.getService(IPlayerRecommendAwardService.class);
+        return ServiceTool.playerRecommendAwardService();
     }
 
     //region your codes 3

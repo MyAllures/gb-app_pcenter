@@ -46,7 +46,7 @@ public class OnlineBankSecondForm implements IForm {
 
     @Comment("存款人")
     @NotBlank
-    @Pattern(message = "fund.rechargeForm.payerName.pattern", regexp = RegExpConstants.REALNAME)
+    @Pattern(message = "fund.rechargeForm.payerName.pattern", regexp = RegExpConstants.PAYERNAME)
     @Length(min = 2, max = 30)
     public String getResult_payerName() {
         return result_payerName;

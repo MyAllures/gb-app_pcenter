@@ -60,6 +60,7 @@ public class PersonInfoForm implements IForm {
 
     @Length(min = 2,max = 30,message = "passport.edit.info.realName")
 //    @Depends(property = "$flag",operator = Operator.EQ,value = {"0"},jsValueExp ="$(\"[name=\\'realNameStatus\\']\").val()",message = "请输入真实姓名")
+    @Remote(message = "passport.realName.exist",checkMethod = "checkRealNameExist",checkClass = PersonalInfoController.class)
     @Pattern(regexp = FormValidRegExps.REALNAME,message = "passport.edit.info.format.error")
     @Comment("姓名")
     public String getResult_realName() {

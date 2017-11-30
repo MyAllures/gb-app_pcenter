@@ -22,8 +22,9 @@
         };
     </script>
     <script type="text/javascript">
-        curl(['site/common/TopPage', 'site/home/TopNav', 'site/home/LeftNav', 'site/index/Comet', "site/index/Index",
-            'jqmetisMenu', 'jqnouislider'], function (TopPage, TopNav, LeftNav, Comet, Index) {
+        curl(['site/common/TopPage', 'site/home/TopNav', 'site/home/LeftNav',
+            'site/index/Comet', "site/index/Index","backgroundBlur",
+            'jqmetisMenu', 'jqnouislider'], function (TopPage, TopNav, LeftNav, Comet, Index,BackgroundBlur) {
             topPage = new TopPage();
             topNav = new TopNav();
             leftNav = new LeftNav();
@@ -31,6 +32,8 @@
             //shortcutMenu = new ShortcutMenu()
             comet = new Comet();
             index = new Index();
+            backgroundBlur = new BackgroundBlur();
+
         });
     </script>
     <%-- <script id="topMenuTmpl" type="text/x-jsrender">
@@ -83,12 +86,75 @@
     </div>
 </div>
 <!--banner-->
-<div class="banner" style="background-image: url(../ftl/${siteDomain.templateCode}/images/bannerbg.jpg);">
+<div class="banner">
     <a href="/">
         <div class="logo" style="background-image:url(${soulFn:getThumbPath(domain, logo,220,90)});width:220px;height: 90px;"></div>
     </a>
-
-    <div class="right"></div>
+    <div class="right">
+        <c:if test="${isLottery.paramValue=='false'}">
+        <ul class="nav-menu">
+            <li>
+                <a href="#">
+                    <i class="nav-menu-ico home-ico"></i>
+                    <span>
+    	  	  	   	  	网站首页
+    	  	  	   	  	<font>HOME</font>
+    	  	  	   	  </span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="nav-menu-ico casino-ico"></i>
+                    <span>
+    	  	  	   	  	电子游艺
+    	  	  	   	  	<font>CASINO</font>
+    	  	  	   	  </span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="nav-menu-ico lives-ico"></i>
+                    <span>
+    	  	  	   	  	真人视讯
+    	  	  	   	  	<font>LIVES</font>
+    	  	  	   	  </span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="nav-menu-ico sports-ico"></i>
+                    <span>
+    	  	  	   	  	体育竞技
+    	  	  	   	  	<font>SPORTS</font>
+    	  	  	   	  </span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="nav-menu-ico lottery-ico"></i>
+                    <span>
+    	  	  	   	  	彩票游戏
+    	  	  	   	  	<font>LOTTERY</font>
+    	  	  	   	  </span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class="nav-menu-ico promo-ico"></i>
+                    <span>
+    	  	  	   	  	优惠活动
+    	  	  	   	  	<font>PROMO</font>
+    	  	  	   	  </span>
+                </a>
+            </li>
+        </ul>
+        </c:if>
+    </div>
+    <div class="banner-bg-t"></div>
+    <div class="banner-bg">
+        <img src="../ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
+    </div>
+    <%--<div class="right"></div>--%>
 </div>
 
 <div id="page-content" class="wrapper" style="min-height: 800px;">
@@ -97,6 +163,28 @@
         <!--左边菜单栏-->
         <div class="sidebar-nav _nav_title">
             <c:forEach items="${command}" var="obj" varStatus="status">
+                <c:if test="${empty obj.object.resourceUrl}">
+                    <div class="left-nav-title">${views.sysResource[obj.object.resourceRName]}</div>
+                    <c:if test="${obj.children.size()>0}">
+                        <c:forEach items="${obj.children}" var="child" varStatus="vs">
+                            <c:if test="${isLottery.paramValue=='false' || (isLottery.paramValue=='true' && child.object.resourceUrl!='fund/playerTransfer/transfers.html')}">
+                                <dl>
+                                    <dt class="${status.index==0 && vs.index == 0?'select':''}">
+                                        <a <c:if test="${child.children.size()>0}">href="javascript:void(0);"</c:if>
+                                                <c:if test="${child.children.size()==0}"> nav-target='mainFrame'
+                                                    data="/${child.object.resourceUrl}?t=${random}"  href="javascript:void(0);"</c:if>>
+                                            <i class="navico ${child.object.resourceIcon}"></i>
+                                                ${views.sysResource[child.object.resourceRName]}
+                                        </a>
+                                    </dt>
+                                </dl>
+                            </c:if>
+                        </c:forEach>
+                    </c:if>
+                </c:if>
+            </c:forEach>
+
+            <%--<c:forEach items="${command}" var="obj" varStatus="status">
                 <c:if test="${isLottery.paramValue=='true'}">
                     <c:if test="${obj.object.resourceUrl!='fund/playerTransfer/transfers.html'}">
                         <dl>
@@ -122,7 +210,7 @@
                     </dl>
                 </c:if>
 
-            </c:forEach>
+            </c:forEach>--%>
         </div>
     </div>
     <!--right-->

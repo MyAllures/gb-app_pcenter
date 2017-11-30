@@ -86,7 +86,7 @@
     </div>
 </div>
 <!--banner-->
-<div class="banner">
+<div class="banner" <c:if test="${isLotterySite}">style="background-image: url(../ftl/${siteDomain.templateCode}/images/bannerbg.jpg);"</c:if> >
     <a href="/">
         <div class="logo" style="background-image:url(${soulFn:getThumbPath(domain, logo,220,90)});width:220px;height: 90px;"></div>
     </a>
@@ -150,10 +150,13 @@
         </ul>
         </c:if>
     </div>
-    <div class="banner-bg-t"></div>
-    <div class="banner-bg">
-        <img src="../ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
-    </div>
+    <c:if test="${!isLotterySite}">
+        <div class="banner-bg-t"></div>
+        <div class="banner-bg">
+            <img src="../ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
+        </div>
+    </c:if>
+
     <%--<div class="right"></div>--%>
 </div>
 

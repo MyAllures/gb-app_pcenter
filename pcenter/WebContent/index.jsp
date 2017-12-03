@@ -94,7 +94,7 @@
         <c:if test="${isLottery.paramValue=='false'}">
         <ul class="nav-menu">
             <li>
-                <a href="#">
+                <a href="/">
                     <i class="nav-menu-ico home-ico"></i>
                     <span>
     	  	  	   	  	网站首页
@@ -102,42 +102,17 @@
     	  	  	   	  </span>
                 </a>
             </li>
-            <li>
-                <a href="#">
-                    <i class="nav-menu-ico casino-ico"></i>
-                    <span>
-    	  	  	   	  	电子游艺
+            <c:forEach var="at" items="${apiTypeI18ns}" varStatus="vs">
+                <li>
+                    <a href="#">
+                        <i class="nav-menu-ico casino-ico"></i>
+                        <span>
+    	  	  	   	  	${at.name}
     	  	  	   	  	<font>CASINO</font>
     	  	  	   	  </span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="nav-menu-ico lives-ico"></i>
-                    <span>
-    	  	  	   	  	真人视讯
-    	  	  	   	  	<font>LIVES</font>
-    	  	  	   	  </span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="nav-menu-ico sports-ico"></i>
-                    <span>
-    	  	  	   	  	体育竞技
-    	  	  	   	  	<font>SPORTS</font>
-    	  	  	   	  </span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="nav-menu-ico lottery-ico"></i>
-                    <span>
-    	  	  	   	  	彩票游戏
-    	  	  	   	  	<font>LOTTERY</font>
-    	  	  	   	  </span>
-                </a>
-            </li>
+                    </a>
+                </li>
+            </c:forEach>
             <li>
                 <a href="#">
                     <i class="nav-menu-ico promo-ico"></i>

@@ -33,6 +33,9 @@ import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.MessageI18nConst;
+import so.wwb.gamebox.model.company.enums.GameStatusEnum;
+import so.wwb.gamebox.model.company.site.po.SiteApiType;
+import so.wwb.gamebox.model.company.site.po.SiteApiTypeI18n;
 import so.wwb.gamebox.model.enums.UserTypeEnum;
 import so.wwb.gamebox.model.master.enums.CreateChannelEnum;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
@@ -90,9 +93,27 @@ public class IndexController extends BaseIndexController {
         model.addAttribute("isDebug", SystemTool.isDebug());
         SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.SETTING_SYSTEM_SETTINGS_IS_LOTTERY_SITE);
         model.addAttribute("isLottery",sysParam);
+        List<SiteApiTypeI18n> apiTypeI18ns = fetchSiteApiTypeI18ns();
+        model.addAttribute("apiTypeI18ns",apiTypeI18ns);
         return INDEX_URI;
     }
 
+    /**
+     * 获取API分类
+     * @return
+     */
+    private List<SiteApiTypeI18n> fetchSiteApiTypeI18ns() {
+        Map<String, SiteApiType> siteApiTypeMap = Cache.getSiteApiType();
+        List<SiteApiTypeI18n> apiTypeI18ns = new ArrayList<>();
+        Map<String, SiteApiTypeI18n> siteApiTypeI18nMap = Cache.getSiteApiTypeI18n(SessionManager.getSiteId());
+        for (SiteApiType siteApiType : siteApiTypeMap.values()) {
+            if(!GameStatusEnum.DISABLE.getCode().equals(siteApiType.getStatus())){
+                SiteApiTypeI18n siteApiTypeI18n = siteApiTypeI18nMap.get(siteApiType.getApiTypeId().toString());
+                apiTypeI18ns.add(siteApiTypeI18n);
+            }
+        }
+        return apiTypeI18ns;
+    }
     /**
      * 顶部右边的玩家信息
      */

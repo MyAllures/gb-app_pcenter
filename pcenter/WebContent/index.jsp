@@ -94,32 +94,20 @@
         <c:if test="${isLottery.paramValue=='false'}">
         <ul class="nav-menu">
             <li>
-                <a href="/">
-                    <i class="nav-menu-ico home-ico"></i>
-                    <span>
-    	  	  	   	  	网站首页
-    	  	  	   	  	<font>HOME</font>
-    	  	  	   	  </span>
+                <a class="nav-menu-ico aip-type-home-ico" href="#">
+                    <span>网站首页</span>
                 </a>
             </li>
             <c:forEach var="at" items="${apiTypeI18ns}" varStatus="vs">
                 <li>
-                    <a href="#">
-                        <i class="nav-menu-ico casino-ico"></i>
-                        <span>
-    	  	  	   	  	${at.name}
-    	  	  	   	  	<font>CASINO</font>
-    	  	  	   	  </span>
+                    <a class="nav-menu-ico aip-type-${at.apiTypeId}-ico" href="#">
+                        <span>${at.name}</span>
                     </a>
                 </li>
             </c:forEach>
             <li>
-                <a href="#">
-                    <i class="nav-menu-ico promo-ico"></i>
-                    <span>
-    	  	  	   	  	优惠活动
-    	  	  	   	  	<font>PROMO</font>
-    	  	  	   	  </span>
+                <a class="nav-menu-ico aip-type-promo-ico" href="#">
+                    <span>优惠活动</span>
                 </a>
             </li>
         </ul>

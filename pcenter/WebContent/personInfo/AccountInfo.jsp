@@ -241,6 +241,7 @@
                     <c:otherwise>
                         <span class="">${soulFn:overlayName(sysUserVo.result.realName)}</span>
                         <input type="hidden" name="result.realName" value="${sysUserVo.result.realName}"/>
+                        <input type="hidden" name="sysUser.id" value="${sysUserVo.result.id}">
                         <%--<input type="hidden" id="realNameStatus" value="1" name="realNameStatus"/>--%>
                     </c:otherwise>
                 </c:choose>

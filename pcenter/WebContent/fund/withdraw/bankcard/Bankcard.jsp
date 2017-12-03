@@ -85,7 +85,7 @@
     <div class="control-grouptwo">
         <label class="control-left">${views.fund_auto['开户行']}：</label>
         <div class="controls">
-            <input type="text" autocomplete="off" class="input bn result-bankDeposit" placeholder="${views.fund_auto['选择其它银行时必填']}" name="result.bankDeposit" value=""/>
+            <input type="text" autocomplete="off" class="input bn result-bankDeposit"  name="result.bankDeposit" value=""/>
         </div>
         <p class="tipsgray">${views.fund_auto['如']}</p>
     </div>

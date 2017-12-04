@@ -898,8 +898,8 @@ public class PersonalInfoController {
      */
     @RequestMapping(value = "/checkRealNameExist")
     @ResponseBody
-    public String checkRealNameExist(@RequestParam("result.realName") String realName){
-        if (!ParamTool.isOnlyFiled("realName")){
+    public String checkRealNameExist(@RequestParam("result.realName") String realName, @RequestParam("sysUser.id") String id){
+        if (!ParamTool.isOnlyFiled("realName") || StringTool.isNotBlank(id)){
             return "true";
         }
         SysUserVo sysUserVo = new SysUserVo();

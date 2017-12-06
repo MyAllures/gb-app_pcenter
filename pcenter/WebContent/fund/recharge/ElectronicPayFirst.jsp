@@ -124,9 +124,8 @@
     </c:if>
 </form>
 <script type="text/javascript">
-    curl(['site/fund/recharge/ElectronicPayFirst','site/fund/recharge/CommonRecharge'], function(Page, CommonRecharge) {
+    curl(['site/fund/recharge/ElectronicPayFirst'], function(Page) {
         page = new Page();
         page.bindButtonEvents();
-        page.commonRecharge = new CommonRecharge();
     });
 </script>

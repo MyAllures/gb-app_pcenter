@@ -56,7 +56,7 @@
             <%@include file="CaptchaCode.jsp" %>
             <div class=" control-group">
                 <label class="control-label"></label>
-                <soul:button target="commonRecharge.confirm" precall="validateForm" text="${views.fund_auto['提交申请']}" opType="function"
+                <soul:button target="confirm" precall="validateForm" text="${views.fund_auto['提交申请']}" opType="function"
                              cssClass="btn-blue btn large-big _submit"/>
             </div>
         </div>
@@ -71,9 +71,8 @@
     </div>
 </form>
 <script type="text/javascript">
-    curl(['site/fund/recharge/BitCoinSecond', 'site/fund/recharge/CommonRecharge'], function (Page, CommonRecharge) {
+    curl(['site/fund/recharge/BitCoinSecond'], function (Page) {
         page = new Page();
         page.bindButtonEvents();
-        page.commonRecharge = new CommonRecharge();
     });
 </script>

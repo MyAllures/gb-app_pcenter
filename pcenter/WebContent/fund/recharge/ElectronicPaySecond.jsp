@@ -103,7 +103,7 @@
             </div>
             <div class=" control-group">
                 <label class="control-label"></label>
-                <soul:button target="commonRecharge.confirm" precall="validateForm" text="${views.fund_auto['提交申请']}" opType="function"
+                <soul:button target="confirm" precall="validateForm" text="${views.fund_auto['提交申请']}" opType="function"
                              cssClass="btn-blue btn large-big"/>
             </div>
         </div>
@@ -118,9 +118,8 @@
     </div>
 </form>
 <script type="text/javascript">
-    curl(['site/fund/recharge/ElectronicPaySecond', 'site/fund/recharge/CommonRecharge'], function (Page, CommonRecharge) {
+    curl(['site/fund/recharge/ElectronicPaySecond'], function (Page) {
         page = new Page();
         page.bindButtonEvents();
-        page.commonRecharge = new CommonRecharge();
     });
 </script>

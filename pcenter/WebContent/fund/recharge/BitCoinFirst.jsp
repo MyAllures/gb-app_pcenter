@@ -120,9 +120,8 @@
     </c:if>
 </form>
 <script type="text/javascript">
-    curl(['site/fund/recharge/BitCoinFirst','site/fund/recharge/CommonRecharge'], function(Page, CommonRecharge) {
+    curl(['site/fund/recharge/BitCoinFirst'], function(Page) {
         page = new Page();
         page.bindButtonEvents();
-        page.commonRecharge = new CommonRecharge();
     });
 </script>

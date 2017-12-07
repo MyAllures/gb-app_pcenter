@@ -193,7 +193,7 @@
                 <div class=" control-group">
                     <label class="control-label"></label>
                     <div class="controls">
-                        <div class="hintbank">
+                        <div class="hintbank" style="width: 400px">
                             <c:if test="${i.value.bankName=='bitcoin'}">
                                 <i class="pay-third ${i.value.bankName}"></i>
                                 ${i.value.bankcardNumber}

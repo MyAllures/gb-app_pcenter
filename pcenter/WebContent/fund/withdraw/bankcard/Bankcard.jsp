@@ -30,7 +30,7 @@
                 <c:forEach items="${bankListVo.result}" var="bank" varStatus="vs" end="14">
                     <label class="bank ${bankcard.bankName eq bank.bankName ? 'select' : ''}" bankcode="${bank.bankName}">
                         <span class="radio">
-                            <input name="result.bankName" showSuccMsg="false" type="radio" value="${bank.bankName}" ${bankcard.bankName eq bank.bankName ? 'checked': ''}/>
+                            <input name="result.bankName" tipsName="result.bankNametips" showSuccMsg="false" type="radio" value="${bank.bankName}" ${bankcard.bankName eq bank.bankName ? 'checked': ''}/>
                         </span>
                         <span class="radio-bank" title="${dicts.common.bankname[bank.bankName]}">
                             <i class="pay-bank ${bank.bankName}"></i>
@@ -71,9 +71,13 @@
                 </span>
             </div>
         </c:if>
-
+        <div class="control-grouptwo">
+            <label class="control-left">&nbsp;</label>
+            <div class="controls">
+                <span tipsName="result.bankName-tips"></span>
+            </div>
+        </div>
     </div>
-
     <div class="control-grouptwo">
         <label class="control-left">${views.fund_auto['银行卡号']}：</label>
         <div class="controls">

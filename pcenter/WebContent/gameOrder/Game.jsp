@@ -41,7 +41,7 @@
                                 <c:forEach items="${i.value}" var="j">
                                     <c:set var="gameType" value="${j.key}"/>
                                     <label class="fwn m-r-sm">
-                                        <input type="checkbox" name="gameType" class="i-checks" api="${i.key}" apiname="${gbFn:getSiteApiName(i.key.toString())}" data="${j.value}" typename="${gbFn:getGameTypeName(gameType)}" value="${gameType}"/>
+                                        <input type="checkbox" name="gameType" class="i-checks" api="${i.key}" apiname="${gbFn:getSiteApiName(i.key.toString())}" data="${j.value}" typename="${dicts.game.game_type[gameType]}" value="${gameType}"/>
                                         <span class="m-l-xs">${dicts.game.game_type[gameType]}</span>
                                     </label>
                                 </c:forEach>

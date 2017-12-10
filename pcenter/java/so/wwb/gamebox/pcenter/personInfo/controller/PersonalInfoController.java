@@ -1,5 +1,6 @@
 package so.wwb.gamebox.pcenter.personInfo.controller;
 
+import jdk.nashorn.internal.runtime.Undefined;
 import org.soul.commons.bean.Pair;
 import org.soul.commons.collections.*;
 import org.soul.commons.data.json.JsonTool;
@@ -898,8 +899,8 @@ public class PersonalInfoController {
      */
     @RequestMapping(value = "/checkRealNameExist")
     @ResponseBody
-    public String checkRealNameExist(@RequestParam("result.realName") String realName, @RequestParam("sysUser.id") String id){
-        if (!ParamTool.isOnlyFiled("realName") || StringTool.isNotBlank(id)){
+    public String checkRealNameExist(@RequestParam("result.realName") String realName, @RequestParam("realName") String name){
+        if (!ParamTool.isOnlyFiled("realName") || !"undefined".equals(name)){
             return "true";
         }
         SysUserVo sysUserVo = new SysUserVo();

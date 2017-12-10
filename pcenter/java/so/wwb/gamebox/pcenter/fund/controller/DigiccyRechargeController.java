@@ -13,6 +13,7 @@ import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.master.digiccy.po.UserDigiccy;
 import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyListVo;
 import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyVo;
+import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
 import so.wwb.gamebox.model.master.fund.po.PlayerRecharge;
@@ -86,7 +87,7 @@ public class DigiccyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/exchange")
     @ResponseBody
-    public Map<String, Object> exchange(String currency,Double bitAmount) {
+    public Map<String, Object> exchange(String currency, Double bitAmount) {
         UserDigiccyVo userDigiccyVo = new UserDigiccyVo();
         userDigiccyVo.setSysUser(SessionManager.getUser());
         userDigiccyVo.getSearch().setCurrency(currency);
@@ -94,6 +95,7 @@ public class DigiccyRechargeController extends RechargeBaseController {
         PlayerRechargeVo playerRechargeVo = new PlayerRechargeVo();
         playerRechargeVo.getSearch().setBitAmount(bitAmount);
         try {
+            playerRechargeVo.setOrigin(TransactionOriginEnum.PC.getCode());
             playerRechargeVo = ServiceTool.playerRechargeService().digiccyExchange(playerRechargeVo, userDigiccyVo);
         } catch (Exception e) {
             LOG.error(e);

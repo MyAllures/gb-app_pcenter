@@ -137,7 +137,7 @@
 
                 </td>
                 <td>
-                    <span class="${_symbol eq '-'?'orange':'green'}">${_symbol}${soulFn:formatCurrency(pt.transactionMoney)}</span>
+                    <span class="${_symbol eq '+'?'green':'orange'}">${_symbol}${soulFn:formatCurrency(pt.transactionMoney)}</span>
                     <c:if test="${pt._describe['bitAmount']>0}">
                         </br>
                         <c:set var="digiccySymbol" value="${dicts.common.currency_symbol[_describe['bankCode']]}"/>
@@ -145,7 +145,22 @@
                     </c:if>
                 </td>
                 <td>${soulFn:formatCurrency(pt.balance)}</td>
-                <td style="padding-left: 0"><span class="green">${dicts.common.status[pt.status]}</span></td>
+                <td style="padding-left: 0">
+                    <c:choose>
+                        <c:when test="${pt.status eq 'success'}">
+                            <span class="green">${dicts.common.status[pt.status]}</span>
+                        </c:when>
+                        <c:when test="${pt.status eq 'failure'}">
+                            <span class="gary">${dicts.common.status[pt.status]}</span>
+                        </c:when>
+                        <c:when test="${pt.status eq 'pending'}">
+                            <span class="red">${dicts.common.status[pt.status]}</span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="orange">${dicts.common.status[pt.status]}</span>
+                        </c:otherwise>
+                    </c:choose>
+                </td>
                 <td>
                     <c:choose>
                         <c:when test="${pt.transactionType eq 'transfers'}">

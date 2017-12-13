@@ -16,7 +16,7 @@
             <c:if test="${playerRecharge.rechargeStatus eq success}">
                 <label class="col-xs-3 al-right">${views.fund_auto['兑换金额']}：</label>
                 <div class="col-xs-8 p-x">
-                     ${currencySign}<i class="orange">${soulFn:formatCurrency(playerRecharge.rechargeAmount)}</i>
+                     ${currencySign}<i class="orange">${soulFn:formatCurrency(playerRecharge.rechargeAmount)}</i><span class="m-l-sm">${views.fund_auto['兑换成功']}</span>
                 </div>
             </c:if>
             <c:if test="${playerRecharge.rechargeStatus != success}">

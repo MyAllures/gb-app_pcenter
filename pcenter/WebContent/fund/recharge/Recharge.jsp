@@ -61,8 +61,8 @@
                 <a href="<c:out value='${url}'/>" target="_blank">
                     <img src="${resRoot}/images/deposit-tab-img7.png">
                <span class="pay-title">
-                   <em>${views.fund_auto['充值中心']}</em>
-                   <small>${views.fund_auto['请优先使用其他存款方式']}</small>
+                   <em data-href="/fund/recharge/online/onlinePay.html" class="showPage" style="cursor: pointer;">${views.fund_auto['充值中心']}</em>
+                   <i data-href="/commonPage/help.html?pageNumber=1&pagingKey=hpdc&dataChildren=8" class="pay-title-tips" style="cursor: pointer;">${views.fund_auto['范例']}</i>
                </span>
                 </a>
             </div>

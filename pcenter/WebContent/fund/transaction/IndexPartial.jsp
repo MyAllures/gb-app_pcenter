@@ -110,7 +110,7 @@
                 <c:when test="${pt.transactionType eq 'backwater'}">
                     <%--返水--%>
                     <c:set value="+" var="_symbol"></c:set>
-                    <c:set value="${pt._describe['date']} ${pt._describe['period']}${views.fund['FundRecord.record.period']}" var="_desc"></c:set>
+                    <c:set value="${pt._describe['period']}${views.fund['FundRecord.record.period']}" var="_desc"></c:set>
                 </c:when>
                 <c:when test="${pt.transactionType eq 'recommend'}">
                     <%--推荐--%>

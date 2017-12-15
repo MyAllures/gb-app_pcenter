@@ -64,8 +64,12 @@
                 <tr>
                     <th>${views.recommend['recommend.Recommend.recommendNumberOfPlayer']}</th>
                     <th>${views.recommend['recommend.Recommend.recommendedDividendRatio']}
-                        <a href="javascript:void(0);" class="ToolTips ToolTipCol" data-html="true" data-text="${views.recommend['recommend.Recommend.recommendedDividendRatioTips']}">
-                            <i class="ico-ask ask"></i>
+                        <a href="javascript:void(0);">
+                            <span tabindex="0" class="m-l-sm help-popover" role="button" data-container="body"
+                                        data-toggle="popover" data-trigger="focus" data-placement="top"
+                                        data-content="${views.recommend['recommend.Recommend.recommendedDividendRatioTips']}" data-original-title="" title="">
+                                <i class="ico-ask ask fa"></i>
+                            </span>
                         </a>
                     </th>
                 </tr>

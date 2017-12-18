@@ -56,6 +56,7 @@ import java.util.*;
 @Controller
 public class IndexController extends BaseIndexController {
     private static final String INDEX_URI = "index";
+    private static final String DIALOG_INDEX_URI = "DialogIndex";
     private static final String INDEX_PLAYER_INFO_URI = "index.include/PlayerInfo";
     private static final String INDEX_PLAYER_MESSAGE_URI = "index.include/Message";
     private static final String INDEX_CONTENT_URI = "index.include/content";
@@ -85,7 +86,12 @@ public class IndexController extends BaseIndexController {
 
     @RequestMapping(value = "index")
     protected String index(HttpServletRequest request, HttpServletResponse response, Model model) {
-        /* 获取当前用户未接收的站内信 */
+        doIndex(request, response, model);
+        return INDEX_URI;
+    }
+
+    private void doIndex(HttpServletRequest request, HttpServletResponse response, Model model) {
+    /* 获取当前用户未接收的站内信 */
         NoticeVo noticeVo  = new NoticeVo();
         noticeVo.setSearchUserId(SessionManager.getUserId());
         ServiceTool.noticeService().fetchUnReceivedMsgs(noticeVo);
@@ -95,7 +101,12 @@ public class IndexController extends BaseIndexController {
         model.addAttribute("isLottery",sysParam);
         List<SiteApiTypeI18n> apiTypeI18ns = Cache.fetchSiteApiTypeI18ns(SessionManager.getSiteId());
         model.addAttribute("apiTypeI18ns",apiTypeI18ns);
-        return INDEX_URI;
+    }
+
+    @RequestMapping(value = "dialogIndex")
+    public String dialogIndex(HttpServletRequest request, HttpServletResponse response, Model model){
+        doIndex(request, response, model);
+        return DIALOG_INDEX_URI;
     }
 
     /**

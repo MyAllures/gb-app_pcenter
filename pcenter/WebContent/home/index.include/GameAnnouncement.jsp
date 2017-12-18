@@ -5,9 +5,10 @@
     <div class="gamenotice">
         <div class="gamenotice-title">
             <h1>${views.fund['Transfer.transfer.gameNotice']}</h1>
-            <span class="more gameMore" style="width: 67px">
-                <soul:button target="moreGameAnnouncement" text="${views.common['more']}&gt;" opType="function"/>
-            </span>
+            <span class="more gameMore" style="width: 60px">
+                <soul:button target="moreGameAnnouncement" cssClass="btn" text="${views.common['more']}&gt;" opType="function"/>
+           </span><sapn style=" margin-left:23.5cm"></sapn>
+            <a href="javascript:;"></a>
         </div>
         <div class="gamenotice-box">
             <dl>

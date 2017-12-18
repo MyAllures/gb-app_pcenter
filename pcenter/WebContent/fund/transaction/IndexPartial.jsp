@@ -156,6 +156,9 @@
                         <c:when test="${pt.status eq 'pending'}">
                             <span class="red">${dicts.common.status[pt.status]}</span>
                         </c:when>
+                        <c:when test="${pt.status eq 'lssuing'}">
+                            <span class="green">${dicts.common.status[pt.status]}</span>
+                        </c:when>
                         <c:otherwise>
                             <span class="orange">${dicts.common.status[pt.status]}</span>
                         </c:otherwise>

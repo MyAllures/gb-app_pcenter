@@ -12,11 +12,6 @@ import java.util.List;
 public class SessionManager extends SessionManagerCommon {
 
     public static final String SESSION_MASTER_INFO = "SESSION_MASTER_INFO";
-    //玩家中心-上一次提交存款订单时间
-    public static final String SESSION_RECHARGE_LAST_TIME = "SESSION_RECHARGE_LAST_TIME";
-    //玩家中心-提交存款订单次数
-    public static final String SESSION_RECHARGE_COUNT = "SESSION_RECHARGE_COUNT";
-
     //玩家中心-填写真实姓名的值,以确认真实姓名是否一致
     private static final String S_REAL_NAME = "S_REAL_NAME";
 
@@ -32,32 +27,6 @@ public class SessionManager extends SessionManagerCommon {
 
     public static SysUser getMasterInfo() {
         return (SysUser) getAttribute(SESSION_MASTER_INFO);
-    }
-
-    /**
-     * 上一次提交存款订单时间
-     *
-     * @param date
-     */
-    public static void setRechargeLastTime(Date date) {
-        setAttribute(SESSION_RECHARGE_LAST_TIME, date);
-    }
-
-    public static Date getRechargeLastTime() {
-        return (Date) getAttribute(SESSION_RECHARGE_LAST_TIME);
-    }
-
-    /**
-     * 5分钟内存款订单次数
-     *
-     * @param count
-     */
-    public static void setRechargeCount(int count) {
-        setAttribute(SESSION_RECHARGE_COUNT, count);
-    }
-
-    public static int getRechargeCount() {
-        return getAttribute(SESSION_RECHARGE_COUNT) == null ? 0 : (int) getAttribute(SESSION_RECHARGE_COUNT);
     }
 
     // begin 待删除

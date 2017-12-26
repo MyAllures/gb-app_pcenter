@@ -69,7 +69,7 @@
                 <span class="deposit-info-title">${views.fund_auto['步骤2']}<img src="${resRoot}/images/online-pay2.png"></span>
                 <div class="control-group">
                     <label class="control-label" for="result.rechargeAmount">${views.fund_auto['存款金额']}：</label>
-                    <div class="controls " style="width: 480px">
+                    <div class="controls " style="width: 525px">
                         <input type="text" value="${playerRechargeVo.result.rechargeAmount}" class="input" name="result.rechargeAmount" id="result.rechargeAmount" autocomplete="off">
                         <span class="fee"></span>
                     </div>

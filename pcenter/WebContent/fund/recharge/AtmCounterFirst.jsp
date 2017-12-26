@@ -85,7 +85,7 @@
                 </div>
                 <div class="control-group">
                     <label class="control-label">${views.fund_auto['存款金额']}：</label>
-                    <div class="controls" style="width: 480px">
+                    <div class="controls" style="width: 525px">
                         <input type="text" class="input" name="result.rechargeAmount" autocomplete="off">
                         <span class="fee"></span>
                     </div>

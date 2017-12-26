@@ -7,7 +7,7 @@
 <!--网银存款步奏2-->
 <form>
     <input type="hidden" name="result.payAccountId" value="${playerRechargeVo.result.payAccountId}"/>
-    <input type="hidden" name="result.rechargeAmount" value="${playerRechargeVo.result.rechargeAmount}"/>
+    <input type="hidden" name="result.rechargeAmount" value="${soulFn:formatInteger(playerRechargeVo.result.rechargeAmount)}${soulFn:formatDecimals(playerRechargeVo.result.rechargeAmount)}"/>
     <input type="hidden" name="result.payerName" value="${playerRechargeVo.result.payerName}"/>
     <input type="hidden" name="activityId" value="${playerRechargeVo.activityId}"/>
     <input type="hidden" name="result.rechargeType" value="${playerRechargeVo.result.rechargeType}"/>

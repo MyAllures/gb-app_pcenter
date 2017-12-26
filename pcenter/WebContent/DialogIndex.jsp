@@ -86,54 +86,17 @@
     </div>
 </div>
 <!--banner-->
-<div class="banner" <c:if test="${isLotterySite}">style="background-image: url(../ftl/${siteDomain.templateCode}/images/bannerbg.jpg);"</c:if> >
+<div class="banner" style="background-image: url(../ftl/${siteDomain.templateCode}/images/bannerbg.jpg);" >
     <a href="/">
         <div class="logo" style="background-image:url(${soulFn:getThumbPath(domain, logo,220,90)});width:220px;height: 90px;"></div>
     </a>
     <div class="right">
-        <c:if test="${isLottery.paramValue=='false'}">
-        <ul class="nav-menu">
-            <li>
-                <a class="nav-menu-ico aip-type-home-ico" href="/">
-                    <span>网站首页</span>
-                </a>
-            </li>
-            <c:set var="game_page" value=""></c:set>
-            <c:forEach var="at" items="${apiTypeI18ns}" varStatus="vs">
-                <c:choose>
-                    <c:when test="${at.apiTypeId == 1}">
-                        <c:set var="game_page" value="/live.html"></c:set>
-                    </c:when>
-                    <c:when test="${at.apiTypeId == 2}">
-                        <c:set var="game_page" value="/casino.html"></c:set>
-                    </c:when>
-                    <c:when test="${at.apiTypeId == 3}">
-                        <c:set var="game_page" value="/sports.html"></c:set>
-                    </c:when>
-                    <c:otherwise>
-                        <c:set var="game_page" value="/lottery.html"></c:set>
-                    </c:otherwise>
-                </c:choose>
-                <li>
-                    <a class="nav-menu-ico aip-type-${at.apiTypeId}-ico" href="${game_page}">
-                        <span>${at.name}</span>
-                    </a>
-                </li>
-            </c:forEach>
-            <li>
-                <a class="nav-menu-ico aip-type-promo-ico" href="/promo.html">
-                    <span>优惠活动</span>
-                </a>
-            </li>
-        </ul>
-        </c:if>
+
     </div>
-    <c:if test="${!isLotterySite}">
-        <div class="banner-bg-t"></div>
-        <div class="banner-bg">
-            <img src="../ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
-        </div>
-    </c:if>
+    <div class="banner-bg-t"></div>
+    <div class="banner-bg">
+        <img src="../ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
+    </div>
 
     <%--<div class="right"></div>--%>
 </div>

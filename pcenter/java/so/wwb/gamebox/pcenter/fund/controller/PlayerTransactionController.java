@@ -91,7 +91,7 @@ public class PlayerTransactionController extends NoMappingCrudController<IVPlaye
         listVo.setMaxDate(SessionManager.getDate().getToday());
         //玩家中心不展示派彩相关资金记录
         listVo.getSearch().setNoDisplay(TransactionWayEnum.MANUAL_PAYOUT.getCode());
-        listVo.getSearch().setFromPcenter(true);
+//        listVo.getSearch().setFromPcenter(true);
         listVo = getService().search(listVo);
 //        CollectionTool.ba TODO Jeff batchUpdate 条件
         listVo = preList(listVo);

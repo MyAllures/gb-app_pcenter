@@ -64,7 +64,7 @@
                 <div id="site-nav">
                     <%@include file="index.include/loadPlayerInfo.jsp"%>
                 </div>
-                <a href="${root}/passport/logout.html" target="_top" class="logout">[${views.home['index.exit']}]</a>
+                <%--<a href="${root}/passport/logout.html" target="_top" class="logout">[${views.home['index.exit']}]</a>--%>
                 <label id="playerUnread">
                     <%@include file="index.include/Message.jsp"%>
                 </label>

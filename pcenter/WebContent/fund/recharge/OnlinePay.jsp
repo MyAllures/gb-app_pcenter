@@ -39,7 +39,6 @@
                         <c:forEach items="${payAccountMap}" var="i" varStatus="vs">
                             <c:if test="${vs.index==0}">
                                 <c:set var="onlinePayMax" value="${i.value.singleDepositMax}"/>
-                                <input type="hidden" id="randomAmount" value="${i.value.randomAmount}"/>
                                 <c:choose>
                                     <c:when test="${empty i.value.singleDepositMin}">
                                         <c:set var="onlinePayMin" value='1.00'/>
@@ -55,7 +54,7 @@
                             </c:if>
                             <c:if test="${vs.index==16}"><div name="hideBank" style="display: none"></c:if>
                             <label class="bank ${vs.index==0?'select':''}">
-                                <span class="radio"><input name="result.payerBank" value="${i.key}" type="radio" ${vs.index==0?'checked':''}></span>
+                                <span class="radio"><input name="result.payerBank" randomAmount="${i.value.randomAmount}" account="${command}" value="${i.key}" type="radio" ${vs.index==0?'checked':''}></span>
                                 <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-bank ${i.key}"></i></span>
                                 <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
                                 <input type="hidden" class="onlinePayMax" value="${empty i.value.singleDepositMax?'99,999,999.00':soulFn:formatCurrency(i.value.singleDepositMax)}"/>
@@ -96,7 +95,7 @@
                     <%@include file="CaptchaCode.jsp"%>
                     <div class=" control-group">
                         <label class="control-label"></label>
-                        <soul:button target="submit" precall="validateForm" text="${views.fund_auto['立即存款']}" callback="back" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
+                        <soul:button target="submit" precall="validateForm" url="${root}/fund/recharge/online/onlineSubmit.html" backUrl="${root}/fund/recharge/online/onlinePay.html?realNameDialog=true" text="${views.fund_auto['立即存款']}" callback="back" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
                     </div>
                     <div>
                     </div>

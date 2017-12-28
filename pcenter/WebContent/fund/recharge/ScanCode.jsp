@@ -42,8 +42,7 @@
                         </c:if>
                         <label class="bank ${vs.index==0?'select':''}">
                             <span class="radio">
-                                <input name="result.rechargeType" value="${i.value.rechargeType}" type="radio" ${vs.index==0?'checked':''}>
-                                <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
+                                <input name="result.rechargeType" randomAmount="${i.value.randomAmount}" value="${i.value.rechargeType}" type="radio" ${vs.index==0?'checked':''}>
                             </span>
                             <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-third ${i.key}"></i></span>
                             <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
@@ -88,7 +87,7 @@
             </c:if>
             <div class=" control-group">
                 <label class="control-label"></label>
-                <soul:button target="submit" precall="validateForm" text="${views.fund_auto['立即存款']}" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
+                <soul:button target="submit" precall="validateForm" url="${root}/fund/recharge/online/scanCodeSubmit.html" backUrl="${root}/fund/recharge/online/scanCode.html?realNameDialog=true" text="${views.fund_auto['立即存款']}" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
             </div>
         </div>
     </div>

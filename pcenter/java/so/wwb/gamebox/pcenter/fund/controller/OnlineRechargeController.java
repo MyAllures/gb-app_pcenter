@@ -11,6 +11,7 @@ import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
 import org.soul.commons.net.ServletTool;
+import org.soul.commons.security.CryptoTool;
 import org.soul.iservice.pay.IOnlinePayService;
 import org.soul.model.comet.vo.MessageVo;
 import org.soul.model.pay.enums.CommonFieldsConst;
@@ -36,6 +37,7 @@ import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.sys.po.VSysSiteDomain;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
+import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
 import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
 import so.wwb.gamebox.model.master.enums.DepositWayEnum;
@@ -77,8 +79,6 @@ public class OnlineRechargeController extends RechargeBaseController {
     private static final String ONLINE_SUCCESS = "/fund/recharge/OnlineSuccess";
     //线上支付（含微信支付、支付宝支付）存款超时页面
     private static final String ONLINE_OVERTIME = "/fund/recharge/OnlineOvertime";
-    /*站长中心-线上支付链接*/
-    private static final String MCENTER_ONLINE_RECHARGE_URL = "fund/deposit/online/list.html";
     private static Log LOG = LogFactory.getLog(OnlineRechargeController.class);
 
     /**
@@ -96,7 +96,12 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         //玩家可用收款账号
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), TerminalEnum.PC.getCode(), null, null);
-        model.addAttribute("payAccountMap", getOnlinePayAccountMap(rank, banks, payAccounts));
+        PayAccountListVo payAccountListVo = new PayAccountListVo();
+        payAccountListVo.setResult(payAccounts);
+        payAccountListVo.setPlayerRank(rank);
+        payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
+        payAccountListVo.setBanks(banks);
+        model.addAttribute("payAccountMap", ServiceTool.payAccountService().getOnlineAccount(payAccountListVo));
         model.addAttribute("username", SessionManager.getUserName());
         model.addAttribute("currency", getCurrencySign());
         model.addAttribute("sales", searchSales(DepositWayEnum.ONLINE_DEPOSIT.getCode()));
@@ -120,48 +125,11 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         String[] accountTypes = new String[]{PayAccountAccountType.WECHAT.getCode(), PayAccountAccountType.ALIPAY.getCode(), PayAccountAccountType.QQWALLET.getCode(), PayAccountAccountType.JD_PAY.getCode(), PayAccountAccountType.BAIFU_PAY.getCode(), PayAccountAccountType.UNION_PAY.getCode()};
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), null, TerminalEnum.PC.getCode(), null, accountTypes);
-        Map<String, List<PayAccount>> groupAccountMap = CollectionTool.groupByProperty(payAccounts, PayAccount.PROP_ACCOUNT_TYPE, String.class);
-        //微信支付收款账号
-        PayAccount weChatPayAccount = null;
-        //支付宝收款账号
-        PayAccount alipayPayAccount = null;
-        //QQ钱包收款账号
-        PayAccount qqWalletPayAccount = null;
-        //京东钱包
-        PayAccount jdPayAccount = null;
-        //百度钱包
-        PayAccount bdPayAccount = null;
-        //银联扫码
-        PayAccount unionPayAccount = null;
-        Map<String, PayAccount> payAccountMap = new HashMap<>(3, 1f);
-        for (Map.Entry<String, List<PayAccount>> entry : groupAccountMap.entrySet()) {
-            if (PayAccountAccountType.WECHAT.getCode().equals(entry.getKey())) {
-                weChatPayAccount = getPayAccountBySort(rank, entry.getValue(), RechargeTypeEnum.WECHATPAY_SCAN.getCode());
-                weChatPayAccount.setRechargeType(RechargeTypeEnum.WECHATPAY_SCAN.getCode());
-                payAccountMap.put(WECHATPAY, weChatPayAccount);
-            } else if (PayAccountAccountType.ALIPAY.getCode().equals(entry.getKey())) {
-                alipayPayAccount = getPayAccountBySort(rank, entry.getValue(), RechargeTypeEnum.ALIPAY_SCAN.getCode());
-                alipayPayAccount.setRechargeType(RechargeTypeEnum.ALIPAY_SCAN.getCode());
-                payAccountMap.put(ALIPAY, alipayPayAccount);
-            } else if (PayAccountAccountType.QQWALLET.getCode().equals(entry.getKey())) {
-                qqWalletPayAccount = getPayAccountBySort(rank, entry.getValue(), RechargeTypeEnum.QQWALLET_SCAN.getCode());
-                qqWalletPayAccount.setRechargeType(RechargeTypeEnum.QQWALLET_SCAN.getCode());
-                payAccountMap.put(QQWALLET, qqWalletPayAccount);
-            } else if (PayAccountAccountType.JD_PAY.getCode().equals(entry.getKey())) {
-                jdPayAccount = getPayAccountBySort(rank, entry.getValue(), RechargeTypeEnum.JDPAY_SCAN.getCode());
-                jdPayAccount.setRechargeType(RechargeTypeEnum.JDPAY_SCAN.getCode());
-                payAccountMap.put(BankCodeEnum.JDWALLET.getCode(), jdPayAccount);
-            } else if (PayAccountAccountType.BAIFU_PAY.getCode().equals(entry.getKey())) {
-                bdPayAccount = getPayAccountBySort(rank, entry.getValue(), RechargeTypeEnum.BDWALLET_SAN.getCode());
-                bdPayAccount.setRechargeType(RechargeTypeEnum.BDWALLET_SAN.getCode());
-                payAccountMap.put(BankCodeEnum.BDWALLET.getCode(), bdPayAccount);
-            } else if (PayAccountAccountType.UNION_PAY.getCode().equals(entry.getKey())) {
-                unionPayAccount = getPayAccountBySort(rank, entry.getValue(), RechargeTypeEnum.UNION_PAY_SCAN.getCode());
-                unionPayAccount.setRechargeType(RechargeTypeEnum.UNION_PAY_SCAN.getCode());
-                payAccountMap.put(BankCodeEnum.UNIONPAY.getCode(), unionPayAccount);
-            }
-        }
-        model.addAttribute("payAccountMap", payAccountMap);
+        PayAccountListVo payAccountListVo = new PayAccountListVo();
+        payAccountListVo.setResult(payAccounts);
+        payAccountListVo.setPlayerRank(rank);
+        payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
+        model.addAttribute("payAccountMap", ServiceTool.payAccountService().getScanAccount(payAccountListVo));
         model.addAttribute("currency", getCurrencySign());
         model.addAttribute("username", SessionManager.getUserName());
         //验证规则
@@ -207,6 +175,28 @@ public class OnlineRechargeController extends RechargeBaseController {
     }
 
     /**
+     * 远程验证金额是否超出
+     *
+     * @param rechargeAmount
+     * @param account
+     * @return
+     */
+    @RequestMapping("/checkRechargeAmount")
+    @ResponseBody
+    public boolean checkRechargeAmount(@RequestParam("result.rechargeAmount") String rechargeAmount, @RequestParam("account") String account) {
+        if (StringTool.isBlank(account)) {
+            return false;
+        }
+        PlayerRank rank = getRank();
+        Integer payAccountId = NumberTool.toInt(CryptoTool.aesDecrypt(account, "BaseVo"));
+        PayAccount payAccount = getPayAccount(payAccountId);
+        if (payAccount == null) {
+            return false;
+        }
+        return amountIsCorrect(payAccount, rank, rechargeAmount);
+    }
+
+    /**
      * 远程验证支付宝支付存款金额是否超出
      */
     @RequestMapping("/checkScanCodeAmount")
@@ -225,7 +215,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         if (!flag) {
             return getResultMsg(false, null, null);
         }
-
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         PlayerRank rank = getRank();
         PayAccount payAccount = getOnlinePayAccount(rank, playerRecharge.getPayerBank());
@@ -523,7 +512,7 @@ public class OnlineRechargeController extends RechargeBaseController {
             payAccount = getWeChatAlipay(rank, PayAccountAccountType.JD_PAY.getCode(), rechargeType);
         } else if (RechargeTypeEnum.BDWALLET_SAN.getCode().equals(rechargeType)) {
             payAccount = getWeChatAlipay(rank, PayAccountAccountType.BAIFU_PAY.getCode(), rechargeType);
-        }else if (RechargeTypeEnum.UNION_PAY_SCAN.getCode().equals(rechargeType)) {
+        } else if (RechargeTypeEnum.UNION_PAY_SCAN.getCode().equals(rechargeType)) {
             payAccount = getWeChatAlipay(rank, PayAccountAccountType.UNION_PAY.getCode(), rechargeType);
         }
         return payAccount;

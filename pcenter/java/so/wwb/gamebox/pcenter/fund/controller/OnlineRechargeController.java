@@ -110,6 +110,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         model.addAttribute("isRealName", isRealName());
         model.addAttribute("realNameDialog", realNameDialog);
         model.addAttribute("rank", rank);
+        model.addAttribute("command", payAccountListVo);
         return ONLINE_PAY;
     }
 

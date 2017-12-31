@@ -51,7 +51,7 @@
                                         <c:set var="onlinePayMin" value="${soulFn:formatCurrency(i.value.singleDepositMin)}"/>
                                     </c:otherwise>
                                 </c:choose>
-
+                                <c:set var="payAccount" value="${command.getSearchId(i.value.id)}"/>
                             </c:if>
                             <c:if test="${vs.index==16}"><div name="hideBank" style="display: none"></c:if>
                             <label class="bank ${vs.index==0?'select':''}">
@@ -96,6 +96,7 @@
                     <%@include file="CaptchaCode.jsp"%>
                     <div class=" control-group">
                         <label class="control-label"></label>
+                        <input type="hidden" value="${payAccount}" name="payAccount"/>
                         <soul:button target="submit" precall="validateForm" url="${root}/fund/recharge/online/onlineSubmit.html" backUrl="${root}/fund/recharge/online/onlinePay.html?realNameDialog=true" text="${views.fund_auto['立即存款']}" callback="back" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
                     </div>
                     <div>

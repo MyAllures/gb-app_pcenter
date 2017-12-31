@@ -39,6 +39,7 @@
                         <c:if test="${vs.index==0}">
                             <c:set var="onlinePayMax" value="${i.value.singleDepositMax}"/>
                             <c:set var="onlinePayMin" value="${i.value.singleDepositMin}"/>
+                            <c:set var="payAccount" value="${command.getSearchId(i.value.id)}"/>
                         </c:if>
                         <label class="bank ${vs.index==0?'select':''}">
                             <span class="radio">
@@ -87,6 +88,7 @@
             </c:if>
             <div class=" control-group">
                 <label class="control-label"></label>
+                <input type="hidden" value="${payAccount}" name="payAccount"/>
                 <soul:button target="submit" precall="validateForm" url="${root}/fund/recharge/online/scanCodeSubmit.html" backUrl="${root}/fund/recharge/online/scanCode.html?realNameDialog=true" text="${views.fund_auto['立即存款']}" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
             </div>
         </div>

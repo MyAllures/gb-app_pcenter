@@ -88,7 +88,7 @@
             </c:if>
             <div class=" control-group">
                 <label class="control-label"></label>
-                <input type="hidden" value="${payAccount}" name="payAccount"/>
+                <input type="hidden" value="${payAccount}" name="account"/>
                 <soul:button target="submit" precall="validateForm" url="${root}/fund/recharge/online/scanCodeSubmit.html" backUrl="${root}/fund/recharge/online/scanCode.html?realNameDialog=true" text="${views.fund_auto['立即存款']}" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
             </div>
         </div>

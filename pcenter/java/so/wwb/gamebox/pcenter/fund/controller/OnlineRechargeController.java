@@ -32,12 +32,12 @@ import so.wwb.gamebox.model.TerminalEnum;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
-import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.sys.po.VSysSiteDomain;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
+import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
 import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
 import so.wwb.gamebox.model.master.enums.DepositWayEnum;
@@ -161,21 +161,6 @@ public class OnlineRechargeController extends RechargeBaseController {
     }
 
     /**
-     * 远程验证线上支付存款金额是否超出
-     *
-     * @param rechargeAmount amount
-     * @param payerBank      payerBank
-     * @return boolean
-     */
-    @RequestMapping("/checkOnlineRechargeAmount")
-    @ResponseBody
-    public boolean checkOnlineRechargeAmount(@RequestParam("result.rechargeAmount") String rechargeAmount, @RequestParam("result.payerBank") String payerBank) {
-        PlayerRank rank = getRank();
-        PayAccount payAccount = getOnlinePayAccount(rank, payerBank);//确认收款账号
-        return amountIsCorrect(payAccount, rank, rechargeAmount);
-    }
-
-    /**
      * 远程验证金额是否超出
      *
      * @param rechargeAmount
@@ -197,17 +182,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         return amountIsCorrect(payAccount, rank, rechargeAmount);
     }
 
-    /**
-     * 远程验证支付宝支付存款金额是否超出
-     */
-    @RequestMapping("/checkScanCodeAmount")
-    @ResponseBody
-    public boolean checkScanCodeAmount(@RequestParam("result.rechargeAmount") String rechargeAmount, @RequestParam("result.rechargeType") String rechargeType) {
-        PlayerRank rank = getRank();
-        PayAccount payAccount = getScanCodePayAccount(rank, rechargeType);
-        return amountIsCorrect(payAccount, rank, rechargeAmount);
-    }
-
     @RequestMapping("/onlineSubmit")
     @Token(valid = true)
     @ResponseBody
@@ -217,22 +191,8 @@ public class OnlineRechargeController extends RechargeBaseController {
             return getResultMsg(false, null, null);
         }
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
-        PlayerRank rank = getRank();
-        PayAccount payAccount = getOnlinePayAccount(rank, playerRecharge.getPayerBank());
-        if (payAccount.getRandomAmount() != null) {
-            boolean randomAmount = payAccount.getRandomAmount();
-            if (randomAmount) {
-                Double rechargeAmount = playerRecharge.getRechargeAmount();
-                if (rechargeAmount.intValue() == rechargeAmount) {
-                    double random = Double.parseDouble(RandomStringTool.random(2, 11, 99, false, true)) * 0.01;
-                    if (random < 0.11) {
-                        random += 0.11;
-                    }
-                    rechargeAmount += random;
-                    playerRecharge.setRechargeAmount(rechargeAmount);
-                }
-            }
-        }
+        PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
+        playerRecharge.setRechargeAmount(getRechargeAmount(payAccount, playerRecharge));
         playerRecharge.setRechargeType(RechargeTypeEnum.ONLINE_DEPOSIT.getCode());
         return commonSubmit(playerRechargeVo, payAccount);
     }
@@ -258,23 +218,29 @@ public class OnlineRechargeController extends RechargeBaseController {
         }
 
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
-        PlayerRank rank = getRank();
-        PayAccount payAccount = getScanCodePayAccount(rank, playerRecharge.getRechargeType());
-        if (payAccount.getRandomAmount() != null) {
-            boolean randomAmount = payAccount.getRandomAmount();
-            if (randomAmount) {
-                Double rechargeAmount = playerRecharge.getRechargeAmount();
-                if (rechargeAmount.intValue() == rechargeAmount) {
-                    double random = Double.parseDouble(RandomStringTool.random(2, 11, 99, false, true)) * 0.01;
-                    if (random < 0.11) {
-                        random += 0.11;
-                    }
-                    rechargeAmount += random;
-                    playerRecharge.setRechargeAmount(rechargeAmount);
-                }
-            }
-        }
+        PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
+        //如果账号支持随机金额 重新设置存款金额
+        playerRecharge.setRechargeAmount(getRechargeAmount(payAccount, playerRecharge));
         return commonSubmit(playerRechargeVo, payAccount);
+    }
+
+    /**
+     * 收款账号支持随机金额，重新获取随机金额
+     *
+     * @param payAccount
+     * @param playerRecharge
+     * @return
+     */
+    private Double getRechargeAmount(PayAccount payAccount, PlayerRecharge playerRecharge) {
+        Double rechargeAmount = playerRecharge.getRechargeAmount();
+        if (payAccount != null && payAccount.getRandomAmount() != null && rechargeAmount.intValue() == rechargeAmount) {
+            double random = Double.parseDouble(RandomStringTool.random(2, 11, 99, false, true)) * 0.01;
+            if (random < 0.11) {
+                random += 0.11;
+            }
+            rechargeAmount += random;
+        }
+        return rechargeAmount;
     }
 
     /**
@@ -458,40 +424,14 @@ public class OnlineRechargeController extends RechargeBaseController {
     /**
      * 获取线上支付收款账号
      *
-     * @param rank
-     * @param bankCode
+     * @param account
      * @return
      */
-    private PayAccount getOnlinePayAccount(PlayerRank rank, String bankCode) {
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), TerminalEnum.PC.getCode(), null, null);
-        IOnlinePayService payService = ServiceTool.onlinePayService();
-        //获取可用渠道货币
-        Map<String, Set<String>> channelBankCode = null;
-        Map<String, Set<String>> channelCurrency = null;
-        try {
-            channelBankCode = payService.getSupportDirectBank(new OnlinePayVo());
-            channelCurrency = payService.getSupportCurrency(new OnlinePayVo());
-        } catch (Exception e) {
-            LOG.error(e);
-        }
-
-        if (channelBankCode == null || channelCurrency == null) {
-            LOG.error("channelBankCode或者channelCurrency为空");
-            return null;
-        }
-        Set<String> currencyChannels = channelCurrency.get(SessionManager.getUser().getDefaultCurrency());
-        if (CollectionTool.isEmpty(currencyChannels)) {
-            LOG.error("currencyChannels为空");
-            return null;
-        }
-        Set<String> bankChannels = channelBankCode.get(bankCode);
-        if (CollectionTool.isEmpty(bankChannels)) {
-            LOG.error("bankChannels为空");
-            return null;
-        }
-        List<String> channels = (List<String>) CollectionTool.intersection(currencyChannels, bankChannels);
-        payAccounts = CollectionQueryTool.inQuery(payAccounts, PayAccount.PROP_BANK_CODE, channels);
-        return getPayAccountBySort(rank, payAccounts, RechargeTypeEnum.ONLINE_DEPOSIT.getCode());
+    private PayAccount getOnlinePayAccount(String account) {
+        PayAccountVo payAccountVo = new PayAccountVo();
+        payAccountVo.setSearchId(account);
+        payAccountVo = ServiceTool.payAccountService().get(payAccountVo);
+        return payAccountVo.getResult();
     }
 
     /**

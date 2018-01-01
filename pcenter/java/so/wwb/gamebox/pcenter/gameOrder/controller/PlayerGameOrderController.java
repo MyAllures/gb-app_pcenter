@@ -51,7 +51,7 @@ public class PlayerGameOrderController {
     /**
      * 玩家中心查询订单间隔天数
      */
-    private static final int DATE_INTERVAL = -40;
+    private static final int DATE_INTERVAL = -62;
 
     @RequestMapping("/index")
     @DemoModel(menuCode = DemoMenuEnum.TZJL)

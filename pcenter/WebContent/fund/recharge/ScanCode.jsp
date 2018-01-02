@@ -1,5 +1,6 @@
 <%--@elvariable id="payAccountMap" type="java.util.Map<java.lang.String,so.wwb.gamebox.model.master.content.po.PayAccount>"--%>
 <%--@elvariable id="rank" type="so.wwb.gamebox.model.master.player.po.PlayerRank"--%>
+<%--@elvariable id="command" type="so.wwb.gamebox.model.master.content.vo.PayAccountListVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
 <!--扫码支付-->
@@ -43,7 +44,7 @@
                         </c:if>
                         <label class="bank ${vs.index==0?'select':''}">
                             <span class="radio">
-                                <input name="result.rechargeType" randomAmount="${i.value.randomAmount}" value="${i.value.rechargeType}" type="radio" ${vs.index==0?'checked':''}>
+                                <input name="result.rechargeType" randomAmount="${i.value.randomAmount}" account="${command.getSearchId(i.value.id)}" value="${i.value.rechargeType}" type="radio" ${vs.index==0?'checked':''}>
                             </span>
                             <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-third ${i.key}"></i></span>
                             <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>

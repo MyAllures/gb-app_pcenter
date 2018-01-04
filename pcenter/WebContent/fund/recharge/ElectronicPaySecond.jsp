@@ -92,15 +92,15 @@
             <div class="control-group">
                 <label class="control-label">${views.fund_auto['订单号（后5位）']}：</label>
                 <div class="controls">
-                    <input type="text" class="input" placeholder="${views.fund_auto['非必填']}" maxlength="5" name="result.bankOrder" autocomplete="off">
+                    <input type="text" class="input" placeholder="${views.fund_auto['请填写订单号非商户订单号']}" maxlength="5" name="result.bankOrder" autocomplete="off">
                 </div>
             </div>
-            <div class="control-group">
+            <%--<div class="control-group">
                 <label class="control-label"></label>
                 <div class="controls co-gray">
                     ${payAccount.bankCode=='alipay'? views.fund_auto['请填写订单号非商户订单号']:''}
                 </div>
-            </div>
+            </div>--%>
             <div class=" control-group">
                 <label class="control-label"></label>
                 <soul:button target="confirm" precall="validateForm" text="${views.fund_auto['提交申请']}" opType="function"

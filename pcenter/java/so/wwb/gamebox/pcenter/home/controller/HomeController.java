@@ -16,7 +16,6 @@ import so.wwb.gamebox.model.company.operator.vo.VSystemAnnouncementListVo;
 import so.wwb.gamebox.model.company.setting.po.Api;
 import so.wwb.gamebox.model.company.site.po.SiteApi;
 import so.wwb.gamebox.model.company.site.po.SiteI18n;
-import so.wwb.gamebox.model.listop.StatusEnum;
 import so.wwb.gamebox.model.master.content.po.CttCarousel;
 import so.wwb.gamebox.model.master.enums.AnnouncementTypeEnum;
 import so.wwb.gamebox.model.master.enums.CarouselTypeEnum;
@@ -101,15 +100,15 @@ public class HomeController {
      */
     private List<Map> searchAdvertisement() {
         int carouselNum = 6;//广告推荐位取前6位
-        List<Map> carouselList = new ArrayList<>(carouselNum);
         Map<String, CttCarousel> siteCarousel = Cache.getSiteCarousel();
         if (MapTool.isEmpty(siteCarousel)) {
-            return carouselList;
+            return new ArrayList<>(0);
         }
         Iterator<String> iter = siteCarousel.keySet().iterator();
         Map<String, Api> apis = Cache.getApi();
         Map<String, SiteApi> siteApis = Cache.getSiteApi();
         int count = 0;
+        List<Map> carouselList = new ArrayList<>(carouselNum);
         while (iter.hasNext() && count < carouselNum) {
             String key = iter.next();
             Map cttCarousel = (Map) siteCarousel.get(key);

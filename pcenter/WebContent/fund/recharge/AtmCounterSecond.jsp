@@ -109,7 +109,7 @@
                 <div class="control-group">
                     <label class="control-label" for="result.payerName">${views.fund_auto['存款人姓名']}：</label>
                     <div class="controls">
-                        <input type="text" name="result.payerName" id="result.payerName" placeholder="${views.fund_auto['您转账时使用的银行卡姓名']}" class="input" style="width:270px;">
+                        <input type="text" name="result.payerName" id="result.payerName" placeholder="${views.fund_auto['您转账时使用的银行卡姓名']}" class="input" style="width:240px;">
                     </div>
                 </div>
             </c:if>

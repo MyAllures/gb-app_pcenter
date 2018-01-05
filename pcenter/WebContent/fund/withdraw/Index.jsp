@@ -59,9 +59,11 @@
                     <c:if test="${isLottery.paramValue=='false'}">
                         <p>${views.fund_auto['钱包余额不足提醒']}</p>
                     </c:if>
-                    <p>
-                        <a class="btn-blue btn large-big gotoDespoit" href="javascript:void(0)">${views.fund_auto['转到钱包']}</a>
-                    </p>
+                    <c:if test="${!isLotterySite}">
+                        <p>
+                            <a class="btn-blue btn large-big gotoDespoit" href="javascript:void(0)">${views.fund_auto['转到钱包']}</a>
+                        </p>
+                    </c:if>
                 </div>
             </div>
         </c:when>

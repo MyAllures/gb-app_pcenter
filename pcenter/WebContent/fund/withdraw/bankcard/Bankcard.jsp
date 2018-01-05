@@ -81,7 +81,7 @@
     <div class="control-grouptwo">
         <label class="control-left">${views.fund_auto['银行卡号']}：</label>
         <div class="controls">
-            <input type="text" class="input bn ignore" placeholder="" maxlength="24" name="bankcardNumber2" tipsName="result.bankcardNumber-tips" autocomplete="off">
+            <input type="text" class="input bn ignore" placeholder="" maxlength="30" name="bankcardNumber2" tipsName="result.bankcardNumber-tips" autocomplete="off">
             <input type="hidden" class="input" name="result.bankcardNumber"/>
         </div>
     </div>

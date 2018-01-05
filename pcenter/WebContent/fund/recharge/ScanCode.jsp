@@ -1,5 +1,6 @@
 <%--@elvariable id="payAccountMap" type="java.util.Map<java.lang.String,so.wwb.gamebox.model.master.content.po.PayAccount>"--%>
 <%--@elvariable id="rank" type="so.wwb.gamebox.model.master.player.po.PlayerRank"--%>
+<%--@elvariable id="command" type="so.wwb.gamebox.model.master.content.vo.PayAccountListVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
 <!--扫码支付-->
@@ -39,11 +40,11 @@
                         <c:if test="${vs.index==0}">
                             <c:set var="onlinePayMax" value="${i.value.singleDepositMax}"/>
                             <c:set var="onlinePayMin" value="${i.value.singleDepositMin}"/>
+                            <c:set var="payAccount" value="${command.getSearchId(i.value.id)}"/>
                         </c:if>
                         <label class="bank ${vs.index==0?'select':''}">
                             <span class="radio">
-                                <input name="result.rechargeType" value="${i.value.rechargeType}" type="radio" ${vs.index==0?'checked':''}>
-                                <a type="hidden" class="randomAmount" value="${i.value.randomAmount}"/>
+                                <input name="result.rechargeType" randomAmount="${i.value.randomAmount}" account="${command.getSearchId(i.value.id)}" value="${i.value.rechargeType}" type="radio" ${vs.index==0?'checked':''}>
                             </span>
                             <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-third ${i.key}"></i></span>
                             <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
@@ -66,7 +67,7 @@
             </div>
             <div class="control-group">
                 <label class="control-label" for="result.rechargeAmount">${views.fund_auto['存款金额']}：</label>
-                <div class="controls" style="width: 480px">
+                <div class="controls" style="width: 525px">
                     <input type="text" class="input" name="result.rechargeAmount" id="result.rechargeAmount" autocomplete="off"/>
                     <span class="fee"></span>
                 </div>
@@ -88,7 +89,8 @@
             </c:if>
             <div class=" control-group">
                 <label class="control-label"></label>
-                <soul:button target="submit" precall="validateForm" text="${views.fund_auto['立即存款']}" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
+                <input type="hidden" value="${payAccount}" name="account"/>
+                <soul:button target="submit" precall="validateForm" url="${root}/fund/recharge/online/scanCodeSubmit.html" backUrl="${root}/fund/recharge/online/scanCode.html?realNameDialog=true" text="${views.fund_auto['立即存款']}" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
             </div>
         </div>
     </div>

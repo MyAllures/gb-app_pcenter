@@ -34,6 +34,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.common.security.AuthTool;
 import so.wwb.gamebox.model.DictEnum;
@@ -225,7 +226,7 @@ public class AccountSettingsController {
 		if (regSettingMailVerifcation) {
 			userPlayerVo.setIsNormal(true);
 		}
-		boolean success = ServiceTool.userPlayerService().updateEmail(updateNoticeContactWayVo, sysUserVo, userPlayerVo);
+		boolean success = ServiceSiteTool.userPlayerService().updateEmail(updateNoticeContactWayVo, sysUserVo, userPlayerVo);
 		map.put("state", success);
 		if (success) {
 			if (regSettingMailVerifcation) {
@@ -651,7 +652,7 @@ public class AccountSettingsController {
 
 		vo.getSearch().setBankcardNumber(vo.getBankcardNumber());
 		vo.getSearch().setUserType(UserTypeEnum.PLAYER.getCode());
-		UserBankcard oldBankCard = ServiceTool.userBankcardService().cardIsExists(vo);
+		UserBankcard oldBankCard = ServiceSiteTool.userBankcardService().cardIsExists(vo);
 		if (oldBankCard != null && oldBankCard.getIsDefault() && !oldBankCard.getUserId().equals(SessionManager.getUserId())) {
 			map.put("state",false);
 			map.put("msg",LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.bankCard.already")));
@@ -665,7 +666,7 @@ public class AccountSettingsController {
 			oldBankCard.setBankName(vo.getBankName());
 			oldBankCard.setBankDeposit(vo.getBankDeposit());
 			vo.setResult(oldBankCard);
-			success = ServiceTool.userBankcardService().update(vo).isSuccess();
+			success = ServiceSiteTool.userBankcardService().update(vo).isSuccess();
 		} else {
 			Integer userId = SessionManager.getUserId();
 			UserBankcard userBankcard = new UserBankcard();
@@ -681,7 +682,7 @@ public class AccountSettingsController {
 			userBankcard.setBankName(vo.getBankName());
 			userBankcard.setCustomBankName(vo.getCustomBankName());
 			vo.setResult(userBankcard);
-			success = ServiceTool.userBankcardService().updatePlayerBank(vo);
+			success = ServiceSiteTool.userBankcardService().updatePlayerBank(vo);
 		}
 		map.put("state", success);
 		if (success) {
@@ -732,7 +733,7 @@ public class AccountSettingsController {
 		userPlayerVo.setStartTime(startTime);
 		userPlayerVo.setEndTime(endTime);
 		userPlayerVo.setSysUser(getCurrentUser());
-		ServiceTool.userPlayerService().updateUserErrorTimes(userPlayerVo);
+		ServiceSiteTool.userPlayerService().updateUserErrorTimes(userPlayerVo);
 		SessionManager.refreshUser();
 	}
 
@@ -742,7 +743,7 @@ public class AccountSettingsController {
 		SysUser user = getCurrentUser();
 		accountVo.setResult(user);
 		accountVo.setChooseFreezeTime(FreezeTime.THREE.getCode());
-		UserPlayer userPlayer = ServiceTool.userPlayerService().freezeAccountBalance(accountVo);
+		UserPlayer userPlayer = ServiceSiteTool.userPlayerService().freezeAccountBalance(accountVo);
 		sendNotice(user, userPlayer);
 	}
 
@@ -865,7 +866,7 @@ public class AccountSettingsController {
 			userPlayerVo.setIsNormal(true);
 		}
 
-		boolean success = ServiceTool.userPlayerService().updatePhone(updateNoticeContactWayVo, sysUserVo, userPlayerVo);
+		boolean success = ServiceSiteTool.userPlayerService().updatePhone(updateNoticeContactWayVo, sysUserVo, userPlayerVo);
 		map.put("state", success);
 		if (success) {
 			if (regSettingMailVerifcation) {
@@ -1263,7 +1264,7 @@ public class AccountSettingsController {
 		UserBankcardVo userBankcardVo = new UserBankcardVo();
 		userBankcardVo.getSearch().setUserId(userId);
 		userBankcardVo.getSearch().setIsDefault(Boolean.TRUE);
-		UserBankcard userBankcard = ServiceTool.userBankcardService().findByUserId(userBankcardVo);
+		UserBankcard userBankcard = ServiceSiteTool.userBankcardService().findByUserId(userBankcardVo);
 		userBankcardVo.setResult(userBankcard);
 		return userBankcardVo;
 	}

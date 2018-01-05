@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import so.wwb.gamebox.common.dubbo.ServiceTool;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.model.master.digiccy.po.UserDigiccy;
 import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyListVo;
 import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyVo;
@@ -47,7 +47,7 @@ public class DigiccyRechargeController extends RechargeBaseController {
     public String digiccyPay(Model model) {
         UserDigiccyListVo userDigiccyListVo = new UserDigiccyListVo();
         userDigiccyListVo.getSearch().setUserId(SessionManager.getUserId());
-        List<UserDigiccy> userDigiccyList = ServiceTool.userDigiccyService().getUserDigiccis(userDigiccyListVo);
+        List<UserDigiccy> userDigiccyList = ServiceSiteTool.userDigiccyService().getUserDigiccis(userDigiccyListVo);
         model.addAttribute("userDigiccyList", userDigiccyList);
         return DIGICCY_PAY_URI;
     }
@@ -65,7 +65,7 @@ public class DigiccyRechargeController extends RechargeBaseController {
         userDigiccyVo.setSysUser(SessionManager.getUser());
         userDigiccyVo.getSearch().setCurrency(currency);
         userDigiccyVo.getSearch().setUserId(SessionManager.getUserId());
-        userDigiccyVo = ServiceTool.userDigiccyService().getDepositAddress(userDigiccyVo);
+        userDigiccyVo = ServiceSiteTool.userDigiccyService().getDepositAddress(userDigiccyVo);
         Map<String, Object> map = new HashMap<>(3, 1f);
         if (userDigiccyVo.isSuccess() && userDigiccyVo.getResult() != null) {
             UserDigiccy userDigiccy = userDigiccyVo.getResult();
@@ -96,7 +96,7 @@ public class DigiccyRechargeController extends RechargeBaseController {
         playerRechargeVo.getSearch().setBitAmount(bitAmount);
         try {
             playerRechargeVo.setOrigin(TransactionOriginEnum.PC.getCode());
-            playerRechargeVo = ServiceTool.playerRechargeService().digiccyExchange(playerRechargeVo, userDigiccyVo);
+            playerRechargeVo = ServiceSiteTool.playerRechargeService().digiccyExchange(playerRechargeVo, userDigiccyVo);
         } catch (Exception e) {
             LOG.error(e);
             playerRechargeVo.setSuccess(false);
@@ -122,7 +122,7 @@ public class DigiccyRechargeController extends RechargeBaseController {
         UserDigiccyVo userDigiccyVo = new UserDigiccyVo();
         userDigiccyVo.getSearch().setCurrency(currency);
         userDigiccyVo.getSearch().setUserId(SessionManager.getUserId());
-        userDigiccyVo = ServiceTool.userDigiccyService().fetchBalance(userDigiccyVo);
+        userDigiccyVo = ServiceSiteTool.userDigiccyService().fetchBalance(userDigiccyVo);
         UserDigiccy userDigiccy = userDigiccyVo.getResult();
         Map<String, Object> map = new HashMap<>(1, 1f);
         if (userDigiccy != null) {
@@ -142,7 +142,7 @@ public class DigiccyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/sale")
     public String sale(PlayerRechargeVo playerRechargeVo, Model model) {
-        playerRechargeVo = ServiceTool.playerRechargeService().searchPlayerRecharge(playerRechargeVo);
+        playerRechargeVo = ServiceSiteTool.playerRechargeService().searchPlayerRecharge(playerRechargeVo);
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         List<VActivityMessage> sales;
         if (playerRecharge != null && RechargeStatusEnum.ONLINE_SUCCESS.getCode().equals(playerRecharge.getRechargeStatus())) {
@@ -174,7 +174,7 @@ public class DigiccyRechargeController extends RechargeBaseController {
         }
         playerRechargeVo.setSysUser(SessionManager.getUser());
         try {
-            playerRechargeVo = ServiceTool.playerRechargeService().saveDigiccyFavorable(playerRechargeVo);
+            playerRechargeVo = ServiceSiteTool.playerRechargeService().saveDigiccyFavorable(playerRechargeVo);
         } catch (Exception e) {
             playerRechargeVo.setSuccess(false);
             LOG.error(e);
@@ -190,7 +190,7 @@ public class DigiccyRechargeController extends RechargeBaseController {
         userDigiccyListVo.getSearch().setUserId(SessionManager.getUserId());
         userDigiccyListVo.setPaging(null);
         userDigiccyListVo.getQuery().addOrder(UserDigiccy.PROP_AMOUNT, Direction.DESC);
-        userDigiccyListVo = ServiceTool.userDigiccyService().search(userDigiccyListVo);
+        userDigiccyListVo = ServiceSiteTool.userDigiccyService().search(userDigiccyListVo);
         List<UserDigiccy> userDigiccies = userDigiccyListVo.getResult();
         if (CollectionTool.isEmpty(userDigiccies)) {
             return new ArrayList<>(0);

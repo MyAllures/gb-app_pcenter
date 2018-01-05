@@ -28,13 +28,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.MessageI18nConst;
-import so.wwb.gamebox.model.company.enums.GameStatusEnum;
-import so.wwb.gamebox.model.company.site.po.SiteApiType;
 import so.wwb.gamebox.model.company.site.po.SiteApiTypeI18n;
 import so.wwb.gamebox.model.enums.UserTypeEnum;
 import so.wwb.gamebox.model.master.enums.CreateChannelEnum;
@@ -132,7 +131,7 @@ public class IndexController extends BaseIndexController {
         playerApiListVo.getSearch().setPlayerId(SessionManager.getUserId());
         playerApiListVo.setApis(Cache.getApi());
         playerApiListVo.setSiteApis(Cache.getSiteApi());
-        return ServiceTool.playerApiService().queryPlayerAssets(playerApiListVo);
+        return ServiceSiteTool.playerApiService().queryPlayerAssets(playerApiListVo);
     }
 
     @RequestMapping(value = "/index/queryAssets")
@@ -202,7 +201,7 @@ public class IndexController extends BaseIndexController {
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.setResult(new UserPlayer());
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
-        userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
+        userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
         SysUserVo sysUserVo = new SysUserVo();
         sysUserVo.setSearch(new SysUserSo());
         sysUserVo.getSearch().setId(SessionManager.getUserId());

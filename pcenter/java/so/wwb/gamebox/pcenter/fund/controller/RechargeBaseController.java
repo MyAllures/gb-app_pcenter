@@ -20,7 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import so.wwb.gamebox.common.dubbo.ServiceTool;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.iservice.master.fund.IPlayerRechargeService;
 import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.common.MessageI18nConst;
@@ -264,7 +264,7 @@ public abstract class RechargeBaseController {
         map.put("supportAtmCounter", supportAtmCounter);
         map.put("accountTypes", accountTypes);
         listVo.setConditions(map);
-        return ServiceTool.payAccountService().searchPayAccountByRank(listVo);
+        return ServiceSiteTool.payAccountService().searchPayAccountByRank(listVo);
     }
 
     /**
@@ -308,7 +308,7 @@ public abstract class RechargeBaseController {
         vActivityMessageVo.setDepositAmount(rechargeAmount);
         vActivityMessageVo.setRankId(userPlayer.getRankId());
         vActivityMessageVo.setLocal(SessionManager.getLocale().toString());
-        vActivityMessageVo = ServiceTool.vActivityMessageService().searchDepositPromotions(vActivityMessageVo);
+        vActivityMessageVo = ServiceSiteTool.vActivityMessageService().searchDepositPromotions(vActivityMessageVo);
         LinkedHashSet<VActivityMessage> vActivityMessages = vActivityMessageVo.getvActivityMessageList();
         if (CollectionTool.isEmpty(vActivityMessages)) {
             return new ArrayList<>();
@@ -382,7 +382,7 @@ public abstract class RechargeBaseController {
     public UserPlayer getUserPlayer() {
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
-        userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
+        userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
         return userPlayerVo.getResult();
     }
 
@@ -394,7 +394,7 @@ public abstract class RechargeBaseController {
     public PlayerRank getRank() {
         SysUserVo vo = new SysUserVo();
         vo.getSearch().setId(SessionManager.getUserId());
-        return ServiceTool.playerRankService().searchRankByPlayerId(vo);
+        return ServiceSiteTool.playerRankService().searchRankByPlayerId(vo);
     }
 
     /**
@@ -416,7 +416,7 @@ public abstract class RechargeBaseController {
     public PayAccount getPayAccount(Integer payAccountId) {
         PayAccountVo payAccountVo = new PayAccountVo();
         payAccountVo.getSearch().setId(payAccountId);
-        payAccountVo = ServiceTool.payAccountService().get(payAccountVo);
+        payAccountVo = ServiceSiteTool.payAccountService().get(payAccountVo);
         return payAccountVo.getResult();
     }
 
@@ -454,6 +454,6 @@ public abstract class RechargeBaseController {
     }
 
     public IPlayerRechargeService playerRechargeService() {
-        return ServiceTool.playerRechargeService();
+        return ServiceSiteTool.playerRechargeService();
     }
 }

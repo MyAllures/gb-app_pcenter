@@ -9,13 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.company.enums.GameStatusEnum;
 import so.wwb.gamebox.model.company.operator.vo.VSystemAnnouncementListVo;
 import so.wwb.gamebox.model.company.setting.po.Api;
 import so.wwb.gamebox.model.company.site.po.SiteApi;
 import so.wwb.gamebox.model.company.site.po.SiteI18n;
-import so.wwb.gamebox.model.listop.StatusEnum;
 import so.wwb.gamebox.model.master.content.po.CttCarousel;
 import so.wwb.gamebox.model.master.enums.AnnouncementTypeEnum;
 import so.wwb.gamebox.model.master.enums.CarouselTypeEnum;
@@ -71,7 +71,7 @@ public class HomeController {
     public String loadActivityMessage(Model model) {
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
-        userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
+        userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
 
         String language = SessionManager.getLocale().toString();
         //获取活动分类
@@ -85,10 +85,10 @@ public class HomeController {
 
         //分页计算
         Paging paging = playerActivityMessageListVo.getPaging();
-        paging.setTotalCount(ServiceTool.playerActivityMessageService().countPlayerActivityMessage(playerActivityMessageListVo));
+        paging.setTotalCount(ServiceSiteTool.playerActivityMessageService().countPlayerActivityMessage(playerActivityMessageListVo));
         paging.cal();
 
-        List<PlayerActivityMessage> playerActivityMessageList = ServiceTool.playerActivityMessageService().queryPlayerActivityMessage(playerActivityMessageListVo);
+        List<PlayerActivityMessage> playerActivityMessageList = ServiceSiteTool.playerActivityMessageService().queryPlayerActivityMessage(playerActivityMessageListVo);
 
         playerActivityMessageListVo.setResult(playerActivityMessageList);
         model.addAttribute("sale", playerActivityMessageListVo);
@@ -163,7 +163,7 @@ public class HomeController {
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.setResult(new UserPlayer());
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
-        userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
+        userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
         HashMap map = new HashMap(2,1f);
         map.put("state", Boolean.valueOf(userPlayerVo.isSuccess()));
         map.put("walletBalance", userPlayerVo.getResult().getWalletBalance());
@@ -179,7 +179,7 @@ public class HomeController {
     /*private void announcement(Model model, VSystemAnnouncementListVo listVo) {
         listVo.getSearch().setLocal(SessionManager.getLocale().toString());
         listVo.getPaging().setPageSize(5);
-        List<VSystemAnnouncement> vList = ServiceTool.vSystemAnnouncementService().searchAnnouncement(listVo);
+        List<VSystemAnnouncement> vList = ServiceSiteTool.vSystemAnnouncementService().searchAnnouncement(listVo);
         model.addAttribute("announcementList", vList);
     }*/
 
@@ -192,7 +192,7 @@ public class HomeController {
     private void sale(Model model, PlayerActivityMessageListVo playerActivityMessageListVo) {
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
-        userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
+        userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
 
         /*String language = SessionManager.getLocale().toString();
         getOperationActivityClassify(model, language);
@@ -208,7 +208,7 @@ public class HomeController {
         listVo.getSearch().setIsAllRank(true);
         listVo.getSearch().setRegisterTime(SessionManager.getUser().getCreateTime());
         listVo.getPaging().setPageSize(8);
-        listVo = ServiceTool.vPlayerActivityMessageService().search(listVo);
+        listVo = ServiceSiteTool.vPlayerActivityMessageService().search(listVo);
         model.addAttribute("sale", listVo);*/
 
         String language = SessionManager.getLocale().toString();
@@ -223,10 +223,10 @@ public class HomeController {
 
         //分页计算
         Paging paging = playerActivityMessageListVo.getPaging();
-        paging.setTotalCount(ServiceTool.playerActivityMessageService().countPlayerActivityMessage(playerActivityMessageListVo));
+        paging.setTotalCount(ServiceSiteTool.playerActivityMessageService().countPlayerActivityMessage(playerActivityMessageListVo));
         paging.cal();
 
-        List<PlayerActivityMessage> playerActivityMessageList = ServiceTool.playerActivityMessageService().queryPlayerActivityMessage(playerActivityMessageListVo);
+        List<PlayerActivityMessage> playerActivityMessageList = ServiceSiteTool.playerActivityMessageService().queryPlayerActivityMessage(playerActivityMessageListVo);
 
         playerActivityMessageListVo.setResult(playerActivityMessageList);
         model.addAttribute("sale", playerActivityMessageListVo);

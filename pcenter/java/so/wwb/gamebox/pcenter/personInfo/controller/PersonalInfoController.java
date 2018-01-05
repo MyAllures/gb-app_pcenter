@@ -1,6 +1,5 @@
 package so.wwb.gamebox.pcenter.personInfo.controller;
 
-import jdk.nashorn.internal.runtime.Undefined;
 import org.soul.commons.bean.Pair;
 import org.soul.commons.collections.*;
 import org.soul.commons.data.json.JsonTool;
@@ -36,6 +35,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.*;
 import so.wwb.gamebox.model.common.notice.enums.ContactWayType;
@@ -280,7 +280,7 @@ public class PersonalInfoController {
             }
         }
 
-        sysUserVo = ServiceTool.userPlayerService().updatePersonInfo(sysUserVo, userPlayerVo);
+        sysUserVo = ServiceSiteTool.userPlayerService().updatePersonInfo(sysUserVo, userPlayerVo);
         map.put("state", sysUserVo.isSuccess());
         if (sysUserVo.isSuccess()) {
             SessionManager.refreshUser();
@@ -488,7 +488,7 @@ public class PersonalInfoController {
 
         sysUserVo.getSearch().setId(SessionManager.getUserId());
         userPlayerVo.setIsNormal(true);
-        boolean success = ServiceTool.userPlayerService().updateEmail(sysUserVo, userPlayerVo);
+        boolean success = ServiceSiteTool.userPlayerService().updateEmail(sysUserVo, userPlayerVo);
         map.put("state", success);
         if (success) {
             map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.success")));
@@ -640,7 +640,7 @@ public class PersonalInfoController {
         userPlayer.setPhoneCode(userPlayer.getPhoneCode());
         userPlayerVo.setResult(userPlayer);
         userPlayerVo.setIsNormal(true);
-        boolean success = ServiceTool.userPlayerService().updatePhone(sysUserVo, userPlayerVo);
+        boolean success = ServiceSiteTool.userPlayerService().updatePhone(sysUserVo, userPlayerVo);
         map.put("state", success);
         if (success) {
             map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.success")));
@@ -907,7 +907,7 @@ public class PersonalInfoController {
         sysUserVo.getSearch().setRealName(realName);
         sysUserVo.getSearch().setSiteId(SessionManager.getSiteId());
         sysUserVo.getSearch().setSubsysCode(SubSysCodeEnum.PCENTER.getCode());
-        String isExistRealName = ServiceTool.userAgentService().isExistRealName(sysUserVo);
+        String isExistRealName = ServiceSiteTool.userAgentService().isExistRealName(sysUserVo);
         return isExistRealName;
     }
 

@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.common.security.AuthTool;
 import so.wwb.gamebox.model.Module;
@@ -218,7 +219,7 @@ public class UpdateSecurityPasswordController {
         }
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.getSearch().setId(sysUser.getId());
-        userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
+        userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
         UserPlayer player = userPlayerVo.getResult();
         if (player != null) {
             Date now = DateQuickPicker.getInstance().getNow();
@@ -228,7 +229,7 @@ public class UpdateSecurityPasswordController {
                 player.setBalanceFreezeEndTime(new Date());
                 userPlayerVo.setResult(player);
                 userPlayerVo.setProperties(UserPlayer.PROP_BALANCE_FREEZE_END_TIME);
-                ServiceTool.userPlayerService().updateOnly(userPlayerVo);
+                ServiceSiteTool.userPlayerService().updateOnly(userPlayerVo);
             }
         }
     }
@@ -319,7 +320,7 @@ public class UpdateSecurityPasswordController {
         SysUser user = SessionManagerCommon.getUser();
 
         userPlayerVo.setSysUser(user);
-        SysUser sysUser = ServiceTool.userPlayerService().updateUserErrorTimes(userPlayerVo);
+        SysUser sysUser = ServiceSiteTool.userPlayerService().updateUserErrorTimes(userPlayerVo);
         SessionManagerCommon.setUser(sysUser);
     }
 
@@ -397,7 +398,7 @@ public class UpdateSecurityPasswordController {
         SysUser user = SessionManagerCommon.getUser();
         accountVo.setResult(user);
         accountVo.setChooseFreezeTime(FreezeTime.THREE.getCode());
-        UserPlayer userPlayer = ServiceTool.userPlayerService().freezeAccountBalance(accountVo);
+        UserPlayer userPlayer = ServiceSiteTool.userPlayerService().freezeAccountBalance(accountVo);
         sendNotice(user, userPlayer);
     }
 

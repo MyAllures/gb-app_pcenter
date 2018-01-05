@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.ParamTool;
@@ -596,7 +597,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         SysUserDataRightListVo sysUserDataRightListVo = new SysUserDataRightListVo();
         sysUserDataRightListVo.getSearch().setUserId(SessionManager.getUserId());
         sysUserDataRightListVo.getSearch().setModuleType(DataRightModuleType.COMPANYDEPOSIT.getCode());
-        List<Integer> userIdByUrl = ServiceTool.sysUserDataRightService().searchPlayerDataRightEntityId(sysUserDataRightListVo);
+        List<Integer> userIdByUrl = ServiceSiteTool.sysUserDataRightService().searchPlayerDataRightEntityId(sysUserDataRightListVo);
         userIdByUrl.add(Const.MASTER_BUILT_IN_ID);
 
         //判断账号是否可以查看该层级的记录 add by Bruce.QQ
@@ -617,17 +618,17 @@ public class CompanyRechargeController extends RechargeBaseController {
         PlayerRechargeListVo listVo = new PlayerRechargeListVo();
         listVo.getSearch().setBankOrder(txId);
         listVo.getSearch().setRechargeStatus(RechargeStatusEnum.FAIL.getCode());
-        return ServiceTool.playerRechargeService().isExistsTxId(listVo);
+        return ServiceSiteTool.playerRechargeService().isExistsTxId(listVo);
     }
 
     private void filterUnavailableSubAccount(List<Integer> userIdByUrl) {
         SysUserDataRightVo sysUserDataRightVo = new SysUserDataRightVo();
         sysUserDataRightVo.getSearch().setModuleType(DataRightModuleType.COMPANYDEPOSIT.getCode());
-        Map<Integer, List<SysUserDataRight>> udrMap = ServiceTool.sysUserDataRightService().searchDataRightsByModuleType(sysUserDataRightVo);
+        Map<Integer, List<SysUserDataRight>> udrMap = ServiceSiteTool.sysUserDataRightService().searchDataRightsByModuleType(sysUserDataRightVo);
 
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
-        userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
+        userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
         Integer rankId = userPlayerVo.getResult().getRankId();
         for (Iterator<Integer> iterator = userIdByUrl.iterator(); iterator.hasNext(); ) {
             Integer userId = iterator.next();

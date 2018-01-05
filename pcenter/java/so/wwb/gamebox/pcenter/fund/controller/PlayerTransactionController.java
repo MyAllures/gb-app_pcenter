@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.iservice.master.report.IVPlayerTransactionService;
 import so.wwb.gamebox.model.DictEnum;
@@ -205,7 +206,7 @@ public class PlayerTransactionController extends NoMappingCrudController<IVPlaye
      */
     @RequestMapping("/refundFeeView")
     public String refundFeeView(VPlayerTransactionListVo playerTransactionListVo, Model model) {
-        Integer transactionId = ServiceTool.getPlayerTransactionService().getRefundFeeRelatedRechargeTransactionId(playerTransactionListVo);
+        Integer transactionId = ServiceSiteTool.getPlayerTransactionService().getRefundFeeRelatedRechargeTransactionId(playerTransactionListVo);
         VPlayerTransactionVo playerTransactionVo = new VPlayerTransactionVo();
         playerTransactionVo.getSearch().setId(transactionId);
         model.addAttribute("command", getService().get(playerTransactionVo));
@@ -220,7 +221,7 @@ public class PlayerTransactionController extends NoMappingCrudController<IVPlaye
                 if (StringTool.isNotBlank(vo.getResult().getTransactionNo())) {
                     VPlayerWithdrawVo withdrawVo = new VPlayerWithdrawVo();
                     withdrawVo.getSearch().setId(vo.getResult().getSourceId());
-                    withdrawVo = ServiceTool.vPlayerWithdrawService().get(withdrawVo);
+                    withdrawVo = ServiceSiteTool.vPlayerWithdrawService().get(withdrawVo);
                     model.addAttribute("withdrawVo", withdrawVo);
                 }
                 if (vo.getResult().getPlayerId() != null) {

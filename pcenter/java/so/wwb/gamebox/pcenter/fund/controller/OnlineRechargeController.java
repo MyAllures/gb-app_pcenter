@@ -1,8 +1,6 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.soul.commons.collections.CollectionQueryTool;
-import org.soul.commons.collections.CollectionTool;
 import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.string.RandomStringTool;
 import org.soul.commons.lang.string.StringTool;
@@ -12,7 +10,6 @@ import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
 import org.soul.commons.net.ServletTool;
 import org.soul.commons.security.CryptoTool;
-import org.soul.iservice.pay.IOnlinePayService;
 import org.soul.model.comet.vo.MessageVo;
 import org.soul.model.pay.enums.CommonFieldsConst;
 import org.soul.model.pay.enums.PayApiTypeConst;
@@ -25,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.SiteParamEnum;
@@ -59,7 +57,10 @@ import so.wwb.gamebox.web.common.token.Token;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cherry on 16-9-11.
@@ -101,7 +102,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         payAccountListVo.setPlayerRank(rank);
         payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
         payAccountListVo.setBanks(banks);
-        model.addAttribute("payAccountMap", ServiceTool.payAccountService().getOnlineAccount(payAccountListVo));
+        model.addAttribute("payAccountMap", ServiceSiteTool.payAccountService().getOnlineAccount(payAccountListVo));
         model.addAttribute("username", SessionManager.getUserName());
         model.addAttribute("currency", getCurrencySign());
         model.addAttribute("sales", searchSales(DepositWayEnum.ONLINE_DEPOSIT.getCode()));
@@ -130,7 +131,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         payAccountListVo.setResult(payAccounts);
         payAccountListVo.setPlayerRank(rank);
         payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
-        model.addAttribute("payAccountMap", ServiceTool.payAccountService().getScanAccount(payAccountListVo));
+        model.addAttribute("payAccountMap", ServiceSiteTool.payAccountService().getScanAccount(payAccountListVo));
         model.addAttribute("currency", getCurrencySign());
         model.addAttribute("username", SessionManager.getUserName());
         //验证规则
@@ -279,7 +280,7 @@ public class OnlineRechargeController extends RechargeBaseController {
                 //添加支付网址
                 playerRecharge.setPayUrl(domain);
                 playerRechargeVo.setProperties(PlayerRecharge.PROP_PAY_URL);
-                ServiceTool.playerRechargeService().updateOnly(playerRechargeVo);
+                ServiceSiteTool.playerRechargeService().updateOnly(playerRechargeVo);
                 response.sendRedirect(url);
             }
         } catch (Exception e) {
@@ -416,7 +417,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         SysUserDataRightListVo sysUserDataRightListVo = new SysUserDataRightListVo();
         sysUserDataRightListVo.getSearch().setUserId(SessionManager.getUserId());
         sysUserDataRightListVo.getSearch().setModuleType(DataRightModuleType.ONLINEDEPOSIT.getCode());
-        List<Integer> userIdByUrl = ServiceTool.sysUserDataRightService().searchPlayerDataRightEntityId(sysUserDataRightListVo);
+        List<Integer> userIdByUrl = ServiceSiteTool.sysUserDataRightService().searchPlayerDataRightEntityId(sysUserDataRightListVo);
         userIdByUrl.add(Const.MASTER_BUILT_IN_ID);
         message.addUserIds(userIdByUrl);
         ServiceTool.messageService().sendToMcenterMsg(message);
@@ -431,7 +432,7 @@ public class OnlineRechargeController extends RechargeBaseController {
     private PayAccount getOnlinePayAccount(String account) {
         PayAccountVo payAccountVo = new PayAccountVo();
         payAccountVo.setSearchId(account);
-        payAccountVo = ServiceTool.payAccountService().get(payAccountVo);
+        payAccountVo = ServiceSiteTool.payAccountService().get(payAccountVo);
         return payAccountVo.getResult();
     }
 

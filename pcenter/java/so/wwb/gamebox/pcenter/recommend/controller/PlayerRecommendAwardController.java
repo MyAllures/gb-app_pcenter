@@ -11,7 +11,7 @@ import org.soul.model.sys.po.SysParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import so.wwb.gamebox.common.dubbo.ServiceTool;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.iservice.master.report.IPlayerRecommendAwardService;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteI18nEnum;
@@ -55,7 +55,7 @@ public class PlayerRecommendAwardController {
     }
 
     private IPlayerRecommendAwardService getService() {
-        return ServiceTool.playerRecommendAwardService();
+        return ServiceSiteTool.playerRecommendAwardService();
     }
 
     //region your codes 3
@@ -162,7 +162,7 @@ public class PlayerRecommendAwardController {
         //查询玩家
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
-        userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
+        userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
         if(userPlayerVo.getResult()!=null){
             model.addAttribute("player", userPlayerVo.getResult());
             String invitationCode = userPlayerVo.getResult().getRegistCode() + SessionManager.getUserId().toString();

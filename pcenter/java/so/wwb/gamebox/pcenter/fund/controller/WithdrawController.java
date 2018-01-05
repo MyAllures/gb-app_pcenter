@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.master.fund.enums.FundTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransactionTypeEnum;
@@ -101,7 +102,7 @@ public class WithdrawController extends BaseWithdrawController {
         if (SessionManager.getUserId() != null) {
             vo.getSearch().setPlayerId(SessionManager.getUserId());
             vo.getSearch().setWithdrawStatus(WithdrawStatusEnum.PENDING_SUB.getCode());
-            vo = ServiceTool.playerWithdrawService().search(vo);
+            vo = ServiceSiteTool.playerWithdrawService().search(vo);
         }
         return vo.getResult();
     }
@@ -144,7 +145,7 @@ public class WithdrawController extends BaseWithdrawController {
         }
         PlayerRankVo playerRankVo = new PlayerRankVo();
         playerRankVo.getSearch().setId(player.getRankId());
-        playerRankVo = ServiceTool.playerRankService().get(playerRankVo);
+        playerRankVo = ServiceSiteTool.playerRankService().get(playerRankVo);
         if (playerRankVo.getResult() == null || playerRankVo.getResult().getWithdrawNormalAudit() == null) {
             return;
         }
@@ -160,13 +161,13 @@ public class WithdrawController extends BaseWithdrawController {
     private List<PlayerTransaction> getAuditLogList(PlayerTransactionListVo listVo) {
         listVo.getSearch().setPlayerId(SessionManager.getUser().getId());
         listVo.getSearch().setCreateTime(new Date());
-        return ServiceTool.getPlayerTransactionService().searchAuditLog(listVo);
+        return ServiceSiteTool.getPlayerTransactionService().searchAuditLog(listVo);
     }
 
     @RequestMapping("/withdrawSuccess")
     private String withdrawSuccess(PlayerWithdrawVo withdrawVo, Model model) {
         if (StringTool.isNotBlank(withdrawVo.getSearch().getTransactionNo())) {
-            withdrawVo = ServiceTool.playerWithdrawService().search(withdrawVo);
+            withdrawVo = ServiceSiteTool.playerWithdrawService().search(withdrawVo);
         }
         return successDialog(withdrawVo, model);
     }
@@ -271,10 +272,10 @@ public class WithdrawController extends BaseWithdrawController {
         }
         SysUserVo sysUserVo = new SysUserVo();
         sysUserVo.getSearch().setId(SessionManager.getUserId());
-        PlayerRank rank = ServiceTool.playerRankService().searchRankByPlayerId(sysUserVo);//查询层级
+        PlayerRank rank = ServiceSiteTool.playerRankService().searchRankByPlayerId(sysUserVo);//查询层级
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
-        userPlayerVo = ServiceTool.userPlayerService().get(userPlayerVo);
+        userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
 
         double money = Double.valueOf(withdrawAmount);
         if (userPlayerVo.getResult().getWalletBalance() < money

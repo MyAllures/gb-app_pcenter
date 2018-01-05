@@ -127,7 +127,7 @@ public class HomeController {
 
     private void addCarousel(Map cttCarousel, int count, List<Map> carouselList, Map<String, Api> apis, Map<String, SiteApi> siteApis) {
         if (SessionManager.getLocale().toString().equals(cttCarousel.get("language")) &&
-                CarouselTypeEnum.CAROUSEL_TYPE_PLAYER_INDEX.getCode().equals(cttCarousel.get("type")) && "true".equals(cttCarousel.get("status").toString())) {
+                CarouselTypeEnum.CAROUSEL_TYPE_PLAYER_INDEX.getCode().equals(cttCarousel.get("type")) && "true".equals(MapTool.getString(cttCarousel,"status"))) {
             String typeJson = cttCarousel.get("link") == null ? "" : cttCarousel.get("link").toString();
             if (StringTool.isNotBlank(typeJson)) {
                 Map jsonMap = JsonTool.fromJson(typeJson, Map.class);

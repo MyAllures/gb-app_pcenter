@@ -1,6 +1,7 @@
 package so.wwb.gamebox.pcenter.home.controller;
 
 import org.soul.commons.collections.CollectionTool;
+import org.soul.commons.collections.MapTool;
 import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.DateTool;
 import org.soul.commons.lang.string.StringTool;
@@ -32,7 +33,7 @@ import java.util.*;
 
 /**
  * 玩家中心首页
- * <p>
+ * <p/>
  * Created by cheery on 15-8-27.
  */
 @Controller
@@ -101,11 +102,14 @@ public class HomeController {
     private List<Map> searchAdvertisement() {
         int carouselNum = 6;//广告推荐位取前6位
         Map<String, CttCarousel> siteCarousel = Cache.getSiteCarousel();
+        if (MapTool.isEmpty(siteCarousel)) {
+            return new ArrayList<>(0);
+        }
         Iterator<String> iter = siteCarousel.keySet().iterator();
-        List<Map> carouselList = new ArrayList<>(carouselNum);
         Map<String, Api> apis = Cache.getApi();
         Map<String, SiteApi> siteApis = Cache.getSiteApi();
         int count = 0;
+        List<Map> carouselList = new ArrayList<>(carouselNum);
         while (iter.hasNext() && count < carouselNum) {
             String key = iter.next();
             Map cttCarousel = (Map) siteCarousel.get(key);
@@ -124,7 +128,7 @@ public class HomeController {
 
     private void addCarousel(Map cttCarousel, int count, List<Map> carouselList, Map<String, Api> apis, Map<String, SiteApi> siteApis) {
         if (SessionManager.getLocale().toString().equals(cttCarousel.get("language")) &&
-                CarouselTypeEnum.CAROUSEL_TYPE_PLAYER_INDEX.getCode().equals(cttCarousel.get("type")) && "true".equals(cttCarousel.get("status").toString())) {
+                CarouselTypeEnum.CAROUSEL_TYPE_PLAYER_INDEX.getCode().equals(cttCarousel.get("type")) && "true".equals(MapTool.getString(cttCarousel,"status"))) {
             String typeJson = cttCarousel.get("link") == null ? "" : cttCarousel.get("link").toString();
             if (StringTool.isNotBlank(typeJson)) {
                 Map jsonMap = JsonTool.fromJson(typeJson, Map.class);
@@ -134,8 +138,10 @@ public class HomeController {
                     SiteApi siteApi = siteApis.get(apiId);
                     if (api != null && siteApi != null && !GameStatusEnum.DISABLE.getCode().equals(api.getSystemStatus()) && !GameStatusEnum.DISABLE.getCode().equals(siteApi.getSystemStatus())) {
                         cttCarousel.putAll(jsonMap);
-                        if(api.getMaintainStartTime()!=null) cttCarousel.put("maintainStart",api.getMaintainStartTime().getTime());
-                        if (api.getMaintainEndTime()!=null) cttCarousel.put("maintainEnd",api.getMaintainEndTime().getTime());
+                        if (api.getMaintainStartTime() != null)
+                            cttCarousel.put("maintainStart", api.getMaintainStartTime().getTime());
+                        if (api.getMaintainEndTime() != null)
+                            cttCarousel.put("maintainEnd", api.getMaintainEndTime().getTime());
                         count++;
                         carouselList.add(cttCarousel);
                     }

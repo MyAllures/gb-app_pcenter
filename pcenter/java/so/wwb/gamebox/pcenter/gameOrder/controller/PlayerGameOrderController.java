@@ -9,6 +9,7 @@ import org.soul.web.session.SessionManagerBase;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.ParamTool;
@@ -74,7 +75,7 @@ public class PlayerGameOrderController {
         listVo.setMinDate(minDate);
         listVo.setMaxDate(today);
         listVo.getSearch().setPlayerId(SessionManager.getUserId());
-        listVo = ServiceTool.playerGameOrderService().search(listVo);
+        listVo = ServiceSiteTool.playerGameOrderService().search(listVo);
         //统计数据
         statisticsData(listVo, model);
         model.addAttribute("command", listVo);
@@ -96,7 +97,7 @@ public class PlayerGameOrderController {
 
     @RequestMapping("/gameRecordDetail")
     public String gameRecordDetail(PlayerGameOrderVo playerGameOrderVo, Model model) {
-        playerGameOrderVo = ServiceTool.playerGameOrderService().getGameOrderDetail(playerGameOrderVo);
+        playerGameOrderVo = ServiceSiteTool.playerGameOrderService().getGameOrderDetail(playerGameOrderVo);
         PlayerGameOrder playerGameOrder = playerGameOrderVo.getResult();
         //如果不是这个玩家的投注订单，则视无该笔订单
         if (playerGameOrder == null || playerGameOrder.getPlayerId() != SessionManager.getUserId().intValue()) {
@@ -117,7 +118,7 @@ public class PlayerGameOrderController {
     private void statisticsData(PlayerGameOrderListVo listVo, Model model) {
         // 统计数据
         if (listVo.getPaging().getTotalCount() != 0) {
-            Map map = ServiceTool.playerGameOrderService().queryTotalPayoutAndEffect(listVo);
+            Map map = ServiceSiteTool.playerGameOrderService().queryTotalPayoutAndEffect(listVo);
             model.addAttribute("singleAmount", map.get("single"));
             model.addAttribute("effectAmount", map.get("effective"));
             model.addAttribute("profitAmount", map.get("profit"));

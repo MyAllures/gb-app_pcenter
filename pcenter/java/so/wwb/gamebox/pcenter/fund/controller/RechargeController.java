@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import so.wwb.gamebox.common.dubbo.ServiceTool;
+import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.master.content.enums.CttAnnouncementTypeEnum;
@@ -40,7 +40,7 @@ public class RechargeController extends RechargeBaseController {
     @RequestMapping("/recharge")
     @DemoModel(menuCode = DemoMenuEnum.CKZQ)
     public String recharge(Model model) {
-        model.addAttribute("map", ServiceTool.payAccountService().queryValidCount(new PayAccountListVo()));
+        model.addAttribute("map", ServiceSiteTool.payAccountService().queryValidCount(new PayAccountListVo()));
         model.addAttribute("customerService", getCustomerService());
         //快速充值地址
         fastRecharge(model);
@@ -87,7 +87,7 @@ public class RechargeController extends RechargeBaseController {
         cttAnnouncementListVo.getSearch().setDisplay(true);
         cttAnnouncementListVo.getQuery().addOrder(CttAnnouncement.PROP_ORDER_NUM, Direction.ASC);
         cttAnnouncementListVo.getPaging().setPageSize(3);
-        cttAnnouncementListVo = ServiceTool.cttAnnouncementService().search(cttAnnouncementListVo);
+        cttAnnouncementListVo = ServiceSiteTool.cttAnnouncementService().search(cttAnnouncementListVo);
         model.addAttribute("bankNotices", cttAnnouncementListVo);
         return BANK_NOTICE_URI;
     }

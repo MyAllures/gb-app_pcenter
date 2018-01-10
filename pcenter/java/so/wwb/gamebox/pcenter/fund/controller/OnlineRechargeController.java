@@ -235,7 +235,7 @@ public class OnlineRechargeController extends RechargeBaseController {
      */
     private Double getRechargeAmount(PayAccount payAccount, PlayerRecharge playerRecharge) {
         Double rechargeAmount = playerRecharge.getRechargeAmount();
-        if (payAccount != null && payAccount.getRandomAmount() != null && rechargeAmount.intValue() == rechargeAmount) {
+        if (payAccount != null && payAccount.getRandomAmount() != null && payAccount.getRandomAmount() && rechargeAmount.intValue() == rechargeAmount) {
             double random = Double.parseDouble(RandomStringTool.random(2, 11, 99, false, true)) * 0.01;
             if (random < 0.11) {
                 random += 0.11;

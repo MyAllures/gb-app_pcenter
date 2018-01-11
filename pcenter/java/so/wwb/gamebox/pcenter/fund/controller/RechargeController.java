@@ -45,7 +45,7 @@ public class RechargeController extends RechargeBaseController {
         payAccountListVo.getSearch().setTerminal(TerminalEnum.PC.getCode());
         payAccountListVo.setPlayerId(SessionManager.getUserId());
         payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
-        model.addAttribute("map", ServiceSiteTool.payAccountService().queryValidCount(new PayAccountListVo()));
+        model.addAttribute("map", ServiceSiteTool.payAccountService().queryValidCount(payAccountListVo));
         model.addAttribute("customerService", getCustomerService());
         //快速充值地址
         fastRecharge(model);

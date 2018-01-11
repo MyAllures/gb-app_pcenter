@@ -4,10 +4,10 @@
 <textarea style="display: none" name="search.gameTypeList">${command.search.gameTypeList}</textarea>
 <input type="hidden" name="search.beginWinningAmount" value="${command.search.beginWinningAmount}"/>
     <div class="record-total" >
-        <span class="red m-r-sm al-bold">总计：${command.paging.totalCount}笔 </span>
-        <span class="al-bold">投注额：<a href="#">${soulFn:formatCurrency(singleAmount)}</a></span>
-        <span class="al-bold">有效投注额：<a href="#">${soulFn:formatCurrency(effectAmount)}</a></span>
-        <span class="al-bold">派彩：<a href="#">${siteCurrencySign}${soulFn:formatCurrency(profitAmount)}</a></span>
+        <span class="red m-r-sm al-bold">${fn:replace(views.gameOrder_auto['总共笔数'],"{0}" , command.paging.totalCount)}</span>
+        <span class="al-bold">${views.gameOrder_auto['投注额']}:<a href="#">${siteCurrencySign}${soulFn:formatCurrency(singleAmount)}</a></span>
+        <span class="al-bold">${views.gameOrder_auto['有效投注额']}:<a href="#">${siteCurrencySign}${soulFn:formatCurrency(effectAmount)}</a></span>
+        <span class="al-bold">${views.gameOrder_auto['派彩']}:<a href="#">${siteCurrencySign}${soulFn:formatCurrency(profitAmount)}</a></span>
     </div>
 <div class="chart-table">
     <table  width="100%" border="0" cellpadding="0" cellspacing="0" class="game-record-table1">
@@ -38,7 +38,7 @@
                     <c:if test="${isLottery.paramValue!='true'}">
                         <td>${gbFn:getSiteApiName(i.apiId.toString())}
                                  <c:if test="${not empty i.gameType}" >
-                                     ${dicts.game.game_type[i.gameType]}
+                                     --${dicts.game.game_type[i.gameType]}
                                  </c:if>
                         </td>
                     </c:if>

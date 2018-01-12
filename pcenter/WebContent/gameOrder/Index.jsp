@@ -12,7 +12,11 @@
         <div class="rgeechar">
             <div class="history btnalign">
                 <span class="pull-left">${views.gameOrder_auto['投注日期']}：</span>
-                <gb:dateRange style="width:170px;" inputStyle="width:150px" format="${DateFormat.DAY_SECOND}" useToday="true" useRange="true" position="down" btnClass="search"  minDate="${command.minDate}" startName="search.beginBetTime" endName="search.endBetTime" startDate="${command.search.beginBetTime}" endDate="${command.search.endBetTime}"/>
+                <gb:dateRange style="width:170px;" inputStyle="width:150px" format="${DateFormat.DAY_SECOND}"
+                              useToday="true" useRange="true" position="down" btnClass="search"
+                              minDate="${command.minDate}" maxDate="${command.maxDate}"
+                              startName="search.beginBetTime" endName="search.endBetTime"
+                              startDate="${command.search.beginBetTime}" endDate="${command.search.endBetTime}"/>
                 <soul:button target="queryByCondition" text="${views.gameOrder_auto['搜索']}" opType="function" cssClass="btn btn-filter"/>
                 <c:if test="${isLottery.paramValue!='true'}">
                     <div class="pull-right">

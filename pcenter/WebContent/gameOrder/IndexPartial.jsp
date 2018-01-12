@@ -38,7 +38,7 @@
                     <c:if test="${isLottery.paramValue!='true'}">
                         <td>${gbFn:getSiteApiName(i.apiId.toString())}
                                  <c:if test="${not empty i.gameType}" >
-                                     --${dicts.game.game_type[i.gameType]}
+                                    <br/>${dicts.game.game_type[i.gameType]}
                                  </c:if>
                         </td>
                     </c:if>
@@ -53,12 +53,18 @@
                         <a href="/gameOrder/gameRecordDetail.html?searchId=${command.getSearchId(i.id)}" nav-target="mainFrame">${i.betId}</a>
                     </td>
                     <td>
-                            ${soulFn:formatDateTz(i.betTime, DateFormat.DAY_SECOND, timeZone)}
+                            ${soulFn:formatDateTz(i.betTime, DateFormat.DAY, timeZone)}
+                        </br>
+                            ${soulFn:formatDateTz(i.betTime, DateFormat.SECOND, timeZone)}
+
+                            <%--${soulFn:formatDateTz(i.betTime, DateFormat.DAY_SECOND, timeZone)}--%>
                     </td>
                     <td>
                         <c:choose>
                             <c:when test="${i.orderState=='settle'&&!empty i.payoutTime}">
-                                ${soulFn:formatDateTz(i.payoutTime, DateFormat.DAY_SECOND, timeZone)}
+                                ${soulFn:formatDateTz(i.payoutTime, DateFormat.DAY, timeZone)}
+                                </br>
+                                ${soulFn:formatDateTz(i.payoutTime, DateFormat.SECOND, timeZone)}
                             </c:when>
                             <c:otherwise>
                                 --

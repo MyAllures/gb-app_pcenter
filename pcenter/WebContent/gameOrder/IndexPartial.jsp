@@ -80,22 +80,24 @@
                             ${soulFn:formatInteger(i.effectiveTradeAmount)}${soulFn:formatDecimals(i.effectiveTradeAmount)}
                         </c:if>
                     </td>
-
-
-                    <c:if test="${i.orderState!='settle'}">
-                        <td class="gray">
-                            --
-                        </td>
-                    </c:if>
-                    <c:if test="${i.profitAmount >0}">
-                        <td class="green">${soulFn:formatInteger(i.profitAmount)}${soulFn:formatDecimals(i.profitAmount)}</td>
-                    </c:if>
-                    <c:if test="${i.profitAmount==0}">
-                        <td class="black">0</td>
-                    </c:if>
-                    <c:if test="${i.profitAmount < 0}">
-                        <td class="red">${soulFn:formatInteger(i.profitAmount)}${soulFn:formatDecimals(i.profitAmount)}</td>
-                    </c:if>
+                    <td>
+                        <c:choose>
+                            <c:when test="${i.orderState!='settle'}">
+                                <span class="gray">--</span>
+                            </c:when>
+                            <c:otherwise>
+                                <c:if test="${i.profitAmount >0}">
+                                <span class="green">${soulFn:formatInteger(i.profitAmount)}${soulFn:formatDecimals(i.profitAmount)}</span>
+                                </c:if>
+                                <c:if test="${i.profitAmount==0}">
+                                    <span class="black">0</span>
+                                </c:if>
+                                <c:if test="${i.profitAmount < 0}">
+                                    <span class="red">${soulFn:formatInteger(i.profitAmount)}${soulFn:formatDecimals(i.profitAmount)}</span>
+                                </c:if>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
                     <td><a href="/gameOrder/gameRecordDetail.html?searchId=${command.getSearchId(i.id)}" nav-target="mainFrame">${dicts.game.order_state[i.orderState]}</a></td>
                 </tr>
             </c:forEach>

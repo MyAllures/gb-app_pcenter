@@ -3,6 +3,7 @@ package so.wwb.gamebox.pcenter.gameOrder.controller;
 import org.soul.commons.dict.DictTool;
 import org.soul.commons.lang.DateTool;
 import org.soul.commons.lang.string.StringTool;
+import org.soul.commons.locale.DateQuickPicker;
 import org.soul.commons.net.ServletTool;
 import org.soul.model.sys.po.SysParam;
 import org.soul.web.session.SessionManagerBase;
@@ -59,7 +60,7 @@ public class PlayerGameOrderController {
     public String index(HttpServletRequest request, PlayerGameOrderListVo listVo, Model model) {
         //玩家中心可查询40天之内的订单
         Date today = SessionManager.getDate().getToday();
-        Date maxDate = DateTool.addSeconds(SessionManagerBase.getDate().getTomorrow(), -1);
+        Date maxDate = DateQuickPicker.getInstance().getTomorrow();//DateTool.addSeconds(SessionManagerBase.getDate().getTomorrow(), -1);
         Date minDate = DateTool.addDays(today, DATE_INTERVAL);
         Date beginBetTime = listVo.getSearch().getBeginBetTime();
         //默认查询今日数据
@@ -73,7 +74,7 @@ public class PlayerGameOrderController {
             listVo.getSearch().setEndBetTime(maxDate);
         }
         listVo.setMinDate(minDate);
-        listVo.setMaxDate(today);
+        listVo.setMaxDate(maxDate);
         listVo.getSearch().setPlayerId(SessionManager.getUserId());
         listVo = ServiceSiteTool.playerGameOrderService().search(listVo);
         //统计数据

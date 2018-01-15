@@ -5,6 +5,7 @@
 <head>
     <title></title>
     <%@ include file="/include/include.head.jsp" %>
+    <%@ include file="/include/include.base.inc.i18n.jsp" %>
 </head>
 <body>
 <!--确认绑定比特币-->

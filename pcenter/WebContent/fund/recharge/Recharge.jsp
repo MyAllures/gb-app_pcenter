@@ -78,7 +78,7 @@
             </span>
             </div>
         </c:if>
-        <c:if test="${map['company']>0}">
+        <c:if test="${map['companycounter']>0}">
             <div class="deposit-tab01">
                 <a href="/fund/recharge/company/atmCounterFirst.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img5.png">

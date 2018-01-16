@@ -20,7 +20,8 @@
         so.wwb.gamebox.web.regions.controller,
         so.wwb.gamebox.web.validate.controller,
         so.wwb.gamebox.web.fund.controller,
-        so.wwb.gamebox.pcenter.**.controller," />
+        so.wwb.gamebox.web.operation.controller,
+        so.wwb.gamebox.pcenter.**.controller" />
 
     <import resource="classpath*:conf/mvc-ctx.xml" />
     <mvc:resources location="/common/"  mapping="/common/**" />

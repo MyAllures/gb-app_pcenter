@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.TerminalEnum;
 import so.wwb.gamebox.model.master.content.enums.CttAnnouncementTypeEnum;
 import so.wwb.gamebox.model.master.content.po.CttAnnouncement;
 import so.wwb.gamebox.model.master.content.vo.CttAnnouncementListVo;
@@ -40,7 +41,11 @@ public class RechargeController extends RechargeBaseController {
     @RequestMapping("/recharge")
     @DemoModel(menuCode = DemoMenuEnum.CKZQ)
     public String recharge(Model model) {
-        model.addAttribute("map", ServiceSiteTool.payAccountService().queryValidCount(new PayAccountListVo()));
+        PayAccountListVo payAccountListVo = new PayAccountListVo();
+        payAccountListVo.getSearch().setTerminal(TerminalEnum.PC.getCode());
+        payAccountListVo.setPlayerId(SessionManager.getUserId());
+        payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
+        model.addAttribute("map", ServiceSiteTool.payAccountService().queryValidCount(payAccountListVo));
         model.addAttribute("customerService", getCustomerService());
         //快速充值地址
         fastRecharge(model);

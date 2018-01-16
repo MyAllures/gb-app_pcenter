@@ -7,6 +7,7 @@ import org.soul.commons.validation.form.constraints.Depends;
 import org.soul.commons.validation.form.constraints.Remote;
 import org.soul.commons.validation.form.support.Comment;
 import org.soul.web.support.IForm;
+import so.wwb.gamebox.model.common.RegExpConstants;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.fund.controller.CompanyRechargeController;
@@ -49,7 +50,7 @@ public class ElectronicPaySecondForm implements IForm {
     }
 
     @Comment("订单号后5位")
-    @Length(message = "fund.rechargeForm.bankOrderNotBlank", min = 5, max = 5)
+    @Pattern(message = "fund.rechargeForm.orderNumber.pattern", regexp = RegExpConstants.BANKORDER)
     public String getResult_bankOrder() {
         return result_bankOrder;
     }

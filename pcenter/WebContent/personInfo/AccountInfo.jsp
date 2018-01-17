@@ -370,6 +370,9 @@
             </div>
         </div>
         </c:if>
+        <c:if test="${empty regFieldSortsMap['birthday']}">
+            <input type="hidden" name="result.birthday" value="${empty sysUserVo.result.birthday?null:soulFn:formatDateTz(sysUserVo.result.birthday,DateFormat.DAY,timeZone)}"/>
+        </c:if>
 
         <%--<div class="control-group">
             <label class="control-label">${views.account['AccountSetting.personal.constellation']}：</label>

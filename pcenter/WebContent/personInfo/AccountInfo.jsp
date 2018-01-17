@@ -331,7 +331,7 @@
 
             </div>
         </div>--%>
-
+        <c:if test="${not empty regFieldSortsMap['sex']}">
         <div class="control-group">
             <label class="control-label">${views.account['AccountSetting.personal.sex']}：</label>
             <div class="controls">
@@ -351,7 +351,8 @@
                 </c:choose>
             </div>
         </div>
-
+        </c:if>
+        <c:if test="${not empty regFieldSortsMap['birthday']}">
         <div class="control-group">
             <label class="control-label">${views.account['AccountSetting.personal.birthday']}：</label>
             <div class="controls">
@@ -368,6 +369,7 @@
                 </c:choose>
             </div>
         </div>
+        </c:if>
 
         <%--<div class="control-group">
             <label class="control-label">${views.account['AccountSetting.personal.constellation']}：</label>

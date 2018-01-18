@@ -49,7 +49,7 @@
             <div class="control-group">
                 <label class="control-label">${views.fund_auto['交易时间']}：</label>
                 <div class="controls">
-                    <gb:dateRange name="result.returnTime" style="width:45%" format="${DateFormat.DAY_SECOND}"/>
+                    <gb:dateRange name="result.returnTime" style="width:70%" format="${DateFormat.DAY_SECOND}"/>
                 </div>
             </div>
             <%@include file="sale.jsp" %>

@@ -331,7 +331,7 @@
 
             </div>
         </div>--%>
-        <c:if test="${not empty regFieldSortsMap['sex']}">
+        <c:if test="${siteId!=119}">
         <div class="control-group">
             <label class="control-label">${views.account['AccountSetting.personal.sex']}：</label>
             <div class="controls">
@@ -351,8 +351,6 @@
                 </c:choose>
             </div>
         </div>
-        </c:if>
-        <c:if test="${not empty regFieldSortsMap['birthday']}">
         <div class="control-group">
             <label class="control-label">${views.account['AccountSetting.personal.birthday']}：</label>
             <div class="controls">
@@ -370,7 +368,7 @@
             </div>
         </div>
         </c:if>
-        <c:if test="${empty regFieldSortsMap['birthday']}">
+        <c:if test="${siteId==119}">
             <input type="hidden" name="result.birthday" value="${empty sysUserVo.result.birthday?null:soulFn:formatDateTz(sysUserVo.result.birthday,DateFormat.DAY,timeZone)}"/>
         </c:if>
 

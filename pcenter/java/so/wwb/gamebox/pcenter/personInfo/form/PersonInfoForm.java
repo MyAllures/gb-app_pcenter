@@ -89,7 +89,8 @@ public class PersonInfoForm implements IForm {
         this.$sysUserProtection_answer1 = $sysUserProtection_answer1;
     }
 
-    @Pattern(message = "passport.edit.info.format.error",regexp = FormValidRegExps.EMAIL)
+    @Pattern(message = "passport.edit.info.email.format.error",regexp = FormValidRegExps.EMAIL)
+    @Length(min = 7,max = 30)
     @Comment("邮箱")
     public String getEmail_contactValue() {
         return email_contactValue;

@@ -106,7 +106,7 @@
                         <div class="controls">
                             <span class="sop-down">
                                 <input type="text" class="input inputMailList field-input" name="email.contactValue" id="emailCode" autocomplete="off">
-                                <input type="hidden" class="input" name="email.id" value="${noticeContactWay.id}">
+                                <input type="hidden" class="input" name="email.id" value="${noticeContactWayMap['201'].id}">
                             </span>
                         </div>
                     </div>

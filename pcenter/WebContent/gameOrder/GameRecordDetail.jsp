@@ -817,6 +817,14 @@
                     </c:choose>
                 </td>
             </tr>
+            <input id="betId" type="hidden"  value="${result.betId}"/>
+            <c:if test="${result.apiId == 3}">
+                <tr>
+                    <soul:button
+                            target="gameDetail" size="size-large" precall=""
+                            text="游戏详情" opType="function" cssClass="btn btn-outline btn-filter" />
+                </tr>
+            </c:if>
         </table>
     </div>
 </div>

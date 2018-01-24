@@ -820,8 +820,8 @@
         </table>
         <input id="betId" type="hidden"  value="${result.betId}"/>
         <c:if test="${result.apiId == 3}">
-            <div class="row">
-                <div class="">
+            <div class="row" style="margin-top: 20px;">
+                <div style="text-align: center;">
                 <soul:button target="gameDetail" size="size-large" precall=""
                         text="游戏详情" opType="function" cssClass="btn btn-outline btn-filter" />
                 </div>

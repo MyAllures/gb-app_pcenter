@@ -818,7 +818,8 @@
                 </td>
             </tr>
         </table>
-        <input id="betId" type="hidden"  value="${result.betId}"/>
+        <input type="hidden" id="betId"  value="${result.betId}"/>
+        <input type="hidden" id="apiId" value="${result.apiId}">
         <c:if test="${result.apiId == 3}">
             <div class="row" style="margin-top: 20px;">
                 <div style="text-align: center;">

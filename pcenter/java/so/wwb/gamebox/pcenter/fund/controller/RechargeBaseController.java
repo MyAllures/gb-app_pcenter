@@ -20,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceActivityTool;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.iservice.master.fund.IPlayerRechargeService;
 import so.wwb.gamebox.model.Module;
@@ -308,7 +309,7 @@ public abstract class RechargeBaseController {
         vActivityMessageVo.setDepositAmount(rechargeAmount);
         vActivityMessageVo.setRankId(userPlayer.getRankId());
         vActivityMessageVo.setLocal(SessionManager.getLocale().toString());
-        vActivityMessageVo = ServiceSiteTool.vActivityMessageService().searchDepositPromotions(vActivityMessageVo);
+        vActivityMessageVo = ServiceActivityTool.vActivityMessageService().searchDepositPromotions(vActivityMessageVo);
         LinkedHashSet<VActivityMessage> vActivityMessages = vActivityMessageVo.getvActivityMessageList();
         if (CollectionTool.isEmpty(vActivityMessages)) {
             return new ArrayList<>();

@@ -11,7 +11,7 @@
     <h3 class="popalign"><i class="tipbig fail"></i>${views.fund['Deposit.deposit.depositFail']}</h3>
     <div class="text">
         <p>${views.fund['Deposit.deposit.failureReason']}</p>
-        <p>
+        <p id="failMsg">
             <c:choose>
                 <c:when test="${!empty msg}">
                     ${msg}

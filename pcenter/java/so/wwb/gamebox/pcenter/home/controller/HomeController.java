@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.dubbo.ServiceActivityTool;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.company.enums.GameStatusEnum;
@@ -86,10 +87,10 @@ public class HomeController {
 
         //分页计算
         Paging paging = playerActivityMessageListVo.getPaging();
-        paging.setTotalCount(ServiceSiteTool.playerActivityMessageService().countPlayerActivityMessage(playerActivityMessageListVo));
+        paging.setTotalCount(ServiceActivityTool.playerActivityMessageService().countPlayerActivityMessage(playerActivityMessageListVo));
         paging.cal();
 
-        List<PlayerActivityMessage> playerActivityMessageList = ServiceSiteTool.playerActivityMessageService().queryPlayerActivityMessage(playerActivityMessageListVo);
+        List<PlayerActivityMessage> playerActivityMessageList = ServiceActivityTool.playerActivityMessageService().queryPlayerActivityMessage(playerActivityMessageListVo);
 
         playerActivityMessageListVo.setResult(playerActivityMessageList);
         model.addAttribute("sale", playerActivityMessageListVo);
@@ -229,10 +230,10 @@ public class HomeController {
 
         //分页计算
         Paging paging = playerActivityMessageListVo.getPaging();
-        paging.setTotalCount(ServiceSiteTool.playerActivityMessageService().countPlayerActivityMessage(playerActivityMessageListVo));
+        paging.setTotalCount(ServiceActivityTool.playerActivityMessageService().countPlayerActivityMessage(playerActivityMessageListVo));
         paging.cal();
 
-        List<PlayerActivityMessage> playerActivityMessageList = ServiceSiteTool.playerActivityMessageService().queryPlayerActivityMessage(playerActivityMessageListVo);
+        List<PlayerActivityMessage> playerActivityMessageList = ServiceActivityTool.playerActivityMessageService().queryPlayerActivityMessage(playerActivityMessageListVo);
 
         playerActivityMessageListVo.setResult(playerActivityMessageList);
         model.addAttribute("sale", playerActivityMessageListVo);

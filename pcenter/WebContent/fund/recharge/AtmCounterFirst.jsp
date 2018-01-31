@@ -59,7 +59,7 @@
                 <h4>${views.fund_auto['请选择银行']}</h4>
                 <span class="deposit-info-title">${views.fund_auto['步骤2']}<img src="${resRoot}/images/online-pay2.png"></span>
                 <div class="control-grouptwo">
-                    <label class="control-left">${views.fund_auto['存入银行']}：</label>
+                    <label class="control-left" style="width: 220px">${views.fund_auto['存入银行']}：</label>
                     <div class="controls">
                         <select name="result.payerBank" class="selectwidth" showSuccMsg="false">
                             <option value="">${views.common['choose']}</option>

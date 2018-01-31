@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
+import so.wwb.gamebox.model.CacheBase;
 import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.TerminalEnum;
@@ -33,6 +34,7 @@ import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.sys.po.VSysSiteDomain;
+import so.wwb.gamebox.model.master.content.enums.PayAccountStatusEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
 import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
@@ -57,10 +59,7 @@ import so.wwb.gamebox.web.common.token.Token;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by cherry on 16-9-11.
@@ -97,6 +96,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         //玩家可用收款账号
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), TerminalEnum.PC.getCode(), null, null);
+        deleteMaintainChannel(payAccounts);
         PayAccountListVo payAccountListVo = new PayAccountListVo();
         payAccountListVo.setResult(payAccounts);
         payAccountListVo.setPlayerRank(rank);
@@ -116,6 +116,24 @@ public class OnlineRechargeController extends RechargeBaseController {
     }
 
     /**
+     * 去除维护中收款账户
+     *
+     * @param payAccounts
+     */
+    private void deleteMaintainChannel(List<PayAccount> payAccounts) {
+        Map<String, Bank> bankMap = CacheBase.getBank();
+        Bank bank;
+        Iterator<PayAccount> accountIterator = payAccounts.iterator();
+        while (accountIterator.hasNext()) {
+            PayAccount payAccount = accountIterator.next();
+            bank = bankMap.get(payAccount.getBankCode());
+            if (bank == null || (bank.getIsUse() != null && !bank.getIsUse())) {
+                accountIterator.remove();
+            }
+        }
+    }
+
+    /**
      * 扫码支付
      *
      * @param model
@@ -127,6 +145,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         String[] accountTypes = new String[]{PayAccountAccountType.WECHAT.getCode(), PayAccountAccountType.ALIPAY.getCode(), PayAccountAccountType.QQWALLET.getCode(), PayAccountAccountType.JD_PAY.getCode(), PayAccountAccountType.BAIFU_PAY.getCode(), PayAccountAccountType.UNION_PAY.getCode()};
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), null, TerminalEnum.PC.getCode(), null, accountTypes);
+        deleteMaintainChannel(payAccounts);
         PayAccountListVo payAccountListVo = new PayAccountListVo();
         payAccountListVo.setResult(payAccounts);
         payAccountListVo.setPlayerRank(rank);
@@ -433,7 +452,20 @@ public class OnlineRechargeController extends RechargeBaseController {
         PayAccountVo payAccountVo = new PayAccountVo();
         payAccountVo.setSearchId(account);
         payAccountVo = ServiceSiteTool.payAccountService().get(payAccountVo);
-        return payAccountVo.getResult();
+        PayAccount payAccount = payAccountVo.getResult();
+        if (payAccount == null) {
+            return null;
+        }
+        if (!PayAccountStatusEnum.USING.getCode().equals(payAccount.getStatus())) {
+            LOG.info("账号{0}已听用,故返回收款账号null", payAccount.getPayName());
+            return null;
+        }
+       /* Bank bank = Cache.getBank().get(payAccount.getBankCode());
+        if (bank == null || (bank.getIsUse() != null && !bank.getIsUse())) {
+            LOG.info("{0}渠道已关闭，故返回收款账号null", payAccount.getBankCode());
+            return null;
+        }*/
+        return payAccount;
     }
 
     /**

@@ -42,7 +42,7 @@
     </div>
     <div class="btnalign">
         <span class="pull-left">${views.fund['FundRecord.record.timeRange']}：</span>
-        <gb:dateRange format="${DateFormat.DAY}" style="width:100px;" inputStyle="width:80px" useToday="true" useRange="true" position="down"
+        <gb:dateRange format="${DateFormat.DAY}" style="width:100px;" inputStyle="width:80px" useToday="true" useRange="true" position="down" lastMonth="false"
                       startDate="${command.search.beginCreateTime}" endDate="${command.search.endCreateTime}" minDate="${command.minDate}" startName="search.beginCreateTime" endName="search.endCreateTime" thisMonth="true"/>
         <div class="pull-right">
             <input type="text" id="input" placeholder="${views.fund['FundRecord.record.transactionNo']}"  class="form-control search" name="search.transactionNo" value="${command.search.transactionNo}">

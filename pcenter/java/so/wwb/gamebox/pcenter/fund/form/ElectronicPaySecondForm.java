@@ -23,6 +23,7 @@ public class ElectronicPaySecondForm implements IForm {
     private String result_rechargeAmount;
     private String result_payerBankcard;
     private String result_bankOrder;
+    private String result_payerName;
     private String $code;
 
     @Comment("存款金额")
@@ -39,7 +40,7 @@ public class ElectronicPaySecondForm implements IForm {
     }
 
     @Comment("存款账号")
-    @Depends(message = "fund.rechargeForm.payerBankcardNotBlank", property = "result.rechargeType", operator = {Operator.NE}, value = {RechargeTypeEnum.RECHARGE_TYPE_ONECODEPAY_FASE})
+    @Depends(property = "result.rechargeType", operator = {Operator.IN}, value = {RechargeTypeEnum.RECHARGE_TYPE_WECHATPAY_FAST, RechargeTypeEnum.RECHARGE_TYPE_BDWALLET_FAST, RechargeTypeEnum.RECHARGE_TYPE_JDWALLET_FAST, RechargeTypeEnum.RECHARGE_TYPE_QQWALLET_FAST, RechargeTypeEnum.RECHARGE_TYPE_OTHER_FAST})
     @Length(message = "fund.rechargeForm.payerBankcardLength", max = 20)
     public String getResult_payerBankcard() {
         return result_payerBankcard;
@@ -57,6 +58,16 @@ public class ElectronicPaySecondForm implements IForm {
 
     public void setResult_bankOrder(String result_bankOrder) {
         this.result_bankOrder = result_bankOrder;
+    }
+
+    @Comment("支付户名")
+    @Depends(property = "result.rechargeType", operator = {Operator.EQ}, value = {RechargeTypeEnum.RECHARGE_TYPE_ALIPAY_FAST})
+    public String getResult_payerName() {
+        return result_payerName;
+    }
+
+    public void setResult_payerName(String result_payerName) {
+        this.result_payerName = result_payerName;
     }
 
 }

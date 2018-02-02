@@ -85,14 +85,16 @@
             <div class="left-ico-message clearfix">
                 <h4>${views.fund_auto['请填写存款金额']}：</h4>
                 <span class="deposit-info-title">${views.fund_auto['步骤2']}<img src="${resRoot}/images/online-pay2.png"></span>
+                <div class="control-group" name="payerName" style="${firstBankCode=='alipay'?'':'display:none'}">
+                    <label class="control-label" for="result.payerName">您的支付户名:</label>
+                    <div class="controls">
+                        <input type="text" class="input" id="result.payerName" name="result.payerName" autocomplete="off" placeholder="请填写存款时使用的真实姓名">
+                    </div>
+                </div>
                 <div class="control-group" name="payerBankcard" style="${empty firstAccountLabel?'display:none':''}">
                     <label class="control-label" for="result.payerBankcard">${firstAccountLabel}</label>
                     <div class="controls">
                         <input type="text" class="input" value="${payerBankcard}" id="result.payerBankcard" name="result.payerBankcard" autocomplete="off" placeholder="${views.fund_auto['昵称']}">
-                        <div class="controls" style="${firstBankCode=='alipay'?'':'display:none'}">
-                            <p style="color:#AAAAAA;">${views.fund_auto['支付宝转账到支付宝']}${views.fund_auto['请填写']}<span style="color:#FF7744;">${views.fund_auto['昵称']}</span>；</p>
-                            <p style="color:#AAAAAA;">${views.fund_auto['支付宝转账到银行卡']}${views.fund_auto['请填写']}<span style="color:#FF7744;">${views.fund_auto['真实姓名']}</span>；</p>
-                        </div>
                     </div>
                 </div>
                 <div class="control-group">

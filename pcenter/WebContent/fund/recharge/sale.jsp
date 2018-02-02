@@ -49,7 +49,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tbody>
         <tr>
-            <td width="72" class="al-right" style="width: 190px">${views.fund_auto['申请优惠']}：</td>
+            <td width="72" class="al-right" style="width: 202px">${views.fund_auto['申请优惠']}：</td>
             <td width="500">
                 <span class="radiotwo">
                     <input name="activityId" type="radio" value="" checked>

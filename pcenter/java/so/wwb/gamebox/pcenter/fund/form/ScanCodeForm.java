@@ -1,5 +1,6 @@
 package so.wwb.gamebox.pcenter.fund.form;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.soul.commons.query.enums.Operator;
 import org.soul.commons.validation.form.constraints.Depends;
@@ -10,6 +11,7 @@ import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.fund.controller.OnlineRechargeController;
 import so.wwb.gamebox.pcenter.fund.controller.RechargeController;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
@@ -20,6 +22,7 @@ import javax.validation.constraints.Pattern;
 @Comment("扫码支付验证")
 public class ScanCodeForm implements IForm {
     private String result_rechargeAmount;
+    private String result_payerBankcard;
     private String $code;
 
     @Comment("存款金额")
@@ -34,6 +37,18 @@ public class ScanCodeForm implements IForm {
 
     public void setResult_rechargeAmount(String result_rechargeAmount) {
         this.result_rechargeAmount = result_rechargeAmount;
+    }
+
+    @Comment("授权码")
+    @Depends(property = {"$isAuthCode"}, operator = {Operator.EQ}, value = {"true"},jsValueExp = "$(\"[name=isAuthCode]\").val() == 'true'")
+    @Length(max = 20, min = 12)
+    @Digits(fraction = 0, integer = 20)
+    public String getResult_payerBankcard() {
+        return result_payerBankcard;
+    }
+
+    public void setResult_payerBankcard(String result_payerBankcard) {
+        this.result_payerBankcard = result_payerBankcard;
     }
 
     @Comment("验证码")

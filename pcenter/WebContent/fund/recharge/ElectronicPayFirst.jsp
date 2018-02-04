@@ -32,7 +32,7 @@
         <input type="hidden" name="result.rechargeType" value="${payAccountList.get(0).rechargeType}"/>
         <div class="account-list account-info-warp">
             <div class="left-ico-message">
-                <h4>${views.fund_auto['请填写存款金额']}：</h4>
+                <h4>${views.fund_auto['选择存款方式']}：</h4>
                 <span class="deposit-info-title">${views.fund_auto['步骤1']}<img src="${resRoot}/images/online-pay1.png"></span>
                 <div class="bank-deposit">
                     <div class="bank-total">

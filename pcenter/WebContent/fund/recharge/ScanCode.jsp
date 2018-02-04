@@ -37,16 +37,35 @@
             <div class="bank-deposit">
                 <div class="bank-total">
                     <c:forEach items="${payAccountMap}" var="i" varStatus="vs">
+                        <c:set var="accountType" value="${i.value.accountType}"/>
+                        <c:set var="authCode" value="${accountType eq '10' || accountType eq '11' || accountType eq '12'}"/>
+                        <c:choose>
+                            <c:when test="${accountType eq '10'}">
+                                <c:set var="tutorialImg" value="wxzf-fs"/>
+                            </c:when>
+                            <c:when test="${accountType eq '12'}">
+                                <c:set var="tutorialImg" value="qqqb-fs"/>
+                            </c:when>
+                            <c:when test="${accountType eq '11'}">
+                                <c:set var="tutorialImg" value="zfb-fs"/>
+                            </c:when>
+                        </c:choose>
                         <c:if test="${vs.index==0}">
                             <c:set var="onlinePayMax" value="${i.value.singleDepositMax}"/>
                             <c:set var="onlinePayMin" value="${i.value.singleDepositMin}"/>
                             <c:set var="payAccount" value="${command.getSearchId(i.value.id)}"/>
+                            <c:set var="isAuthCode" value="${authCode}"/>
+                            <c:set var="tutorial" value="${dicts.content.account_type[accountType]}教程"/>
+                            <c:set var="firstTutorialImg" value="${tutorialImg}"/>
                         </c:if>
                         <label class="bank ${vs.index==0?'select':''}">
                             <span class="radio">
-                                <input name="result.rechargeType" randomAmount="${i.value.randomAmount}" account="${command.getSearchId(i.value.id)}" value="${i.value.rechargeType}" type="radio" ${vs.index==0?'checked':''}>
+                                <input name="result.rechargeType" tutorialImg="${tutorialImg}" tutorial="${dicts.content.account_type[accountType]}教程" isAuthCode="${authCode}" randomAmount="${i.value.randomAmount}" account="${command.getSearchId(i.value.id)}" value="${i.value.rechargeType}" type="radio" ${vs.index==0?'checked':''}>
                             </span>
-                            <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-third ${i.key}"></i></span>
+                            <span class="radio-bank" title="${dicts.common.bankname[i.key]}">
+                                <i class="pay-third ${authCode?'sm ':''} ${i.key}"></i>
+                                <c:if test="${authCode}"><font class="diy-pay-title">${dicts.content.account_type[accountType]}</font></c:if>
+                            </span>
                             <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
                             <input type="hidden" class="onlinePayMax" value="${empty i.value.singleDepositMax?'99,999,999.00':soulFn:formatCurrency(i.value.singleDepositMax)}"/>
                             <input type="hidden" class="onlinePayMin" value="${empty i.value.singleDepositMin?'0.01':soulFn:formatCurrency(i.value.singleDepositMin)}"/>
@@ -72,7 +91,13 @@
                     <span class="fee"></span>
                 </div>
             </div>
-
+            <div id="authCode" class="control-group" style="${isAuthCode?'':'display:none'}">
+                <input type="hidden" name="isAuthCode" value="${isAuthCode}"/>
+                <label class="control-label" for="result.payerBankcard">授权码：</label>
+                <div class="controls" style="width: 525px">
+                    <input type="text" class="input" name="result.payerBankcard" id="result.payerBankcard" placeholder="获取授权码，参考下方教程" autocomplete="off"/>
+                </div>
+            </div>
             <!--优惠-->
             <%@include file="sale.jsp"%>
             <c:set var="rechargeCount" value="<%=SessionManager.getRechargeCount()%>"/>
@@ -105,7 +130,9 @@
                 <li>${views.fund_auto['扫码随机额度提示']}</li>
                 </div>
             </ul>
-            <div>
+            <div id="tutorial" class="fansao-wrap" style="${isAuthCode?'':'display:none'}">
+                <div class="fansao-title">${tutorial}</div>
+                <div class="fansao-img"><img src="${resRoot}/images/${firstTutorialImg}.png"></div>
             </div>
         </div>
     </div>

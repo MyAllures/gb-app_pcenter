@@ -145,7 +145,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         String[] accountTypes = new String[]{PayAccountAccountType.WECHAT.getCode(), PayAccountAccountType.ALIPAY.getCode(), PayAccountAccountType.QQWALLET.getCode(), PayAccountAccountType.JD_PAY.getCode(), PayAccountAccountType.BAIFU_PAY.getCode(), PayAccountAccountType.UNION_PAY.getCode(), PayAccountAccountType.WECHAT_MICROPAY.getCode(), PayAccountAccountType.QQ_MICROPAY.getCode(), PayAccountAccountType.ALIPAY_MICROPAY.getCode()};
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), null, TerminalEnum.PC.getCode(), null, accountTypes);
-        deleteMaintainChannel(payAccounts);
         PayAccountListVo payAccountListVo = new PayAccountListVo();
         payAccountListVo.setResult(payAccounts);
         payAccountListVo.setPlayerRank(rank);

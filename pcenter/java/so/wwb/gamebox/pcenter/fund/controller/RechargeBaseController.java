@@ -30,6 +30,7 @@ import so.wwb.gamebox.model.company.setting.po.SysCurrency;
 import so.wwb.gamebox.model.company.site.po.SiteCustomerService;
 import so.wwb.gamebox.model.company.site.po.SiteI18n;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
+import so.wwb.gamebox.model.master.content.so.PayAccountSo;
 import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
 import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
 import so.wwb.gamebox.model.master.enums.ActivityTypeEnum;
@@ -252,6 +253,24 @@ public abstract class RechargeBaseController {
     /**
      * 查询收款账号
      */
+    public List<PayAccount> searchPayAccount(PayAccountListVo payAccountListVo, Boolean supportAtmCounter, String[] accountTypes) {
+        PayAccountSo payAccountSo = payAccountListVo.getSearch();
+        Map<String, Object> map = new HashMap<>(7, 1f);
+        map.put("playerId", SessionManager.getUserId());
+        map.put("type", payAccountSo.getType());
+        map.put("accountType", payAccountSo.getAccountType());
+        map.put("currency", SessionManager.getUser().getDefaultCurrency());
+        map.put("terminal", payAccountSo.getTerminal());
+        map.put("supportAtmCounter", supportAtmCounter);
+        map.put("accountTypes", accountTypes);
+        map.put(PayAccount.PROP_BANK_CODE, payAccountSo.getBankCode());
+        payAccountListVo.setConditions(map);
+        return ServiceSiteTool.payAccountService().searchPayAccountByRank(payAccountListVo);
+    }
+
+    /**
+     * 查询收款账号
+     */
     public List<PayAccount> searchPayAccount(String type, String accountType, String terminal, Boolean supportAtmCounter, String[] accountTypes) {
         PayAccountListVo listVo = new PayAccountListVo();
         Map<String, Object> map = new HashMap<>(7, 1f);
@@ -264,6 +283,7 @@ public abstract class RechargeBaseController {
         }
         map.put("supportAtmCounter", supportAtmCounter);
         map.put("accountTypes", accountTypes);
+        //map.put(PayAccount.PROP_BANK_CODE,)
         listVo.setConditions(map);
         return ServiceSiteTool.payAccountService().searchPayAccountByRank(listVo);
     }

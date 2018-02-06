@@ -180,6 +180,7 @@ public abstract class RechargeBaseController {
         } else if (isReturnFee && rank.getReturnFeeCount() != null && rank.getReturnFeeCount() > 0 && rank.getReturnTime() != null) {
             listVo.getSearch().setStartTime(DateTool.addHours(now, -rank.getReturnTime()));
         }
+        listVo.setRank(rank);
         return playerRechargeService().searchPlayerRechargeCount(listVo);
     }
 

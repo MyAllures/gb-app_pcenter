@@ -2,7 +2,7 @@
 <%--@elvariable id="playerRechargeVo" type="so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
-<div class="applysale">
+<div id="applysale" class="applysale">
 <c:if test="${fn:length(sales)>0}">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tbody>

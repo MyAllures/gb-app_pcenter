@@ -533,26 +533,6 @@ public class CompanyRechargeController extends RechargeBaseController {
     }
 
     /**
-     * 是否隐藏收款账号
-     *
-     * @param model
-     */
-    private void isHide(Model model, SiteParamEnum paramEnum) {
-        // 查询隐藏参数
-        SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.CONTENT_PAY_ACCOUNT_HIDE);
-        if (sysParam == null) return;
-
-        SysParam hideParam = ParamTool.getSysParam(paramEnum);
-
-        // 判断是否隐藏收款账号
-        if ("true".equals(sysParam.getParamValue()) && "true".equals(hideParam.getParamValue())) {
-            model.addAttribute("isHide", true);
-            model.addAttribute("hideContent", Cache.getSiteI18n(SiteI18nEnum.MASTER_CONTENT_HIDE_ACCOUNT_CONTENT).get(SessionManager.getLocale().toString()));
-            model.addAttribute("customerService", getCustomerService());
-        }
-    }
-
-    /**
      * 随机生成存款金额的小数点后两位
      *
      * @param rechargeAmount

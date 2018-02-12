@@ -15,7 +15,9 @@ import org.soul.commons.query.sort.Order;
 import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.vo.SysUserVo;
 import org.soul.model.session.SessionKey;
+import org.soul.model.sys.po.SysParam;
 import org.soul.web.session.SessionManagerBase;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +26,9 @@ import so.wwb.gamebox.common.dubbo.ServiceActivityTool;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.iservice.master.fund.IPlayerRechargeService;
 import so.wwb.gamebox.model.Module;
+import so.wwb.gamebox.model.ParamTool;
+import so.wwb.gamebox.model.SiteI18nEnum;
+import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.setting.po.SysCurrency;
@@ -477,5 +482,25 @@ public abstract class RechargeBaseController {
 
     public IPlayerRechargeService playerRechargeService() {
         return ServiceSiteTool.playerRechargeService();
+    }
+
+    /**
+     * 是否隐藏收款账号
+     *
+     * @param model
+     */
+    public void isHide(Model model, SiteParamEnum paramEnum) {
+        // 查询隐藏参数
+        SysParam sysParam = ParamTool.getSysParam(SiteParamEnum.CONTENT_PAY_ACCOUNT_HIDE);
+        if (sysParam == null) return;
+
+        SysParam hideParam = ParamTool.getSysParam(paramEnum);
+
+        // 判断是否隐藏收款账号
+        if ("true".equals(sysParam.getParamValue()) && "true".equals(hideParam.getParamValue())) {
+            model.addAttribute("isHide", true);
+            model.addAttribute("hideContent", Cache.getSiteI18n(SiteI18nEnum.MASTER_CONTENT_HIDE_ACCOUNT_CONTENT).get(SessionManager.getLocale().toString()));
+            model.addAttribute("customerService", getCustomerService());
+        }
     }
 }

@@ -3,11 +3,15 @@ package so.wwb.gamebox.pcenter.fund.controller;
 import org.soul.commons.collections.CollectionTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
+import org.soul.commons.math.NumberTool;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.model.DictEnum;
+import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.TerminalEnum;
 import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
@@ -25,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 存款渠道改版-扫码支付和电子支付和并
+ * <p/>
  * Created by cherry on 18-2-5.
  */
 @Controller
@@ -44,12 +50,14 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         model.addAttribute("scan", getScanAccount(rank, null, new String[]{PayAccountAccountType.WECHAT.getCode(), PayAccountAccountType.WECHAT_MICROPAY.getCode()}));
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.FAST_WECHAT.getCode(), RechargeTypeEnum.WECHATPAY_FAST.getCode()));
-        model.addAttribute("command", new PayAccountVo());
+        commonPage(model, rank);
+        model.addAttribute("onlineType", RechargeTypeEnum.WECHATPAY_SCAN.getCode());
+        model.addAttribute("companyType", RechargeTypeEnum.WECHATPAY_FAST.getCode());
         return WECHATPAY_URI;
     }
 
     /**
-     * 微信支付
+     * 支付宝支付
      *
      * @param model
      * @return
@@ -59,7 +67,23 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         model.addAttribute("scan", getScanAccount(rank, null, new String[]{PayAccountAccountType.ALIPAY.getCode(), PayAccountAccountType.ALIPAY_MICROPAY.getCode()}));
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.FAST_ALIPAY.getCode(), RechargeTypeEnum.ALIPAY_FAST.getCode()));
+        commonPage(model, rank);
+        model.addAttribute("onlineType", RechargeTypeEnum.ALIPAY_SCAN.getCode());
+        model.addAttribute("companyType", RechargeTypeEnum.ALIPAY_FAST.getCode());
         return ALIPAY_URI;
+    }
+
+    /**
+     * 支付页面公共页面元素部分
+     *
+     * @param model
+     */
+    private void commonPage(Model model, PlayerRank rank) {
+        model.addAttribute("command", new PayAccountVo());
+        model.addAttribute("username", SessionManager.getUserName());
+        model.addAttribute("rank", rank);
+        isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
+        model.addAttribute("customerService", getCustomerService());
     }
 
     private Map<String, PayAccount> getScanAccount(PlayerRank rank, String accountType, String[] accountTypes) {
@@ -138,5 +162,46 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
             }
         }
         return accounts;
+    }
+
+    /**
+     * 远程验证金额是否超出
+     *
+     * @param rechargeAmount
+     * @param account
+     * @return
+     */
+    @RequestMapping("/checkRechargeAmount")
+    @ResponseBody
+    public boolean checkRechargeAmount(@RequestParam("result.rechargeAmount") String rechargeAmount, @RequestParam("account") String account) {
+        if (StringTool.isBlank(account) || StringTool.isBlank(rechargeAmount)) {
+            return false;
+        }
+        double amount = NumberTool.toDouble(rechargeAmount);
+        PayAccountVo payAccountVo = new PayAccountVo();
+        payAccountVo.setSearchId(account);
+        payAccountVo = ServiceSiteTool.payAccountService().get(payAccountVo);
+        PayAccount payAccount = payAccountVo.getResult();
+        if (payAccount == null) {
+            return false;
+        }
+        Integer max;
+        Integer min;
+        PlayerRank rank = getRank();
+        if (PayAccountType.COMMPANY_ACCOUNT_CODE.equals(payAccount.getType())) {
+            //公司入款使用层级设置的存款上下限
+            max = rank.getOnlinePayMax();
+            min = rank.getOnlinePayMin();
+        } else {
+            //线上支付使用收款帐号设置的上下限
+            min = payAccount.getSingleDepositMin();
+            max = payAccount.getSingleDepositMax();
+        }
+        if ((max != null && max < amount) || (min != null && min > amount)) {
+            return false;
+        }
+        //计算手续费
+        double fee = calculateFee(rank, amount);
+        return (amount + fee) > 0;
     }
 }

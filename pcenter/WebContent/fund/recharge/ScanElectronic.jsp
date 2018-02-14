@@ -48,13 +48,14 @@
                     <c:set var="onlinePayMin" value="${account.singleDepositMin}"/>
                     <c:set var="onlinePayMin" value="${empty onlinePayMin || onlinePayMin<=0?0.01:onlinePayMin}"/>
                     <c:set var="onlinePayMax" value="${empty onlinePayMax?99999999:onlinePayMax}"/>
+                    <c:set var="accountLimit" value="* 范围:${soulFn:formatCurrency(onlinePayMin)} ~ ${soulFn:formatCurrency(onlinePayMax)}"/>
                     <c:if test="${index==0}">
                         <c:set var="firstPayAccount" value="${account}"/>
                         <c:set var="isAuthCode" value="${authCode}"/>
-                        <c:set var="firstAccountLimit" value="* 范围:${soulFn:formatCurrency(onlinePayMin)} ~ ${soulFn:formatCurrency(onlinePayMax)}"/>
+                        <c:set var="firstAccountLimit" value="${accountLimit}"/>
                     </c:if>
                     <label class="bank ${index == 0?'':'select'}">
-                        <span class="radio"><input name="account" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${i.value.randomAmount}" checked="checked" value="${command.getSearchId(account.id)}"></span>
+                        <span class="radio"><input name="account" rechargeType="${onlineType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${account.randomAmount}" checked="checked" value="${command.getSearchId(account.id)}"></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${bankCode}"></i><font class="diy-pay-title">${name}</font>
                         </span>
@@ -71,13 +72,14 @@
                     <c:set var="onlinePayMin" value="${rank.onlinePayMin}"/>
                     <c:set var="onlinePayMin" value="${empty onlinePayMin || onlinePayMin<=0?0.01:onlinePayMin}"/>
                     <c:set var="onlinePayMax" value="${empty onlinePayMax?99999999:onlinePayMax}"/>
+                    <c:set var="accountLimit" value="* 范围:${soulFn:formatCurrency(onlinePayMin)} ~ ${soulFn:formatCurrency(onlinePayMax)}"/>
                     <c:if test="${index==0}">
                         <c:set var="firstPayAccount" value="${account}"/>
-                        <c:set var="firstAccountLimit" value="* 范围:${soulFn:formatCurrency(rank.onlinePayMin)} ~ ${soulFn:formatCurrency(rank.onlinePayMax)}"/>
+                        <c:set var="firstAccountLimit" value="${accountLimit}"/>
                     </c:if>
                     <label class="bank ${index == 0?'':'select'}">
                         <c:set var="name" value="${account.aliasName}"/>
-                        <span class="radio"><input name="account" type="radio" checked="checked" value="${command.getSearchId(account.id)}"/></span>
+                        <span class="radio"><input name="account" type="radio" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${account.bankCode}"></i>
                             <font class="diy-pay-title">${name}</font>
@@ -164,31 +166,33 @@
                 </div>
             </div>
         </c:if>
-        <div class="control-group" name="electronicElement">
-            <c:choose>
-                <c:when test="${thirdBankCode eq 'wechatpay'}">
-                    <c:set var="accountLabel" value="${views.fund_auto['您的']}${thirdBankName}："/>
-                </c:when>
-                <c:when test="${thirdBankCode eq 'qqwallet'}">
-                    <c:set var="accountLabel" value="${views.fund_auto['您的']}QQ号码："/>
-                </c:when>
-                <c:when test="${thirdBankCode eq 'onecodepay'}">
-                    <c:set var="accountLabel" value=""/>
-                </c:when>
-                <c:when test="${thirdBankCode eq 'other'}">
-                    <c:set var="accountLabel" value="${views.fund_auto['您的']}${thirdBankName}${views.fund_auto['账号']}："/>
-                </c:when>
-                <c:otherwise>
-                    <c:set var="accountLabel" value="${views.fund_auto['您的']}${thirdBankName}${views.fund_auto['账号']}："/>
-                </c:otherwise>
-            </c:choose>
-            <label class="control-label" for="result.payerBankcard">${accountLabel}</label>
-            <div class="controls">
-                <input type="text" id="result.payerBankcard" name="result.payerBankcard" class="input" placeholder="* 如：陈XX">
+        <c:if test="${thirdBankCode != 'onecodepay'}">
+            <div class="control-group" name="${companyType}Element">
+                <c:choose>
+                    <c:when test="${thirdBankCode eq 'wechatpay'}">
+                        <c:set var="accountLabel" value="${views.fund_auto['您的']}${thirdBankName}："/>
+                    </c:when>
+                    <c:when test="${thirdBankCode eq 'qqwallet'}">
+                        <c:set var="accountLabel" value="${views.fund_auto['您的']}QQ号码："/>
+                    </c:when>
+                    <c:when test="${thirdBankCode eq 'onecodepay'}">
+                        <c:set var="accountLabel" value=""/>
+                    </c:when>
+                    <c:when test="${thirdBankCode eq 'other'}">
+                        <c:set var="accountLabel" value="${views.fund_auto['您的']}${thirdBankName}${views.fund_auto['账号']}："/>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="accountLabel" value="${views.fund_auto['您的']}${thirdBankName}${views.fund_auto['账号']}："/>
+                    </c:otherwise>
+                </c:choose>
+                <label class="control-label" for="result.payerBankcard">${accountLabel}</label>
+                <div class="controls">
+                    <input type="text" id="result.payerBankcard" name="result.payerBankcard" class="input" placeholder="* 如：陈XX">
+                </div>
             </div>
-        </div>
+        </c:if>
         <c:if test="${!empty thirdAccountType}">
-            <div id="authCode" class="control-group" style="${isAuthCode?'':'display:none'}">
+            <div name="authCode" class="control-group" style="${isAuthCode?'':'display:none'}">
                 <input type="hidden" name="isAuthCode" value="${isAuthCode}"/>
                 <label class="control-label" for="payerBankcard">授权码：</label>
                 <div class="controls" style="width: 525px">
@@ -211,7 +215,7 @@
         <div class=" control-group">
             <label class="control-label"></label>
             <input type="hidden" name="result.rechargeType" value="${firstPayAccount.type eq '1'?companyType:onlineType}"/>
-            <button type="button" class="btn-blue btn large-big">立即存款</button>
+            <soul:button target="submit" text="立即存款" opType="function" cssClass="btn-blue btn large-big" tag="button"/>
         </div>
         <div class="applysale">
             <ul class="transfer-tips">
@@ -222,7 +226,7 @@
                 </li>
             </ul>
         </div>
-        <div id="tutorial" class="fansao-wrap" style="${empty thirdAccountType?'':'display:none'}">
+        <div name="authCode" class="fansao-wrap" style="${empty thirdAccountType?'':'display:none'}">
             <div class="fansao-title">${thirdAccountType}教程</div>
             <div class="fansao-img"><img src="${resRoot}/images/${tutorialImg}.png"></div>
         </div>

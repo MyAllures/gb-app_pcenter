@@ -4,8 +4,11 @@ import org.soul.commons.collections.CollectionTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.math.NumberTool;
+import org.soul.web.validation.form.annotation.FormModel;
+import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,9 +24,14 @@ import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
 import so.wwb.gamebox.model.master.enums.PayAccountAccountType;
 import so.wwb.gamebox.model.master.enums.PayAccountType;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
+import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
+import so.wwb.gamebox.pcenter.fund.form.OnlineBankForm;
+import so.wwb.gamebox.pcenter.fund.form.ScanElectronicRechargeForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
+import so.wwb.gamebox.web.common.token.Token;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +54,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
      * @return
      */
     @RequestMapping("/wechatpay")
+    @Token(generate = true)
     public String wechatpay(Model model) {
         PlayerRank rank = getRank();
         model.addAttribute("scan", getScanAccount(rank, null, new String[]{PayAccountAccountType.WECHAT.getCode(), PayAccountAccountType.WECHAT_MICROPAY.getCode()}));
@@ -63,6 +72,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
      * @return
      */
     @RequestMapping("/alipay")
+    @Token(generate = true)
     public String alipay(Model model) {
         PlayerRank rank = getRank();
         model.addAttribute("scan", getScanAccount(rank, null, new String[]{PayAccountAccountType.ALIPAY.getCode(), PayAccountAccountType.ALIPAY_MICROPAY.getCode()}));
@@ -84,6 +94,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("rank", rank);
         isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
         model.addAttribute("customerService", getCustomerService());
+        model.addAttribute("", JsRuleCreator.create(ScanElectronicRechargeForm.class));
     }
 
     private Map<String, PayAccount> getScanAccount(PlayerRank rank, String accountType, String[] accountTypes) {
@@ -203,5 +214,13 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         //计算手续费
         double fee = calculateFee(rank, amount);
         return (amount + fee) > 0;
+    }
+
+    @RequestMapping("/submit")
+    @ResponseBody
+    @Token(valid = true)
+    public Map<String,Object> submit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result, Model model){
+
+        return null;
     }
 }

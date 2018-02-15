@@ -3,6 +3,7 @@ package so.wwb.gamebox.pcenter.fund.controller;
 import org.soul.commons.collections.CollectionTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
+import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.math.NumberTool;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.model.DictEnum;
+import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.TerminalEnum;
+import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.content.so.PayAccountSo;
@@ -24,15 +27,16 @@ import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
 import so.wwb.gamebox.model.master.enums.PayAccountAccountType;
 import so.wwb.gamebox.model.master.enums.PayAccountType;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
+import so.wwb.gamebox.model.master.fund.po.PlayerRecharge;
 import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
-import so.wwb.gamebox.pcenter.fund.form.OnlineBankForm;
 import so.wwb.gamebox.pcenter.fund.form.ScanElectronicRechargeForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.common.token.Token;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,8 +48,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/fund/recharge/ScanElectronic")
 public class ScanElectronicRechargeController extends RechargeBaseController {
-    private static final String WECHATPAY_URI = "/fund/recharge/Wechatpay";
-    private static final String ALIPAY_URI = "/fund/recharge/Alipay";
+    private static final String SCAN_ELECTRONIC_URI = "/fund/recharge/ScanElectronic";
 
     /**
      * 微信支付
@@ -62,7 +65,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         commonPage(model, rank);
         model.addAttribute("onlineType", RechargeTypeEnum.WECHATPAY_SCAN.getCode());
         model.addAttribute("companyType", RechargeTypeEnum.WECHATPAY_FAST.getCode());
-        return WECHATPAY_URI;
+        return "/fund/recharge/ScanElectronic";
     }
 
     /**
@@ -80,7 +83,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         commonPage(model, rank);
         model.addAttribute("onlineType", RechargeTypeEnum.ALIPAY_SCAN.getCode());
         model.addAttribute("companyType", RechargeTypeEnum.ALIPAY_FAST.getCode());
-        return ALIPAY_URI;
+        return SCAN_ELECTRONIC_URI;
     }
 
     /**
@@ -94,7 +97,9 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("rank", rank);
         isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
         model.addAttribute("customerService", getCustomerService());
-        model.addAttribute("", JsRuleCreator.create(ScanElectronicRechargeForm.class));
+        model.addAttribute("validateRule", JsRuleCreator.create(ScanElectronicRechargeForm.class));
+        double rechargeDecimals = Math.random() * 99 + 1;
+        model.addAttribute("rechargeDecimals", rechargeDecimals);
     }
 
     private Map<String, PayAccount> getScanAccount(PlayerRank rank, String accountType, String[] accountTypes) {
@@ -219,8 +224,53 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
     @RequestMapping("/submit")
     @ResponseBody
     @Token(valid = true)
-    public Map<String,Object> submit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result, Model model){
-
-        return null;
+    public Map<String, Object> submit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return getResultMsg(false, LocaleTool.tranView(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PARAMS_DATA_ERROR), null);
+        }
+        PayAccount payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
+        if (payAccount == null) {
+            return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
+        }
+        //公司入款展示确认弹窗：存款金额、实际到账、手续费
+        if (PayAccountType.COMMPANY_ACCOUNT_CODE.equals(payAccount.getType())) {
+            PlayerRank rank = getRank();
+            Double rechargeAmount = playerRechargeVo.getResult().getRechargeAmount();
+            double fee = calculateFee(rank, rechargeAmount);
+            Map<String, Object> map = new HashMap<>(4, 1f);
+            map.put("state", true);
+            map.put("fee", fee);
+            map.put("rechargeAmount", rechargeAmount);
+            map.put("rechargeTotal", rechargeAmount + fee);
+            map.put("isThird", true);
+            return map;
+        } else { //线上支付保存存款订单
+            PlayerRecharge playerRecharge = playerRechargeVo.getResult();
+            playerRecharge.setPayerBankcard(form.get$payerBankcard());
+            String payAccountType = payAccount.getAccountType();
+            String rechargeType = RechargeTypeEnum.ONLINE_DEPOSIT.getCode();
+            if (PayAccountAccountType.WECHAT.getCode().equals(payAccountType)) {
+                rechargeType = RechargeTypeEnum.WECHATPAY_SCAN.getCode();
+            } else if (PayAccountAccountType.ALIPAY.getCode().equals(payAccountType)) {
+                rechargeType = RechargeTypeEnum.ALIPAY_SCAN.getCode();
+            } else if (PayAccountAccountType.QQWALLET.getCode().equals(payAccountType)) {
+                rechargeType = RechargeTypeEnum.QQWALLET_SCAN.getCode();
+            } else if (PayAccountAccountType.JD_PAY.getCode().equals(payAccountType)) {
+                rechargeType = RechargeTypeEnum.JDPAY_SCAN.getCode();
+            } else if (PayAccountAccountType.BAIFU_PAY.getCode().equals(payAccountType)) {
+                rechargeType = RechargeTypeEnum.BDWALLET_SAN.getCode();
+            } else if (PayAccountAccountType.WECHAT_MICROPAY.getCode().equals(payAccountType)) {
+                rechargeType = RechargeTypeEnum.WECHATPAY_SCAN.getCode();
+            } else if (PayAccountAccountType.ALIPAY_MICROPAY.getCode().equals(payAccountType)) {
+                rechargeType = RechargeTypeEnum.ALIPAY_SCAN.getCode();
+            } else if (PayAccountAccountType.QQ_MICROPAY.getCode().equals(payAccountType)) {
+                rechargeType = RechargeTypeEnum.QQWALLET_SCAN.getCode();
+            } else if (PayAccountAccountType.UNION_PAY.getCode().equals(payAccountType)) {
+                rechargeType = RechargeTypeEnum.UNION_PAY_SCAN.getCode();
+            }
+            playerRecharge.setRechargeType(rechargeType);
+            return commonOnlineSubmit(playerRechargeVo, payAccount);
+        }
     }
+
 }

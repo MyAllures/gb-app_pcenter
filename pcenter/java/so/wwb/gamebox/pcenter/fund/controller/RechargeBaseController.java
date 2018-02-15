@@ -4,6 +4,7 @@ import org.soul.commons.collections.CollectionQueryTool;
 import org.soul.commons.collections.CollectionTool;
 import org.soul.commons.currency.CurrencyTool;
 import org.soul.commons.lang.DateTool;
+import org.soul.commons.lang.string.RandomStringTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
@@ -12,6 +13,7 @@ import org.soul.commons.math.NumberTool;
 import org.soul.commons.query.Criteria;
 import org.soul.commons.query.enums.Operator;
 import org.soul.commons.query.sort.Order;
+import org.soul.model.comet.vo.MessageVo;
 import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.vo.SysUserVo;
 import org.soul.model.session.SessionKey;
@@ -24,24 +26,31 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceActivityTool;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
+import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.iservice.master.fund.IPlayerRechargeService;
 import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteI18nEnum;
 import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.common.MessageI18nConst;
+import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
 import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.setting.po.SysCurrency;
 import so.wwb.gamebox.model.company.site.po.SiteCustomerService;
 import so.wwb.gamebox.model.company.site.po.SiteI18n;
+import so.wwb.gamebox.model.master.content.enums.PayAccountStatusEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.content.so.PayAccountSo;
 import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
 import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
+import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
+import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
 import so.wwb.gamebox.model.master.enums.ActivityTypeEnum;
 import so.wwb.gamebox.model.master.enums.RankFeeType;
 import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
+import so.wwb.gamebox.model.master.fund.enums.RechargeTypeParentEnum;
 import so.wwb.gamebox.model.master.fund.po.PlayerRecharge;
 import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeListVo;
 import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
@@ -502,5 +511,91 @@ public abstract class RechargeBaseController {
             model.addAttribute("hideContent", Cache.getSiteI18n(SiteI18nEnum.MASTER_CONTENT_HIDE_ACCOUNT_CONTENT).get(SessionManager.getLocale().toString()));
             model.addAttribute("customerService", getCustomerService());
         }
+    }
+
+    public PayAccount getPayAccountBySearchId(String searchId) {
+        PayAccountVo payAccountVo = new PayAccountVo();
+        payAccountVo.setSearchId(searchId);
+        payAccountVo = ServiceSiteTool.payAccountService().get(payAccountVo);
+        PayAccount payAccount = payAccountVo.getResult();
+        if (payAccount != null && !PayAccountStatusEnum.USING.getCode().equals(payAccount.getStatus())) {
+            LOG.info("账号{0}已听用,故返回收款账号null", payAccount.getPayName());
+            return null;
+        }
+        return payAccount;
+    }
+
+    /**
+     * 收款账号支持随机金额，重新获取随机金额
+     *
+     * @param payAccount
+     * @param playerRecharge
+     * @return
+     */
+    public Double getRechargeAmount(PayAccount payAccount, PlayerRecharge playerRecharge) {
+        Double rechargeAmount = playerRecharge.getRechargeAmount();
+        if (payAccount != null && payAccount.getRandomAmount() != null && payAccount.getRandomAmount() && rechargeAmount.intValue() == rechargeAmount) {
+            double random = Double.parseDouble(RandomStringTool.random(2, 11, 99, false, true)) * 0.01;
+            if (random < 0.11) {
+                random += 0.11;
+            }
+            rechargeAmount += random;
+        }
+        return rechargeAmount;
+    }
+
+    /**
+     * 线上支付（含扫码支付）提交公共方法
+     *
+     * @param playerRechargeVo
+     * @param payAccount
+     * @return
+     */
+    public Map<String, Object> commonOnlineSubmit(PlayerRechargeVo playerRechargeVo, PayAccount payAccount) {
+        if (payAccount == null) {
+            return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
+        }
+        playerRechargeVo = saveRecharge(playerRechargeVo, payAccount, RechargeTypeParentEnum.ONLINE_DEPOSIT.getCode(), playerRechargeVo.getResult().getRechargeType());
+        if (playerRechargeVo.isSuccess()) {
+            //声音提醒站长中心
+            onlineToneWarn();
+            //设置session相关存款数据
+            setRechargeCount();
+            return getResultMsg(true, null, playerRechargeVo.getResult().getTransactionNo());
+        } else {
+            return getResultMsg(false, playerRechargeVo.getErrMsg(), null);
+        }
+    }
+
+    public Map<String, Object> getResultMsg(boolean isSuccess, String msg, String transactionNo) {
+        Map<String, Object> map = new HashMap<>(3, 1f);
+        map.put("state", isSuccess);
+        if (isSuccess) {
+            map.put("transactionNo", transactionNo);
+        } else if (StringTool.isNotBlank(msg)) {
+            map.put("msg", msg);
+        }
+        return map;
+    }
+
+    /**
+     * 在线支付提醒站长后台
+     */
+    private void onlineToneWarn() {
+        MessageVo message = new MessageVo();
+        message.setSubscribeType(CometSubscribeType.MCENTER_ONLINE_RECHARGE_REMINDER.getCode());
+        message.setSendToUser(true);
+        message.setCcenterId(SessionManager.getSiteParentId());
+        message.setSiteId(SessionManager.getSiteId());
+        message.setMasterId(SessionManager.getSiteUserId());
+        message.setMsgBody(SiteParamEnum.WARMING_TONE_ONLINEPAY.getType());
+
+        SysUserDataRightListVo sysUserDataRightListVo = new SysUserDataRightListVo();
+        sysUserDataRightListVo.getSearch().setUserId(SessionManager.getUserId());
+        sysUserDataRightListVo.getSearch().setModuleType(DataRightModuleType.ONLINEDEPOSIT.getCode());
+        List<Integer> userIdByUrl = ServiceSiteTool.sysUserDataRightService().searchPlayerDataRightEntityId(sysUserDataRightListVo);
+        userIdByUrl.add(Const.MASTER_BUILT_IN_ID);
+        message.addUserIds(userIdByUrl);
+        ServiceTool.messageService().sendToMcenterMsg(message);
     }
 }

@@ -214,18 +214,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
         playerRecharge.setRechargeAmount(getRechargeAmount(payAccount, playerRecharge));
         playerRecharge.setRechargeType(RechargeTypeEnum.ONLINE_DEPOSIT.getCode());
-        return commonSubmit(playerRechargeVo, payAccount);
-    }
-
-    private Map<String, Object> getResultMsg(boolean isSuccess, String msg, String transactionNo) {
-        Map<String, Object> map = new HashMap<>(3, 1f);
-        map.put("state", isSuccess);
-        if (isSuccess) {
-            map.put("transactionNo", transactionNo);
-        } else if (StringTool.isNotBlank(msg)) {
-            map.put("msg", msg);
-        }
-        return map;
+        return commonOnlineSubmit(playerRechargeVo, payAccount);
     }
 
     @RequestMapping("/scanCodeSubmit")
@@ -241,26 +230,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
         //如果账号支持随机金额 重新设置存款金额
         playerRecharge.setRechargeAmount(getRechargeAmount(payAccount, playerRecharge));
-        return commonSubmit(playerRechargeVo, payAccount);
-    }
-
-    /**
-     * 收款账号支持随机金额，重新获取随机金额
-     *
-     * @param payAccount
-     * @param playerRecharge
-     * @return
-     */
-    private Double getRechargeAmount(PayAccount payAccount, PlayerRecharge playerRecharge) {
-        Double rechargeAmount = playerRecharge.getRechargeAmount();
-        if (payAccount != null && payAccount.getRandomAmount() != null && payAccount.getRandomAmount() && rechargeAmount.intValue() == rechargeAmount) {
-            double random = Double.parseDouble(RandomStringTool.random(2, 11, 99, false, true)) * 0.01;
-            if (random < 0.11) {
-                random += 0.11;
-            }
-            rechargeAmount += random;
-        }
-        return rechargeAmount;
+        return commonOnlineSubmit(playerRechargeVo, payAccount);
     }
 
     /**
@@ -397,49 +367,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         return ONLINE_FAIL;
     }
 
-    /**
-     * 线上支付（含扫码支付）提交公共方法
-     *
-     * @param playerRechargeVo
-     * @param payAccount
-     * @return
-     */
-    private Map<String, Object> commonSubmit(PlayerRechargeVo playerRechargeVo, PayAccount payAccount) {
-        if (payAccount == null) {
-            return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
-        }
-        playerRechargeVo = saveRecharge(playerRechargeVo, payAccount, RechargeTypeParentEnum.ONLINE_DEPOSIT.getCode(), playerRechargeVo.getResult().getRechargeType());
-        if (playerRechargeVo.isSuccess()) {
-            //声音提醒站长中心
-            onlineToneWarn();
-            //设置session相关存款数据
-            setRechargeCount();
-            return getResultMsg(true, null, playerRechargeVo.getResult().getTransactionNo());
-        } else {
-            return getResultMsg(false, playerRechargeVo.getErrMsg(), null);
-        }
-    }
-
-    /**
-     * 在线支付提醒站长后台
-     */
-    private void onlineToneWarn() {
-        MessageVo message = new MessageVo();
-        message.setSubscribeType(CometSubscribeType.MCENTER_ONLINE_RECHARGE_REMINDER.getCode());
-        message.setSendToUser(true);
-        message.setCcenterId(SessionManager.getSiteParentId());
-        message.setSiteId(SessionManager.getSiteId());
-        message.setMasterId(SessionManager.getSiteUserId());
-        message.setMsgBody(SiteParamEnum.WARMING_TONE_ONLINEPAY.getType());
-
-        SysUserDataRightListVo sysUserDataRightListVo = new SysUserDataRightListVo();
-        sysUserDataRightListVo.getSearch().setUserId(SessionManager.getUserId());
-        sysUserDataRightListVo.getSearch().setModuleType(DataRightModuleType.ONLINEDEPOSIT.getCode());
-        List<Integer> userIdByUrl = ServiceSiteTool.sysUserDataRightService().searchPlayerDataRightEntityId(sysUserDataRightListVo);
-        userIdByUrl.add(Const.MASTER_BUILT_IN_ID);
-        message.addUserIds(userIdByUrl);
-        ServiceTool.messageService().sendToMcenterMsg(message);
-    }
 
     /**
      * 获取线上支付收款账号
@@ -448,15 +375,8 @@ public class OnlineRechargeController extends RechargeBaseController {
      * @return
      */
     private PayAccount getOnlinePayAccount(String account) {
-        PayAccountVo payAccountVo = new PayAccountVo();
-        payAccountVo.setSearchId(account);
-        payAccountVo = ServiceSiteTool.payAccountService().get(payAccountVo);
-        PayAccount payAccount = payAccountVo.getResult();
+        PayAccount payAccount = getPayAccountBySearchId(account);
         if (payAccount == null) {
-            return null;
-        }
-        if (!PayAccountStatusEnum.USING.getCode().equals(payAccount.getStatus())) {
-            LOG.info("账号{0}已听用,故返回收款账号null", payAccount.getPayName());
             return null;
         }
        /* Bank bank = Cache.getBank().get(payAccount.getBankCode());

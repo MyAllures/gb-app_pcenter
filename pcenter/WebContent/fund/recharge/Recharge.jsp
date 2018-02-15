@@ -37,7 +37,7 @@
         </c:if>
         <c:if test="${map['wechat']>0}">
             <div class="deposit-tab01">
-                <a href="online-pay2.html" nav-Target="mainFrame">
+                <a href="/fund/recharge/ScanElectronic/wechatpay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img3.png">
                     <span class="pay-title green-t-bg"><em>微信支付</em></span>
                 </a>
@@ -62,7 +62,7 @@
         <c:if test="${map['jd']>0}">
             <div class="deposit-tab01">
                 <a href="online-pay5.html" nav-Target="mainFrame">
-                    <img src="${resRoot}/images/deposit-tab-img7.png"/>
+                    <img src="${resRoot}/images/deposit-tab-img5.png"/>
                     <span class="pay-title red-t-bg"><em>京东支付</em></span>
                 </a>
             </div>
@@ -81,7 +81,7 @@
         <c:if test="${map['onecodepay']>0}">
             <div class="deposit-tab01">
                 <a href="online-pay-sz.html" nav-Target="mainFrame">
-                    <img src="images/deposit-tab-img9.png"/>
+                    <img src="${resRoot}/images/deposit-tab-img9.png"/>
                     <span class="pay-title prasinous-t-bg"><em>一码付</em></span>
                 </a>
             </div>
@@ -93,7 +93,7 @@
                     <c:set var="url" value="http://${rechargeUrlParam.paramValue}"/>
                 </c:if>
                 <a href="<c:out value='${url}'/>" target="_blank">
-                    <img src="${resRoot}/images/deposit-tab-img7.png">
+                    <img src="${resRoot}/images/deposit-tab-img10.png">
                    <span class="pay-title">
                        <em data-href="/fund/recharge/online/onlinePay.html" class="showPage" style="cursor: pointer;">${views.fund_auto['充值中心']}</em>
                        <i data-href="/commonPage/help.html?pageNumber=1&pagingKey=hpdc&dataChildren=8" class="pay-title-tips" style="cursor: pointer;">${views.fund_auto['范例']}</i>
@@ -112,7 +112,7 @@
         <c:if test="${!empty digiccyAccountInfo}">
             <div class="deposit-tab01">
                 <a href="/fund/recharge/digiccy/digiccyPay.html" nav-Target="mainFrame">
-                    <img src="${resRoot}/images/deposit-tab-img9.png">
+                    <img src="${resRoot}/images/deposit-tab-img12.png">
                     <span class="pay-title dark-green-t-bg"><em>${views.fund_auto['数字货币支付']}</em></span>
                 </a>
             </div>

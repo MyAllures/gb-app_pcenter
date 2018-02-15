@@ -54,8 +54,8 @@
                         <c:set var="isAuthCode" value="${authCode}"/>
                         <c:set var="firstAccountLimit" value="${accountLimit}"/>
                     </c:if>
-                    <label class="bank ${index == 0?'':'select'}">
-                        <span class="radio"><input name="account" rechargeType="${onlineType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${account.randomAmount}" checked="checked" value="${command.getSearchId(account.id)}"></span>
+                    <label class="bank ${index == 0?'select':''}">
+                        <span class="radio"><input name="account" isThird="false" rechargeType="${onlineType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${account.randomAmount}" ${index == 0?'checked':''} value="${command.getSearchId(account.id)}"></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${bankCode}"></i><font class="diy-pay-title">${name}</font>
                         </span>
@@ -77,9 +77,9 @@
                         <c:set var="firstPayAccount" value="${account}"/>
                         <c:set var="firstAccountLimit" value="${accountLimit}"/>
                     </c:if>
-                    <label class="bank ${index == 0?'':'select'}">
+                    <label class="bank ${index == 0?'select':''}">
                         <c:set var="name" value="${account.aliasName}"/>
-                        <span class="radio"><input name="account" type="radio" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
+                        <span class="radio"><input name="account" type="radio" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${account.bankCode}"></i>
                             <font class="diy-pay-title">${name}</font>
@@ -108,7 +108,7 @@
                                 <c:choose>
                                     <c:when test="${isHide}">
                                        <span class="orange select">
-                                            <i class="orange fontsbig" id="accountCode">${views.fund_auto['账号代码']}：${firstPayAccount.code}</i>
+                                            <i class="orange fontsbig">${views.fund_auto['账号代码']}：<span id="accountCode">${firstPayAccount.code}</span></i>
                                             <i class="m-bigl">
                                                 <soul:button target="customerService" text="${(empty hideContent.value) ? views.fund_auto['联系客服获取账号'] : hideContent.value}" url="${customerService}" opType="function"/>
                                             </i>
@@ -116,14 +116,14 @@
                                     </c:when>
                                     <c:otherwise>
                                         <span class="orange paidname select" data-clipboard-target="bankNum" data-clipboard-text="" name="copy">
-                                            <em class="bank-number" id="bankNum">${firstPayAccount.bankCode eq 'onecodepay'?'不显示':firstPayAccount.account}</em>
+                                            <em class="bank-number" ${thirdBankCode eq 'onecodepay'?'id="bankNum"':''}>${thirdBankCode eq 'onecodepay'?'不显示':firstPayAccount.account}</em>
                                             <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
                                         </span>
                                     </c:otherwise>
                                 </c:choose>
                                  <span class="paidname select" data-clipboard-target="bankName" data-clipboard-text="" name="copy">
                                     <em class="gray">${views.fund_auto['姓名']}：</em>
-                                    <em class="gathering-name" id="bankName">${firstPayAccount.bankCode eq 'onecodepay'?'不显示':firstPayAccount.fullName}</em>
+                                    <em class="gathering-name" ${thirdBankCode eq 'onecodepay'?'id="bankName"':''}>${thirdBankCode eq 'onecodepay'?'不显示':firstPayAccount.fullName}</em>
                                     <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
                                 </span>
                             </div>
@@ -159,7 +159,7 @@
             <div class="controls">${username}</div>
         </div>
         <c:if test="${thirdBankCode eq 'alipay'}">
-            <div class="mui-input-row">
+            <div class="mui-input-row" name="electronicElement">
                 <label for="result.payerName">您的支付户名:</label>
                 <div class="ct">
                     <input type="text" id="result.payerName" name="result.payerName" placeholder="请填写存款时使用的真实姓名">
@@ -167,16 +167,13 @@
             </div>
         </c:if>
         <c:if test="${thirdBankCode != 'onecodepay'}">
-            <div class="control-group" name="${companyType}Element">
+            <div class="control-group" name="electronicElement" style="${firstPayAccount.type eq '1'?'':'display:none'}">
                 <c:choose>
                     <c:when test="${thirdBankCode eq 'wechatpay'}">
-                        <c:set var="accountLabel" value="${views.fund_auto['您的']}${thirdBankName}："/>
+                        <c:set var="accountLabel" value="${views.fund_auto['您的']}${thirdBankName}${views.fund_auto['账号']}："/>
                     </c:when>
                     <c:when test="${thirdBankCode eq 'qqwallet'}">
                         <c:set var="accountLabel" value="${views.fund_auto['您的']}QQ号码："/>
-                    </c:when>
-                    <c:when test="${thirdBankCode eq 'onecodepay'}">
-                        <c:set var="accountLabel" value=""/>
                     </c:when>
                     <c:when test="${thirdBankCode eq 'other'}">
                         <c:set var="accountLabel" value="${views.fund_auto['您的']}${thirdBankName}${views.fund_auto['账号']}："/>
@@ -191,6 +188,12 @@
                 </div>
             </div>
         </c:if>
+        <div name="electronicElement" class="control-group" style="${firstPayAccount.type eq '1'?'':'display:none'}">
+            <label class="control-label">${views.fund_auto['订单号（后5位）']}：</label>
+            <div class="controls">
+                <input type="text" class="input" placeholder="${views.fund_auto['请填写订单号非商户订单号']}" maxlength="5" name="result.bankOrder" autocomplete="off">
+            </div>
+        </div>
         <c:if test="${!empty thirdAccountType}">
             <div name="authCode" class="control-group" style="${isAuthCode?'':'display:none'}">
                 <input type="hidden" name="isAuthCode" value="${isAuthCode}"/>
@@ -203,8 +206,11 @@
         <div class="control-group">
             <label class="control-label" for="result.rechargeAmount">存款金额：</label>
             <div class="controls">
-                <input type="text" class="input" name="result.rechargeAmount" id="result.rechargeAmount" placeholder="${firstAccountLimit}">
-                <span class="right-decimals" style="${firstPayAccount.randomAmount?'':'display:none'}" id="rechargeDecimals">.66</span>
+                <input type="text" class="input" name="rechargeAmount" placeholder="${firstAccountLimit}">
+                <input type="hidden" class="input" name="result.rechargeAmount" id="result.rechargeAmount">
+                <input type="hidden" name="" value="${rechargeDecimals}"/>
+                <span class="right-decimals" style="${firstPayAccount.randomAmount?'':'display:none'}" id="rechargeDecimals">.${rechargeDecimals}</span>
+                <span tipsName="result.rechargeAmount-tips"></span>
                 <span class="fee"></span>
             </div>
         </div>
@@ -215,7 +221,7 @@
         <div class=" control-group">
             <label class="control-label"></label>
             <input type="hidden" name="result.rechargeType" value="${firstPayAccount.type eq '1'?companyType:onlineType}"/>
-            <soul:button target="submit" text="立即存款" opType="function" cssClass="btn-blue btn large-big" tag="button"/>
+            <soul:button target="submit" precall="validateForm" text="立即存款" opType="function" cssClass="btn-blue btn large-big" tag="button"/>
         </div>
         <div class="applysale">
             <ul class="transfer-tips">
@@ -226,9 +232,80 @@
                 </li>
             </ul>
         </div>
-        <div name="authCode" class="fansao-wrap" style="${empty thirdAccountType?'':'display:none'}">
+        <div name="authCode" class="fansao-wrap" style="${isAuthCode?'':'display:none'}">
             <div class="fansao-title">${thirdAccountType}教程</div>
             <div class="fansao-img"><img src="${resRoot}/images/${tutorialImg}.png"></div>
+        </div>
+    </div>
+</div>
+<%--完成存款弹窗--%>
+<div class="modal inmodal in" style="display: none" id="ElectronicDialog" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight family">
+            <div class="modal-header">
+                <span class="filter">完成存款，提交申请</span>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">关闭</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="withdraw-not text-15p">
+                    <div class="form-group clearfix line-hi45 m-b-xxs">
+                        <label class="col-xs-5 al-right bold">存款金额：</label>
+                        <div class="col-xs-6 p-x f-size26" id="confirmRechargeAmount"></div>
+                    </div>
+                    <div class="form-group clearfix line-hi45 m-b-xxs">
+                        <label class="col-xs-5 al-right bold">手续费/返手续费：</label>
+                        <div class="col-xs-6 p-x">
+                            <%--green--%>
+                            <em class="red f-size26" id="confirmFee"></em>
+                        </div>
+                    </div>
+                    <div class="form-group clearfix line-hi45 m-b-xxs">
+                        <label class="col-xs-5 al-right bold">实际到账：</label>
+                        <div class="col-xs-6 p-x">
+                            <em class="red f-size26" id="confirmRechargeTotal"></em>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix bg-gray p-t-xs al-center">
+                    <div class="clearfix line-hi25 p-sm caution-pop">
+                        <em><i class="mark plaintsmall"></i> 系统审核通过后，您的钱包余额将增加相应的“实际到账”金额。</em>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-filter">已存款，确认提交</button>
+                <button type="button" class="btn btn-outline btn-filter">取消提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<%--失败弹窗--%>
+<div class="modal inmodal in" style="display: none" id="ElectronicDialog" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight family">
+            <div class="modal-header">
+                <span class="filter">完成存款，提交申请</span>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">关闭</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="theme-popcon">
+                    <h3 class="popalign"><i class="tipbig fail"></i>${views.fund['Deposit.deposit.depositFail']}</h3>
+                    <div class="text">
+                        <p>${views.fund['Deposit.deposit.failureReason']}</p>
+                        <p>${views.fund['Deposit.deposit.failOtherReason']}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-filter">${views.fund_auto['再存一次']}</button>
+                <button type="button" class="btn btn-outline btn-filter">${views.common['contactCustomerService']}</button>
+            </div>
         </div>
     </div>
 </div>

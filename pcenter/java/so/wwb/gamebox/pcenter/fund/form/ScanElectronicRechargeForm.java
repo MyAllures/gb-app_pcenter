@@ -27,6 +27,7 @@ public class ScanElectronicRechargeForm {
     private String result_payerBankcard;
     private String result_bankOrder;
     private String result_payerName;
+    private String account;
     private String $code;
 
     @Comment("存款金额")
@@ -95,5 +96,15 @@ public class ScanElectronicRechargeForm {
 
     public void set$code(String $code) {
         this.$code = $code;
+    }
+
+    @Comment("收款账号")
+    @NotBlank
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 }

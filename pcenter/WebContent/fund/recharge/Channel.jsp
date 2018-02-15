@@ -1,3 +1,5 @@
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ include file="/include/include.inc.jsp" %>
 <%--支付渠道---%>
 <div class="deposit-info-warp  clearfix">
     <div class="titleline pull-left">
@@ -22,5 +24,5 @@
             </ul>
         </div>
     </div>
-    <a href="/fund/playerRecharge/recharge.html" nav-Target="mainFrame" class="btn-gray btn btn-big pull-right">返回上一级</a>
+    <a href="/fund/playerRecharge/recharge.html" class="btn-gray btn btn-big pull-right" nav-Target="mainFrame">${views.fund_auto['返回上一级']}</a>
 </div>

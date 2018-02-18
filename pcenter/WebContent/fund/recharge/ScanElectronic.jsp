@@ -46,16 +46,16 @@
                     </c:choose>
                     <c:set var="onlinePayMax" value="${account.singleDepositMax}"/>
                     <c:set var="onlinePayMin" value="${account.singleDepositMin}"/>
-                    <c:set var="onlinePayMin" value="${empty onlinePayMin || onlinePayMin<=0?0.01:onlinePayMin}"/>
-                    <c:set var="onlinePayMax" value="${empty onlinePayMax?99999999:onlinePayMax}"/>
-                    <c:set var="accountLimit" value="* 范围:${soulFn:formatCurrency(onlinePayMin)} ~ ${soulFn:formatCurrency(onlinePayMax)}"/>
+                    <c:set var="onlinePayMin" value="${empty onlinePayMin || onlinePayMin<=0?0.01:soulFn:formatCurrency(onlinePayMin)}"/>
+                    <c:set var="onlinePayMax" value="${empty onlinePayMax?'99,999,999':soulFn:formatCurrency(onlinePayMax)}"/>
+                    <c:set var="accountLimit" value="* 范围:${onlinePayMin} ~ ${onlinePayMax}"/>
                     <c:if test="${index==0}">
                         <c:set var="firstPayAccount" value="${account}"/>
                         <c:set var="isAuthCode" value="${authCode}"/>
                         <c:set var="firstAccountLimit" value="${accountLimit}"/>
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
-                        <span class="radio"><input name="account" isThird="false" rechargeType="${onlineType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${account.randomAmount}" ${index == 0?'checked':''} value="${command.getSearchId(account.id)}"></span>
+                        <span class="radio"><input name="account" showSuccMsg="false" isThird="false" rechargeType="${onlineType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${account.randomAmount}" ${index == 0?'checked':''} value="${command.getSearchId(account.id)}"></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${bankCode}"></i><font class="diy-pay-title">${name}</font>
                         </span>
@@ -70,16 +70,16 @@
                     </c:if>
                     <c:set var="onlinePayMax" value="${rank.onlinePayMax}"/>
                     <c:set var="onlinePayMin" value="${rank.onlinePayMin}"/>
-                    <c:set var="onlinePayMin" value="${empty onlinePayMin || onlinePayMin<=0?0.01:onlinePayMin}"/>
-                    <c:set var="onlinePayMax" value="${empty onlinePayMax?99999999:onlinePayMax}"/>
-                    <c:set var="accountLimit" value="* 范围:${soulFn:formatCurrency(onlinePayMin)} ~ ${soulFn:formatCurrency(onlinePayMax)}"/>
+                    <c:set var="onlinePayMin" value="${empty onlinePayMin || onlinePayMin<=0?0.01:soulFn:formatCurrency(onlinePayMin)}"/>
+                    <c:set var="onlinePayMax" value="${empty onlinePayMax?'99,999,999':soulFn:formatCurrency(onlinePayMax)}"/>
+                    <c:set var="accountLimit" value="* 范围:${onlinePayMin} ~ ${onlinePayMax}"/>
                     <c:if test="${index==0}">
                         <c:set var="firstPayAccount" value="${account}"/>
                         <c:set var="firstAccountLimit" value="${accountLimit}"/>
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
                         <c:set var="name" value="${account.aliasName}"/>
-                        <span class="radio"><input name="account" type="radio" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
+                        <span class="radio"><input name="account" type="radio" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${account.bankCode}"></i>
                             <font class="diy-pay-title">${name}</font>
@@ -208,7 +208,7 @@
             <div class="controls">
                 <input type="text" class="input" name="rechargeAmount" placeholder="${firstAccountLimit}">
                 <input type="hidden" class="input" name="result.rechargeAmount" id="result.rechargeAmount">
-                <input type="hidden" name="" value="${rechargeDecimals}"/>
+                <input type="hidden" name="rechargeDecimals" value="${rechargeDecimals}"/>
                 <span class="right-decimals" style="${firstPayAccount.randomAmount?'':'display:none'}" id="rechargeDecimals">.${rechargeDecimals}</span>
                 <span tipsName="result.rechargeAmount-tips"></span>
                 <span class="fee"></span>

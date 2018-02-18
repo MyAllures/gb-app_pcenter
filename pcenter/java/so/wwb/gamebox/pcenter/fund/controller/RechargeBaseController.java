@@ -62,6 +62,7 @@ import so.wwb.gamebox.model.master.player.po.UserPlayer;
 import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.web.common.token.TokenHandler;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
 
 import java.util.*;
@@ -572,7 +573,10 @@ public abstract class RechargeBaseController {
         map.put("state", isSuccess);
         if (isSuccess) {
             map.put("transactionNo", transactionNo);
-        } else if (StringTool.isNotBlank(msg)) {
+        } else {
+            map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
+        }
+        if (StringTool.isNotBlank(msg)) {
             map.put("msg", msg);
         }
         return map;

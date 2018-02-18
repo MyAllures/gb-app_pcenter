@@ -33,6 +33,7 @@ import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.fund.form.ScanElectronicRechargeForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.common.token.Token;
+import so.wwb.gamebox.web.common.token.TokenHandler;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -98,8 +99,8 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
         model.addAttribute("customerService", getCustomerService());
         model.addAttribute("validateRule", JsRuleCreator.create(ScanElectronicRechargeForm.class));
-        double rechargeDecimals = Math.random() * 99 + 1;
-        model.addAttribute("rechargeDecimals", rechargeDecimals);
+        Double rechargeDecimals = Math.random() * 99 + 1;
+        model.addAttribute("rechargeDecimals", rechargeDecimals.intValue());
     }
 
     private Map<String, PayAccount> getScanAccount(PlayerRank rank, String accountType, String[] accountTypes) {
@@ -243,6 +244,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
             map.put("rechargeAmount", rechargeAmount);
             map.put("rechargeTotal", rechargeAmount + fee);
             map.put("isThird", true);
+            map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
             return map;
         } else { //线上支付保存存款订单
             PlayerRecharge playerRecharge = playerRechargeVo.getResult();
@@ -271,6 +273,24 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
             playerRecharge.setRechargeType(rechargeType);
             return commonOnlineSubmit(playerRechargeVo, payAccount);
         }
+    }
+
+    @RequestMapping("/electronicSubmit")
+    @ResponseBody
+    @Token(valid = true)
+    public Map<String, Object> electronicSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            return getResultMsg(false, LocaleTool.tranView(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PARAMS_DATA_ERROR), null);
+        }
+        PayAccount payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
+        if (payAccount == null) {
+            return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
+        }
+        if (PayAccountType.ONLINE_ACCOUNT_CODE.equals(payAccount.getType())) {
+            return getResultMsg(false, LocaleTool.tranView(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PARAMS_DATA_ERROR), null);
+        }
+
+        return null;
     }
 
 }

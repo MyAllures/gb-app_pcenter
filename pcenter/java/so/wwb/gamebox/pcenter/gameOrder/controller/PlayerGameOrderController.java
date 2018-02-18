@@ -24,12 +24,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceGameApiTool;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
+import so.wwb.gamebox.model.ApiGameTool;
 import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.company.setting.po.ApiI18n;
+import so.wwb.gamebox.model.company.setting.po.GameI18n;
 import so.wwb.gamebox.model.company.setting.po.SysCurrency;
+import so.wwb.gamebox.model.company.site.po.SiteApiI18n;
 import so.wwb.gamebox.model.company.site.po.SiteApiTypeI18n;
 import so.wwb.gamebox.model.company.site.po.SiteGame;
+import so.wwb.gamebox.model.company.site.po.SiteGameI18n;
 import so.wwb.gamebox.model.company.site.vo.SiteGameVo;
 import so.wwb.gamebox.model.enums.UserTypeEnum;
 import so.wwb.gamebox.model.gameapi.enums.ApiProviderEnum;
@@ -37,6 +42,7 @@ import so.wwb.gamebox.model.master.player.po.PlayerGameOrder;
 import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderDetailVo;
 import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderListVo;
 import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderVo;
+import so.wwb.gamebox.model.site.report.po.VPlayerGameOrder;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
@@ -95,7 +101,7 @@ public class PlayerGameOrderController {
         listVo.setMaxDate(maxDate);
         listVo.getSearch().setPlayerId(SessionManager.getUserId());
         listVo = ServiceSiteTool.playerGameOrderService().search(listVo);
-
+        setApiNameAndGame(listVo.getResult());
         //统计数据
         statisticsData(listVo, model);
         model.addAttribute("command", listVo);
@@ -110,8 +116,18 @@ public class PlayerGameOrderController {
         if (CollectionTool.isEmpty(playerGameOrders)) {
             return;
         }
+        Map<Integer, Map<Integer, String>> apiNameGroupByApiType = ApiGameTool.getSiteApiNameByApiType(Cache.getSiteApiTypeRelactionI18n());
+        Map<String, SiteApiI18n> siteApiI18nMap = Cache.getSiteApiI18n();
+        Map<String, ApiI18n> apiI18nMap = Cache.getApiI18n();
+        Map<String, SiteGameI18n> siteGameI18nMap = Cache.getSiteGameI18n();
+        Map<String, GameI18n> gameI18nMap = Cache.getGameI18n();
+        Integer gameId;
         for (PlayerGameOrder playerGameOrder : playerGameOrders) {
-
+            playerGameOrder.setApiName(ApiGameTool.getSiteApiName(apiNameGroupByApiType, siteApiI18nMap, apiI18nMap, playerGameOrder.getApiId(), playerGameOrder.getApiTypeId()));
+            gameId = playerGameOrder.getGameId();
+            if (gameId != null && gameId != 0) {
+                playerGameOrder.setGameName(ApiGameTool.getSiteGameName(siteGameI18nMap, gameI18nMap, String.valueOf(gameId)));
+            }
         }
     }
 

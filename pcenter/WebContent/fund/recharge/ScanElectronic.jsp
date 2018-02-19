@@ -276,8 +276,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-filter">已存款，确认提交</button>
-                <button type="button" class="btn btn-outline btn-filter">取消提交</button>
+                <soul:button target="electronicSubmit" precall="validateForm" text="已存款，确认提交" opType="function" cssClass="btn btn-filter" tag="button"/>
+                <soul:button target="submit" text="取消提交" opType="function" cssClass="btn btn-outline btn-filter" tag="button"/>
             </div>
         </div>
     </div>

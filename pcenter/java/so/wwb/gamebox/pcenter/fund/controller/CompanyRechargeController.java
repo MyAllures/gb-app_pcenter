@@ -383,7 +383,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         return companySubmit(playerRechargeVo, RechargeTypeEnum.ONLINE_BANK.getCode(), result);
     }
 
-    @RequestMapping("electronicPaySubmit")
+    @RequestMapping("/electronicPaySubmit")
     @Token(valid = true)
     public String electronicPaySubmit(PlayerRechargeVo playerRechargeVo, HttpServletRequest request, @FormModel @Valid ElectronicPaySecondForm form, BindingResult result, Model model) {
         return companySubmit(playerRechargeVo, playerRechargeVo.getResult().getRechargeType(), result);

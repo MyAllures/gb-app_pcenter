@@ -164,6 +164,21 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
     }
 
     /**
+     * 其他电子支付
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping("/otherBank")
+    @Token
+    public String otherBank(Model model) {
+        PlayerRank rank = getRank();
+        model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.OTHER.getCode(), RechargeTypeEnum.OTHER_FAST.getCode()));
+        commonPage(model, rank, null, RechargeTypeEnum.OTHER_FAST.getCode());
+        return SCAN_ELECTRONIC_URI;
+    }
+
+    /**
      * 支付页面公共页面元素部分
      *
      * @param model

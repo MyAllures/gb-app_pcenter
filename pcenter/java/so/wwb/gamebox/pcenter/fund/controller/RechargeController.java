@@ -25,7 +25,9 @@ import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cherry on 16-9-12.
@@ -45,12 +47,14 @@ public class RechargeController extends RechargeBaseController {
         payAccountListVo.getSearch().setTerminal(TerminalEnum.PC.getCode());
         payAccountListVo.setPlayerId(SessionManager.getUserId());
         payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
-        model.addAttribute("map", ServiceSiteTool.payAccountService().queryChannelCount(payAccountListVo));
+        Map<String, Long> channelCountMap = ServiceSiteTool.payAccountService().queryChannelCount(payAccountListVo);
+        model.addAttribute("map", channelCountMap);
         model.addAttribute("customerService", getCustomerService());
         //快速充值地址
         fastRecharge(model);
         //是否支持数字货币
         model.addAttribute("digiccyAccountInfo", ParamTool.getDigiccyAccountInfo());
+
         return RECHARGE_URI;
     }
 

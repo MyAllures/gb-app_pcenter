@@ -20,6 +20,8 @@ public class SessionManager extends SessionManagerCommon {
 
     //玩家中心-转账-转账提交时间
     private static final String S_TRANSFER_TIME = "S_TRANSFER_TIME";
+    //玩家中心－存款－可用渠道
+
 
     public static void setMasterInfo(SysUser user) {
         setAttribute(SESSION_MASTER_INFO, user);

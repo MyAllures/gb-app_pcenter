@@ -13,6 +13,15 @@
 <form name="scanElectronicForm">
 <%--渠道选择--%>
 <%@include file="Channel.jsp"%>
+<c:if test="${fn:length(scan)<=0 && fn:length(electronic)<=0}">
+    <div class="account-list account-info-warp">
+        <div class="left-ico-message">
+            <h2 class="m-bigl m-t-sm">${views.fund_auto['暂无收款账户，请选择其他存款方式！']}</h2>
+            <span class="deposit-info-title info-top-no"><img src="${resRoot}/images/online-pay4.png"></span>
+        </div>
+    </div>
+</c:if>
+<c:if test="${fn:length(scan)>0 || fn:length(electronic)>0}">
 <div id="validateRule" style="display: none">${validateRule}</div>
 <gb:token/>
 <div class="account-list account-info-warp">
@@ -337,5 +346,6 @@
         </div>
     </div>
 </div>
+</c:if>
 </form>
 <soul:import res="site/fund/recharge/ScanElectronic"/>

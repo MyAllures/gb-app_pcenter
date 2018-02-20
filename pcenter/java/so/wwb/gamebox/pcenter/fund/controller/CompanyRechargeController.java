@@ -9,7 +9,6 @@ import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
 import org.soul.model.comet.vo.MessageVo;
-import org.soul.model.sys.po.SysParam;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.DictEnum;
-import so.wwb.gamebox.model.ParamTool;
-import so.wwb.gamebox.model.SiteI18nEnum;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
@@ -450,7 +447,12 @@ public class CompanyRechargeController extends RechargeBaseController {
             return ONLINE_FAIL;
         }
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
-        PayAccount payAccount = getPayAccount(playerRecharge.getPayAccountId());
+        PayAccount payAccount;
+        if (StringTool.isNotBlank(playerRechargeVo.getAccount())) {
+            payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
+        } else {
+            payAccount = getPayAccount(playerRecharge.getPayAccountId());
+        }
         if (payAccount == null) {
             return ONLINE_FAIL;
         }
@@ -544,45 +546,6 @@ public class CompanyRechargeController extends RechargeBaseController {
         } while (NumberTool.toInt(decimal) == 0);
         return rechargeAmount + NumberTool.toDouble(decimal) / 100;*/
         return rechargeAmount;
-    }
-
-    /**
-     * 存款消息提醒发送消息给前端
-     *
-     * @param playerRechargeVo
-     */
-    private void tellerReminder(PlayerRechargeVo playerRechargeVo) {
-        PlayerRecharge recharge = playerRechargeVo.getResult();
-        if (recharge == null || recharge.getId() == null) {
-            return;
-        }
-        //推送消息给前端
-        MessageVo message = new MessageVo();
-        message.setSubscribeType(CometSubscribeType.MCENTER_RECHARGE_REMINDER.getCode());
-        Map<String, Object> map = new HashMap<>(3, 1f);
-        map.put("date", recharge.getCreateTime() == null ? new Date() : recharge.getCreateTime());
-        map.put("currency", getCurrencySign());
-        map.put("type", recharge.getRechargeTypeParent());
-        map.put("amount", CurrencyTool.formatCurrency(recharge.getRechargeAmount()));
-        map.put("id", recharge.getId());
-        map.put("transactionNo", recharge.getTransactionNo());
-        message.setMsgBody(JsonTool.toJson(map));
-        message.setSendToUser(true);
-        message.setCcenterId(SessionManager.getSiteParentId());
-        message.setSiteId(SessionManager.getSiteId());
-        message.setMasterId(SessionManager.getSiteUserId());
-
-
-        SysUserDataRightListVo sysUserDataRightListVo = new SysUserDataRightListVo();
-        sysUserDataRightListVo.getSearch().setUserId(SessionManager.getUserId());
-        sysUserDataRightListVo.getSearch().setModuleType(DataRightModuleType.COMPANYDEPOSIT.getCode());
-        List<Integer> userIdByUrl = ServiceSiteTool.sysUserDataRightService().searchPlayerDataRightEntityId(sysUserDataRightListVo);
-        userIdByUrl.add(Const.MASTER_BUILT_IN_ID);
-
-        //判断账号是否可以查看该层级的记录 add by Bruce.QQ
-//        filterUnavailableSubAccount(userIdByUrl);
-        message.addUserIds(userIdByUrl);
-        ServiceTool.messageService().sendToMcenterMsg(message);
     }
 
     /**

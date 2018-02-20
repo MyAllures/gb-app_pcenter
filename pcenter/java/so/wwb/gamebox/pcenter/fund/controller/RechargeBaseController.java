@@ -3,6 +3,7 @@ package so.wwb.gamebox.pcenter.fund.controller;
 import org.soul.commons.collections.CollectionQueryTool;
 import org.soul.commons.collections.CollectionTool;
 import org.soul.commons.currency.CurrencyTool;
+import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.DateTool;
 import org.soul.commons.lang.string.RandomStringTool;
 import org.soul.commons.lang.string.StringTool;
@@ -520,7 +521,7 @@ public abstract class RechargeBaseController {
         payAccountVo = ServiceSiteTool.payAccountService().get(payAccountVo);
         PayAccount payAccount = payAccountVo.getResult();
         if (payAccount != null && !PayAccountStatusEnum.USING.getCode().equals(payAccount.getStatus())) {
-            LOG.info("账号{0}已听用,故返回收款账号null", payAccount.getPayName());
+            LOG.info("账号{0}已停用,故返回收款账号null", payAccount.getPayName());
             return null;
         }
         return payAccount;
@@ -599,6 +600,45 @@ public abstract class RechargeBaseController {
         sysUserDataRightListVo.getSearch().setModuleType(DataRightModuleType.ONLINEDEPOSIT.getCode());
         List<Integer> userIdByUrl = ServiceSiteTool.sysUserDataRightService().searchPlayerDataRightEntityId(sysUserDataRightListVo);
         userIdByUrl.add(Const.MASTER_BUILT_IN_ID);
+        message.addUserIds(userIdByUrl);
+        ServiceTool.messageService().sendToMcenterMsg(message);
+    }
+
+    /**
+     * 存款消息提醒发送消息给前端
+     *
+     * @param playerRechargeVo
+     */
+    public void tellerReminder(PlayerRechargeVo playerRechargeVo) {
+        PlayerRecharge recharge = playerRechargeVo.getResult();
+        if (recharge == null || recharge.getId() == null) {
+            return;
+        }
+        //推送消息给前端
+        MessageVo message = new MessageVo();
+        message.setSubscribeType(CometSubscribeType.MCENTER_RECHARGE_REMINDER.getCode());
+        Map<String, Object> map = new HashMap<>(3, 1f);
+        map.put("date", recharge.getCreateTime() == null ? new Date() : recharge.getCreateTime());
+        map.put("currency", getCurrencySign());
+        map.put("type", recharge.getRechargeTypeParent());
+        map.put("amount", CurrencyTool.formatCurrency(recharge.getRechargeAmount()));
+        map.put("id", recharge.getId());
+        map.put("transactionNo", recharge.getTransactionNo());
+        message.setMsgBody(JsonTool.toJson(map));
+        message.setSendToUser(true);
+        message.setCcenterId(SessionManager.getSiteParentId());
+        message.setSiteId(SessionManager.getSiteId());
+        message.setMasterId(SessionManager.getSiteUserId());
+
+
+        SysUserDataRightListVo sysUserDataRightListVo = new SysUserDataRightListVo();
+        sysUserDataRightListVo.getSearch().setUserId(SessionManager.getUserId());
+        sysUserDataRightListVo.getSearch().setModuleType(DataRightModuleType.COMPANYDEPOSIT.getCode());
+        List<Integer> userIdByUrl = ServiceSiteTool.sysUserDataRightService().searchPlayerDataRightEntityId(sysUserDataRightListVo);
+        userIdByUrl.add(Const.MASTER_BUILT_IN_ID);
+
+        //判断账号是否可以查看该层级的记录 add by Bruce.QQ
+//        filterUnavailableSubAccount(userIdByUrl);
         message.addUserIds(userIdByUrl);
         ServiceTool.messageService().sendToMcenterMsg(message);
     }

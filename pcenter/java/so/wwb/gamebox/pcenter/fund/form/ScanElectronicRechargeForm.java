@@ -6,6 +6,7 @@ import org.soul.commons.query.enums.Operator;
 import org.soul.commons.validation.form.constraints.Depends;
 import org.soul.commons.validation.form.constraints.Remote;
 import org.soul.commons.validation.form.support.Comment;
+import org.soul.web.support.IForm;
 import so.wwb.gamebox.model.common.RegExpConstants;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
@@ -21,7 +22,7 @@ import javax.validation.constraints.Pattern;
  * 扫码支付和电子支付合并渠道后存款验证
  * Created by cherry on 18-2-12.
  */
-public class ScanElectronicRechargeForm {
+public class ScanElectronicRechargeForm implements IForm {
     private String result_rechargeAmount;
     private String $payerBankcard;
     private String result_payerBankcard;

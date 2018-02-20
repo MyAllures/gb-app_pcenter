@@ -14,6 +14,7 @@
 <%--渠道选择--%>
 <%@include file="Channel.jsp"%>
 <div id="validateRule" style="display: none">${validateRule}</div>
+<gb:token/>
 <div class="account-list account-info-warp">
     <div class="left-ico-message">
         <h4>选择支付方式：</h4>
@@ -159,10 +160,10 @@
             <div class="controls">${username}</div>
         </div>
         <c:if test="${thirdBankCode eq 'alipay'}">
-            <div class="mui-input-row" name="electronicElement">
-                <label for="result.payerName">您的支付户名:</label>
-                <div class="ct">
-                    <input type="text" id="result.payerName" name="result.payerName" placeholder="请填写存款时使用的真实姓名">
+            <div class="control-group" name="electronicElement">
+                <label class="control-label" for="result.payerName">您的支付户名：</label>
+                <div class="controls">
+                    <input type="text" class="input" id="result.payerName" name="result.payerName" placeholder="请填写存款时使用的真实姓名">
                 </div>
             </div>
         </c:if>
@@ -238,25 +239,26 @@
         </div>
     </div>
 </div>
+<div class="modal-backdrop in" style="display: none" id="backdrop"></div>
 <%--完成存款弹窗--%>
-<div class="modal inmodal in" style="display: none" id="ElectronicDialog" tabindex="-1" role="dialog">
+<div class="modal inmodal in" style="display: none" id="electronicDialog" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content animated bounceInRight family">
             <div class="modal-header">
                 <span class="filter">完成存款，提交申请</span>
-                <button type="button" class="close" data-dismiss="modal">
+                <soul:button target="closeElectronicDialog" text="取消提交" opType="function" cssClass="close" tag="button">
                     <span aria-hidden="true">×</span>
                     <span class="sr-only">关闭</span>
-                </button>
+                </soul:button>
             </div>
             <div class="modal-body">
                 <div class="withdraw-not text-15p">
                     <div class="form-group clearfix line-hi45 m-b-xxs">
-                        <label class="col-xs-5 al-right bold">存款金额：</label>
+                        <label class="col-xs-5 al-right bold">${views.fund_auto['存款金额']}：</label>
                         <div class="col-xs-6 p-x f-size26" id="confirmRechargeAmount"></div>
                     </div>
                     <div class="form-group clearfix line-hi45 m-b-xxs">
-                        <label class="col-xs-5 al-right bold">手续费/返手续费：</label>
+                        <label class="col-xs-5 al-right bold">${views.fund_auto['手续费/返手续费']}：</label>
                         <div class="col-xs-6 p-x">
                             <%--green--%>
                             <em class="red f-size26" id="confirmFee"></em>
@@ -277,21 +279,21 @@
             </div>
             <div class="modal-footer">
                 <soul:button target="electronicSubmit" precall="validateForm" text="已存款，确认提交" opType="function" cssClass="btn btn-filter" tag="button"/>
-                <soul:button target="submit" text="取消提交" opType="function" cssClass="btn btn-outline btn-filter" tag="button"/>
+                <soul:button target="closeElectronicDialog" text="取消提交" opType="function" cssClass="btn btn-outline btn-filter" tag="button"/>
             </div>
         </div>
     </div>
 </div>
 <%--失败弹窗--%>
-<div class="modal inmodal in" style="display: none" id="ElectronicDialog" tabindex="-1" role="dialog">
+<div class="modal inmodal in" style="display: none" id="electronicFailDialog" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content animated bounceInRight family">
             <div class="modal-header">
-                <span class="filter">完成存款，提交申请</span>
-                <button type="button" class="close" data-dismiss="modal">
+                <span class="filter">${views.fund['Deposit.deposit.depositFail']}</span>
+                <soul:button target="closeElectronicDialog" text="取消提交" opType="function" cssClass="close" tag="button">
                     <span aria-hidden="true">×</span>
                     <span class="sr-only">关闭</span>
-                </button>
+                </soul:button>
             </div>
             <div class="modal-body">
                 <div class="theme-popcon">
@@ -303,8 +305,34 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-filter">${views.fund_auto['再存一次']}</button>
-                <button type="button" class="btn btn-outline btn-filter">${views.common['contactCustomerService']}</button>
+                <soul:button tag="button" target="back" text="${views.fund_auto['再存一次']}" opType="function" cssClass="btn btn-filter"/>
+                <soul:button tag="button" target="customerService" text="${views.common['contactCustomerService']}" cssClass="btn btn-outline btn-filter" url="${customerService}" opType="function"/>
+            </div>
+        </div>
+    </div>
+</div>
+<%--成功弹窗--%>
+<div class="modal inmodal in" style="display: none" id="electronicSuccessDialog" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight family">
+            <div class="modal-header">
+                <span class="filter">${views.fund['Deposit.deposit.submitSuccess']}</span>
+                <soul:button target="back" text="" opType="function" cssClass="close" tag="button">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">关闭</span>
+                </soul:button>
+            </div>
+            <div class="modal-body">
+                <div class="theme-popcon">
+                    <h3 class="popalign"><i class="tipbig fail"></i>${views.fund['Deposit.deposit.submitSuccess']}</h3>
+                    <div class="text">
+                        <p>${views.fund['Deposit.deposit.submitSuccessTips']}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <soul:button tag="button" target="back" text="${views.fund_auto['再存一次']}" opType="function" cssClass="btn btn-filter"/>
+                <soul:button tag="button" target="viewRecharge" text="${views.fund['Deposit.deposit.viewTrasaction']}" cssClass="btn btn-outline btn-filter" opType="function"/>
             </div>
         </div>
     </div>

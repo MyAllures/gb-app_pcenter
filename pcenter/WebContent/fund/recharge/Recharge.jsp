@@ -45,7 +45,7 @@
         </c:if>
         <c:if test="${map['alipay']>0}">
             <div class="deposit-tab01">
-                <a href="online-pay3.html" nav-Target="mainFrame">
+                <a href="/fund/recharge/ScanElectronic/alipay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img4.png"/>
                     <span class="pay-title cyan-t-bg"><em>支付宝支付</em></span>
                 </a>
@@ -53,7 +53,7 @@
         </c:if>
         <c:if test="${map['qq']>0}">
             <div class="deposit-tab01">
-                <a href="online-pay4.html" nav-Target="mainFrame">
+                <a href="/fund/recharge/ScanElectronic/qq.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img7.png">
                     <span class="pay-title sea-t-bg"><em>QQ支付</em></span>
                 </a>
@@ -61,7 +61,7 @@
         </c:if>
         <c:if test="${map['jd']>0}">
             <div class="deposit-tab01">
-                <a href="online-pay5.html" nav-Target="mainFrame">
+                <a href="/fund/recharge/ScanElectronic/jd.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img5.png"/>
                     <span class="pay-title red-t-bg"><em>京东支付</em></span>
                 </a>
@@ -69,18 +69,23 @@
         </c:if>
         <c:if test="${map['bd']>0}">
             <div class="deposit-tab01">
-                <a href="online-pay5.html" nav-Target="mainFrame">
+                <a href="/fund/recharge/ScanElectronic/bd.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img6.png"/>
                     <span class="pay-title pink-t-bg"><em>百度支付</em></span>
                 </a>
             </div>
         </c:if>
         <c:if test="${map['unionpay']>0}">
-
+            <div class="deposit-tab01">
+                <a href="/fund/recharge/ScanElectronic/union.html" nav-Target="mainFrame">
+                    <img src="${resRoot}/images/deposit-tab-img6.png"/>
+                    <span class="pay-title pink-t-bg"><em>银联支付</em></span>
+                </a>
+            </div>
         </c:if>
         <c:if test="${map['onecodepay']>0}">
             <div class="deposit-tab01">
-                <a href="online-pay-sz.html" nav-Target="mainFrame">
+                <a href="/fund/recharge/ScanElectronic/onecodepay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img9.png"/>
                     <span class="pay-title prasinous-t-bg"><em>一码付</em></span>
                 </a>

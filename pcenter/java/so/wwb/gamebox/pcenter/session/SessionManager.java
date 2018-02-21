@@ -5,6 +5,7 @@ import so.wwb.gamebox.web.SessionManagerCommon;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tony on 15-4-29.
@@ -21,7 +22,7 @@ public class SessionManager extends SessionManagerCommon {
     //玩家中心-转账-转账提交时间
     private static final String S_TRANSFER_TIME = "S_TRANSFER_TIME";
     //玩家中心－存款－可用渠道
-
+    private static final String S_RECHARGE_CHANNEL = "S_RECHARGE_CHANNEL";
 
     public static void setMasterInfo(SysUser user) {
         setAttribute(SESSION_MASTER_INFO, user);
@@ -55,24 +56,26 @@ public class SessionManager extends SessionManagerCommon {
     //玩家中心个人资料手机和邮箱验证码
     private static final String SESSION_VERIFICATIONCODE_ = "SESSION_VERIFICATIONCODE_";
 
-    public static void setEmailOrPhoneCode(List emailOrPhoneParam,String type) {
-        setAttribute(SESSION_VERIFICATIONCODE_+type, emailOrPhoneParam);
+    public static void setEmailOrPhoneCode(List emailOrPhoneParam, String type) {
+        setAttribute(SESSION_VERIFICATIONCODE_ + type, emailOrPhoneParam);
     }
 
     public static List getEmailOrPhoneCode(String type) {
-        return (List)getAttribute(SESSION_VERIFICATIONCODE_+type);
+        return (List) getAttribute(SESSION_VERIFICATIONCODE_ + type);
     }
 
     public static void removeEmailOrPhoneSession(String type) {
-        removeAttribute(SESSION_VERIFICATIONCODE_+type);
+        removeAttribute(SESSION_VERIFICATIONCODE_ + type);
     }
 
     private static final String SESSION_LAST_SEND_TIME_ = "SESSION_LAST_SEND_TIME_";
-    public static void setLastSendTime(Date lastTime,String type) {
-        setAttribute(SESSION_LAST_SEND_TIME_+type,lastTime);
+
+    public static void setLastSendTime(Date lastTime, String type) {
+        setAttribute(SESSION_LAST_SEND_TIME_ + type, lastTime);
     }
+
     public static Date getLastSendTime(String type) {
-        return (Date)getAttribute(SESSION_LAST_SEND_TIME_+type);
+        return (Date) getAttribute(SESSION_LAST_SEND_TIME_ + type);
     }
 
     /**
@@ -114,5 +117,23 @@ public class SessionManager extends SessionManagerCommon {
 
     public static Date getTransferTime() {
         return (Date) getAttribute(S_TRANSFER_TIME);
+    }
+
+    /**
+     * 设置玩家中心可用存款渠道
+     *
+     * @param map
+     */
+    public static void setRechargeChannel(Map<String, Object> map) {
+        setAttribute(S_RECHARGE_CHANNEL, map);
+    }
+
+    /**
+     * 获取玩家中心可用存款
+     *
+     * @return
+     */
+    public static Map<String, Object> getRechargeChannel() {
+        return (Map<String, Object>) getAttribute(S_RECHARGE_CHANNEL);
     }
 }

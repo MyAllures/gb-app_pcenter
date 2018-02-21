@@ -17,6 +17,7 @@ import so.wwb.gamebox.model.master.content.enums.CttAnnouncementTypeEnum;
 import so.wwb.gamebox.model.master.content.po.CttAnnouncement;
 import so.wwb.gamebox.model.master.content.vo.CttAnnouncementListVo;
 import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
+import so.wwb.gamebox.model.master.digiccy.po.DigiccyAccountInfo;
 import so.wwb.gamebox.model.master.operation.po.VActivityMessage;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.session.SessionManager;
@@ -50,15 +51,19 @@ public class RechargeController extends RechargeBaseController {
         Map<String, Long> channelCountMap = ServiceSiteTool.payAccountService().queryChannelCount(payAccountListVo);
         model.addAttribute("map", channelCountMap);
         model.addAttribute("customerService", getCustomerService());
+        Map<String, Object> channelMap = new HashMap<>();
         //快速充值地址
-        fastRecharge(model);
+        fastRecharge(model, channelMap);
         //是否支持数字货币
-        model.addAttribute("digiccyAccountInfo", ParamTool.getDigiccyAccountInfo());
-
+        DigiccyAccountInfo digiccyAccountInfo = ParamTool.getDigiccyAccountInfo();
+        model.addAttribute("digiccyAccountInfo", digiccyAccountInfo);
+        channelMap.put("channel", channelCountMap);
+        channelMap.put("digiccy", digiccyAccountInfo);
+        SessionManager.setRechargeChannel(channelMap);
         return RECHARGE_URI;
     }
 
-    public void fastRecharge(Model model) {
+    public void fastRecharge(Model model, Map<String, Object> channelMap) {
         SysParam rechargeUrlParam = ParamTool.getSysParam(SiteParamEnum.SETTING_RECHARGE_URL);
         if (rechargeUrlParam == null || StringTool.isBlank(rechargeUrlParam.getParamValue())) {
             model.addAttribute("isFastRecharge", false);
@@ -66,10 +71,12 @@ public class RechargeController extends RechargeBaseController {
         }
         //快速充值地址
         model.addAttribute("rechargeUrlParam", rechargeUrlParam);
+        channelMap.put("rechargeUrlParam", rechargeUrlParam);
         //是否包含全部层级
         SysParam allRank = ParamTool.getSysParam(SiteParamEnum.SETTING_RECHARGE_URL_ALL_RANK);
         if (allRank != null && "true".equals(allRank.getParamValue())) {
             model.addAttribute("isFastRecharge", true);
+            channelMap.put("isFastRecharge", true);
             return;
         }
         SysParam ranksParam = ParamTool.getSysParam(SiteParamEnum.SETTING_RECHARGE_URL_RANKS);
@@ -84,6 +91,7 @@ public class RechargeController extends RechargeBaseController {
                 }
             }
         }
+        channelMap.put("isFastRecharge", isFastRecharge);
         model.addAttribute("isFastRecharge", isFastRecharge);
     }
 

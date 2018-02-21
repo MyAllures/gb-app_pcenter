@@ -20,15 +20,15 @@
     </div>
     <div class="deposit-select-wrap">
         <c:if test="${map['online']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 zxzf-bg">
                 <a href="/fund/recharge/online/onlinePay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img1.png">
-                    <span class="pay-title orange-t-bg"><em>${views.fund_auto['线上支付']}</em></span>
+                    <span class="pay-title"><em>${views.fund_auto['线上支付']}</em></span>
                 </a>
             </div>
         </c:if>
         <c:if test="${map['company']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 wyck-bg">
                 <a href="/fund/recharge/company/onlineBankFirst.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img2.png"/>
                     <span class="pay-title blue-t-bg"><em>${views.fund_auto['网银存款']}</em></span>
@@ -36,7 +36,7 @@
             </div>
         </c:if>
         <c:if test="${map['wechat']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 wxzf-bg">
                 <a href="/fund/recharge/ScanElectronic/wechatpay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img3.png">
                     <span class="pay-title green-t-bg"><em>微信支付</em></span>
@@ -44,47 +44,47 @@
             </div>
         </c:if>
         <c:if test="${map['alipay']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 zfb-bg">
                 <a href="/fund/recharge/ScanElectronic/alipay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img4.png"/>
-                    <span class="pay-title cyan-t-bg"><em>支付宝支付</em></span>
+                    <span class="pay-title"><em>支付宝支付</em></span>
                 </a>
             </div>
         </c:if>
         <c:if test="${map['qq']>0}">
-            <div class="deposit-tab01">
-                <a href="/fund/recharge/ScanElectronic/qq.html" nav-Target="mainFrame">
+            <div class="deposit-tab01 qqzf-bg">
+                <a href="/fund/ronlinebecharge/ScanElectronic/qq.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img7.png">
-                    <span class="pay-title sea-t-bg"><em>QQ支付</em></span>
+                    <span class="pay-title"><em>QQ支付</em></span>
                 </a>
             </div>
         </c:if>
         <c:if test="${map['jd']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 jdzf-bg">
                 <a href="/fund/recharge/ScanElectronic/jd.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img5.png"/>
-                    <span class="pay-title red-t-bg"><em>京东支付</em></span>
+                    <span class="pay-title"><em>京东支付</em></span>
                 </a>
             </div>
         </c:if>
         <c:if test="${map['bd']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 bdzf-bg">
                 <a href="/fund/recharge/ScanElectronic/bd.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img6.png"/>
-                    <span class="pay-title pink-t-bg"><em>百度支付</em></span>
+                    <span class="pay-title"><em>百度支付</em></span>
                 </a>
             </div>
         </c:if>
         <c:if test="${map['unionpay']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 ylzf-bg">
                 <a href="/fund/recharge/ScanElectronic/union.html" nav-Target="mainFrame">
-                    <img src="${resRoot}/images/deposit-tab-img6.png"/>
-                    <span class="pay-title pink-t-bg"><em>银联支付</em></span>
+                    <img src="${resRoot}/images/deposit-tab-img13.png"/>
+                    <span class="pay-title"><em>银联支付</em></span>
                 </a>
             </div>
         </c:if>
         <c:if test="${map['onecodepay']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 ymf-bg">
                 <a href="/fund/recharge/ScanElectronic/onecodepay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img9.png"/>
                     <span class="pay-title prasinous-t-bg"><em>一码付</em></span>
@@ -92,17 +92,17 @@
             </div>
         </c:if>
         <c:if test="${map['counter']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 gtck-bg">
                 <a href="/fund/recharge/company/atmCounterFirst.html" nav-Target="mainFrame">
-                    <img src="${resRoot}/images/deposit-tab-img5.png"/>
+                    <img src="${resRoot}/images/deposit-tab-img11.png"/>
                     <span class="pay-title prasinous-t-bg"><em>${views.fund_auto['柜员机/柜台存款']}</em></span>
                 </a>
             </div>
         </c:if>
         <c:if test="${map['other']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 qtzf-bg">
                 <a href="/fund/recharge/ScanElectronic/other.html" nav-Target="mainFrame">
-                    <img src="${resRoot}/images/deposit-tab-img9.png"/>
+                    <img src="${resRoot}/images/deposit-tab-img14.png"/>
                     <span class="pay-title prasinous-t-bg"><em>其他支付</em></span>
                 </a>
             </div>
@@ -112,7 +112,7 @@
             <c:if test="${!fn:startsWith(url, 'http')}">
                 <c:set var="url" value="http://${rechargeUrlParam.paramValue}"/>
             </c:if>
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 szhb-bg">
                 <a href="<c:out value='${url}'/>" target="_blank">
                     <img src="${resRoot}/images/deposit-tab-img10.png"/>
                     <span class="pay-title prasinous-t-bg"><em>${views.fund_auto['充值中心']}</em></span>
@@ -120,7 +120,7 @@
             </div>
         </c:if>
         <c:if test="${map['bitcoin']>0}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 btb-bg">
                 <a href="/fund/recharge/company/bitCoinFirst.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img8.png">
                     <span class="pay-title yellow-t-bg"><em>${views.fund_auto['比特币支付']}</em></span>
@@ -128,7 +128,7 @@
             </div>
         </c:if>
         <c:if test="${!empty digiccyAccountInfo}">
-            <div class="deposit-tab01">
+            <div class="deposit-tab01 szhb-bg">
                 <a href="/fund/recharge/digiccy/digiccyPay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img12.png">
                     <span class="pay-title dark-green-t-bg"><em>${views.fund_auto['数字货币支付']}</em></span>

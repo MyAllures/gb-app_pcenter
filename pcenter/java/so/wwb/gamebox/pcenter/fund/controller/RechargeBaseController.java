@@ -48,6 +48,7 @@ import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
 import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
 import so.wwb.gamebox.model.master.enums.ActivityTypeEnum;
+import so.wwb.gamebox.model.master.enums.PayAccountType;
 import so.wwb.gamebox.model.master.enums.RankFeeType;
 import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
@@ -641,5 +642,65 @@ public abstract class RechargeBaseController {
 //        filterUnavailableSubAccount(userIdByUrl);
         message.addUserIds(userIdByUrl);
         ServiceTool.messageService().sendToMcenterMsg(message);
+    }
+
+    /**
+     * 存款确认弹窗显示信息内容
+     *
+     * @param playerRechargeVo
+     * @return
+     */
+    public Map<String, Object> companyRechargeConfirmInfo(PlayerRechargeVo playerRechargeVo) {
+        PlayerRank rank = getRank();
+        Double rechargeAmount = playerRechargeVo.getResult().getRechargeAmount();
+        double fee = calculateFee(rank, rechargeAmount);
+        Map<String, Object> map = new HashMap<>(7, 1f);
+        map.put("state", true);
+        map.put("fee", fee);
+        map.put("formatFee", CurrencyTool.formatCurrency(fee));
+        map.put("rechargeAmount", CurrencyTool.formatCurrency(rechargeAmount));
+        map.put("rechargeTotal", CurrencyTool.formatCurrency(rechargeAmount + fee));
+        map.put("isThird", true);
+        map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
+        return map;
+    }
+
+    /**
+     * 公共的公司入款存款提交方法
+     *
+     * @param playerRechargeVo
+     * @param result
+     * @param rechargeType
+     * @return
+     */
+    public Map<String, Object> commonCompanyRechargeSubmit(PlayerRechargeVo playerRechargeVo, BindingResult result, String rechargeType) {
+        if (result.hasErrors()) {
+            LOG.info("存款参数有误");
+            return getResultMsg(false, null, null);
+        }
+        PayAccount payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
+        if (payAccount == null || PayAccountType.ONLINE_ACCOUNT_CODE.equals(payAccount.getType())) {
+            LOG.info("收款账号有误");
+            return getResultMsg(false, null, null);
+        }
+        return companySaveRecharge(playerRechargeVo, payAccount, rechargeType);
+    }
+
+    /**
+     * 保存公司入款
+     *
+     * @param playerRechargeVo
+     * @param payAccount
+     * @param rechargeType
+     * @return
+     */
+    public Map<String, Object> companySaveRecharge(PlayerRechargeVo playerRechargeVo, PayAccount payAccount, String rechargeType) {
+        playerRechargeVo = saveRecharge(playerRechargeVo, payAccount, RechargeTypeParentEnum.COMPANY_DEPOSIT.getCode(), rechargeType);
+        if (playerRechargeVo.isSuccess()) {
+            tellerReminder(playerRechargeVo);
+            //设置session相关存款数据
+            setRechargeCount();
+        }
+        return getResultMsg(playerRechargeVo.isSuccess(), null, null);
     }
 }

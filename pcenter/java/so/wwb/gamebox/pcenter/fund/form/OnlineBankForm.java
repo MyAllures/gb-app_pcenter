@@ -23,7 +23,18 @@ import javax.validation.constraints.Pattern;
 public class OnlineBankForm implements IForm {
     private String result_rechargeAmount;
     private String result_payerName;
+    private String account;
     private String $code;
+
+    @Comment("收款账号")
+    @NotBlank
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
 
     @Comment("存款金额")
     @NotBlank(message = "fund.rechargeForm.rechargeAmountNotBlank")

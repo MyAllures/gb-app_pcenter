@@ -1,34 +1,28 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
 import org.soul.commons.collections.CollectionTool;
-import org.soul.commons.currency.CurrencyTool;
-import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
-import org.soul.model.comet.vo.MessageVo;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
-import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.DictEnum;
 import so.wwb.gamebox.model.SiteParamEnum;
-import so.wwb.gamebox.model.common.Const;
-import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
 import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
 import so.wwb.gamebox.model.master.dataRight.po.SysUserDataRight;
-import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
 import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightVo;
 import so.wwb.gamebox.model.master.enums.DepositWayEnum;
 import so.wwb.gamebox.model.master.enums.PayAccountAccountType;
@@ -91,6 +85,7 @@ public class CompanyRechargeController extends RechargeBaseController {
      * @return
      */
     @RequestMapping("/onlineBankFirst")
+    @Token(generate = true)
     public String onlineBankFirst(Model model, PlayerRechargeVo playerRechargeVo) {
         //玩家可用收款账号
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode(), null);
@@ -110,6 +105,11 @@ public class CompanyRechargeController extends RechargeBaseController {
         model.addAttribute("playerRechargeVo", playerRechargeVo);
         model.addAttribute("isRealName", isRealName());
         model.addAttribute("displayAccounts", display);
+        isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_ONLINE_BANKING);
+        //可用的网银转账链接
+        model.addAttribute("bankList", searchBank(BankEnum.TYPE_BANK.getCode()));
+        model.addAttribute("bankCode", "ebankpay");
+        model.addAttribute("customerService", getCustomerService());
         return ONLINE_BANK_FIRST;
     }
 
@@ -366,6 +366,22 @@ public class CompanyRechargeController extends RechargeBaseController {
         return ONLINE_BANK_THIRD;
     }
 
+    @RequestMapping("/onlineBankConfirm")
+    @ResponseBody
+    @Token(valid = true)
+    public Map<String, Object> onlineBankConfirm(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlineBankForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            LOG.info("玩家存款参数有误");
+            return getResultMsg(false, null, null);
+        }
+        PayAccount payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
+        if (payAccount == null || !PayAccountType.COMMPANY_ACCOUNT_CODE.equals(payAccount.getType())) {
+            LOG.info("玩家存款收款帐号有误");
+            return getResultMsg(false, null, null);
+        }
+        return companyRechargeConfirmInfo(playerRechargeVo);
+    }
+
     /**
      * 网银存款提交
      *
@@ -375,10 +391,12 @@ public class CompanyRechargeController extends RechargeBaseController {
      * @return
      */
     @RequestMapping("/onlineBankSubmit")
+    @ResponseBody
     @Token(valid = true)
-    public String onlineBankSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlineBankSecondForm form, BindingResult result) {
-        return companySubmit(playerRechargeVo, RechargeTypeEnum.ONLINE_BANK.getCode(), result);
+    public Map<String, Object> onlineBankSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlineBankForm form, BindingResult result) {
+        return commonCompanyRechargeSubmit(playerRechargeVo, result, RechargeTypeEnum.ONLINE_BANK.getCode());
     }
+
 
     @RequestMapping("/electronicPaySubmit")
     @Token(valid = true)

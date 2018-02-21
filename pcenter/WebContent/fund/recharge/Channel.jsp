@@ -58,7 +58,7 @@
                 </c:if>
                 <c:if test="${map['counter']>0}">
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1" href="/fund/recharge/company/atmCounterFirst.html" nav-Target="mainFrame" key="30"><i class="pay-third ebankpay"></i></a>
+                        <a role="menuitem" tabindex="-1" href="/fund/recharge/company/atmCounterFirst.html" nav-Target="mainFrame" key="30"><i class="pay-third gyjgt"></i></a>
                     </li>
                 </c:if>
                 <c:if test="${map['other']>0}">
@@ -73,7 +73,7 @@
                         <c:set var="url" value="http://${rechargeUrlParam.paramValue}"/>
                     </c:if>
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1"  href="<c:out value='${url}'/>" target="_blank" key="30"><i class="pay-third"></i></a>
+                        <a role="menuitem" tabindex="-1"  href="<c:out value='${url}'/>" target="_blank" key="30"><i class="pay-third quickpay"></i></a>
                     </li>
                 </c:if>
                 <c:if test="${map['bitcoin']>0}">
@@ -83,7 +83,7 @@
                 </c:if>
                 <c:if test="${!empty channelMap['digiccyAccountInfo']}">
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1" href="/fund/recharge/digiccy/digiccyPay.html" nav-Target="mainFrame" key="30"><i class="pay-third digiccy"></i></a>
+                        <a role="menuitem" tabindex="-1" href="/fund/recharge/digiccy/digiccyPay.html" nav-Target="mainFrame" key="30"><i class="pay-third szhb"></i></a>
                     </li>
                 </c:if>
             </ul>

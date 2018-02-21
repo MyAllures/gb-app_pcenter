@@ -91,18 +91,31 @@
                 </a>
             </div>
         </c:if>
-        <c:if test="${isFastRecharge}">
+        <c:if test="${map['counter']>0}">
             <div class="deposit-tab01">
-                <c:set var="url" value="${rechargeUrlParam.paramValue}"/>
-                <c:if test="${!fn:startsWith(url, 'http')}">
-                    <c:set var="url" value="http://${rechargeUrlParam.paramValue}"/>
-                </c:if>
+                <a href="/fund/recharge/company/atmCounterFirst.html" nav-Target="mainFrame">
+                    <img src="${resRoot}/images/deposit-tab-img5.png"/>
+                    <span class="pay-title prasinous-t-bg"><em>${views.fund_auto['柜员机/柜台存款']}</em></span>
+                </a>
+            </div>
+        </c:if>
+        <c:if test="${map['other']>0}">
+            <div class="deposit-tab01">
+                <a href="/fund/recharge/ScanElectronic/other.html" nav-Target="mainFrame">
+                    <img src="${resRoot}/images/deposit-tab-img9.png"/>
+                    <span class="pay-title prasinous-t-bg"><em>其他支付</em></span>
+                </a>
+            </div>
+        </c:if>
+        <c:if test="${isFastRecharge}">
+            <c:set var="url" value="${rechargeUrlParam.paramValue}"/>
+            <c:if test="${!fn:startsWith(url, 'http')}">
+                <c:set var="url" value="http://${rechargeUrlParam.paramValue}"/>
+            </c:if>
+            <div class="deposit-tab01">
                 <a href="<c:out value='${url}'/>" target="_blank">
-                    <img src="${resRoot}/images/deposit-tab-img10.png">
-                   <span class="pay-title">
-                       <em data-href="/fund/recharge/online/onlinePay.html" class="showPage" style="cursor: pointer;">${views.fund_auto['充值中心']}</em>
-                       <i data-href="/commonPage/help.html?pageNumber=1&pagingKey=hpdc&dataChildren=8" class="pay-title-tips" style="cursor: pointer;">${views.fund_auto['范例']}</i>
-                   </span>
+                    <img src="${resRoot}/images/deposit-tab-img10.png"/>
+                    <span class="pay-title prasinous-t-bg"><em>${views.fund_auto['充值中心']}</em></span>
                 </a>
             </div>
         </c:if>

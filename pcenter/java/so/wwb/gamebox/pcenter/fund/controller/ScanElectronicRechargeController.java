@@ -66,6 +66,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("scan", getScanAccount(rank, null, new String[]{PayAccountAccountType.WECHAT.getCode(), PayAccountAccountType.WECHAT_MICROPAY.getCode()}));
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.FAST_WECHAT.getCode(), RechargeTypeEnum.WECHATPAY_FAST.getCode()));
         commonPage(model, rank, RechargeTypeEnum.WECHATPAY_SCAN.getCode(), RechargeTypeEnum.WECHATPAY_FAST.getCode());
+        model.addAttribute("bankCode",BankCodeEnum.FAST_WECHAT.getCode());
         return "/fund/recharge/ScanElectronic";
     }
 
@@ -82,6 +83,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("scan", getScanAccount(rank, null, new String[]{PayAccountAccountType.ALIPAY.getCode(), PayAccountAccountType.ALIPAY_MICROPAY.getCode()}));
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.FAST_ALIPAY.getCode(), RechargeTypeEnum.ALIPAY_FAST.getCode()));
         commonPage(model, rank, RechargeTypeEnum.ALIPAY_SCAN.getCode(), RechargeTypeEnum.ALIPAY_FAST.getCode());
+        model.addAttribute("bankCode",BankCodeEnum.ALIPAY_MICROPAY.getCode());
         return SCAN_ELECTRONIC_URI;
     }
 
@@ -98,6 +100,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("scan", getScanAccount(rank, null, new String[]{PayAccountAccountType.QQWALLET.getCode(), PayAccountAccountType.QQ_MICROPAY.getCode()}));
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.QQWALLET.getCode(), RechargeTypeEnum.QQWALLET_FAST.getCode()));
         commonPage(model, rank, RechargeTypeEnum.QQWALLET_SCAN.getCode(), RechargeTypeEnum.QQWALLET_FAST.getCode());
+        model.addAttribute("bankCode",BankCodeEnum.QQWALLET.getCode());
         return SCAN_ELECTRONIC_URI;
     }
 
@@ -114,6 +117,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("scan", getScanAccount(rank, PayAccountAccountType.JD_PAY.getCode(), null));
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.JDWALLET.getCode(), RechargeTypeEnum.JDWALLET_FAST.getCode()));
         commonPage(model, rank, RechargeTypeEnum.JDPAY_SCAN.getCode(), RechargeTypeEnum.JDWALLET_FAST.getCode());
+        model.addAttribute("bankCode",BankCodeEnum.JDWALLET.getCode());
         return SCAN_ELECTRONIC_URI;
     }
 
@@ -130,6 +134,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("scan", getScanAccount(rank, PayAccountAccountType.BAIFU_PAY.getCode(), null));
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.BDWALLET.getCode(), RechargeTypeEnum.BDWALLET_FAST.getCode()));
         commonPage(model, rank, RechargeTypeEnum.BDWALLET_SAN.getCode(), RechargeTypeEnum.BDWALLET_FAST.getCode());
+        model.addAttribute("bankCode",BankCodeEnum.BDWALLET.getCode());
         return SCAN_ELECTRONIC_URI;
     }
 
@@ -145,6 +150,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         model.addAttribute("scan", getScanAccount(rank, PayAccountAccountType.UNION_PAY.getCode(), null));
         commonPage(model, rank, RechargeTypeEnum.UNION_PAY_SCAN.getCode(), null);
+        model.addAttribute("bankCode",BankCodeEnum.UNIONPAY.getCode());
         return SCAN_ELECTRONIC_URI;
     }
 
@@ -160,6 +166,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.ONECODEPAY.getCode(), RechargeTypeEnum.ONECODEPAY_FAST.getCode()));
         commonPage(model, rank, null, RechargeTypeEnum.ONECODEPAY_FAST.getCode());
+        model.addAttribute("bankCode",BankCodeEnum.ONECODEPAY.getCode());
         return SCAN_ELECTRONIC_URI;
     }
 
@@ -169,12 +176,13 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
      * @param model
      * @return
      */
-    @RequestMapping("/otherBank")
+    @RequestMapping("/other")
     @Token
-    public String otherBank(Model model) {
+    public String other(Model model) {
         PlayerRank rank = getRank();
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.OTHER.getCode(), RechargeTypeEnum.OTHER_FAST.getCode()));
         commonPage(model, rank, null, RechargeTypeEnum.OTHER_FAST.getCode());
+        model.addAttribute("bankCode",BankCodeEnum.OTHER.getCode());
         return SCAN_ELECTRONIC_URI;
     }
 

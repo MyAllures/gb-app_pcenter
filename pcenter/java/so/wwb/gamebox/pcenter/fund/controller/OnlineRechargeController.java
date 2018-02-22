@@ -2,15 +2,12 @@ package so.wwb.gamebox.pcenter.fund.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.soul.commons.data.json.JsonTool;
-import org.soul.commons.lang.string.RandomStringTool;
 import org.soul.commons.lang.string.StringTool;
-import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
 import org.soul.commons.net.ServletTool;
 import org.soul.commons.security.CryptoTool;
-import org.soul.model.comet.vo.MessageVo;
 import org.soul.model.pay.enums.CommonFieldsConst;
 import org.soul.model.pay.enums.PayApiTypeConst;
 import org.soul.model.pay.vo.OnlinePayVo;
@@ -25,27 +22,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.CacheBase;
-import so.wwb.gamebox.model.Module;
-import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.TerminalEnum;
-import so.wwb.gamebox.model.common.Const;
-import so.wwb.gamebox.model.common.MessageI18nConst;
-import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.sys.po.VSysSiteDomain;
-import so.wwb.gamebox.model.master.content.enums.PayAccountStatusEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
-import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
-import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
-import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
 import so.wwb.gamebox.model.master.enums.DepositWayEnum;
 import so.wwb.gamebox.model.master.enums.PayAccountAccountType;
 import so.wwb.gamebox.model.master.enums.PayAccountType;
 import so.wwb.gamebox.model.master.fund.enums.RechargeStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
-import so.wwb.gamebox.model.master.fund.enums.RechargeTypeParentEnum;
 import so.wwb.gamebox.model.master.fund.po.PlayerRecharge;
 import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
 import so.wwb.gamebox.model.master.operation.po.VActivityMessage;
@@ -59,7 +46,10 @@ import so.wwb.gamebox.web.common.token.Token;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cherry on 16-9-11.
@@ -112,6 +102,10 @@ public class OnlineRechargeController extends RechargeBaseController {
         model.addAttribute("realNameDialog", realNameDialog);
         model.addAttribute("rank", rank);
         model.addAttribute("command", payAccountListVo);
+        model.addAttribute("bankCode", "unionpay");
+        model.addAttribute("customerService", getCustomerService());
+        Double rechargeDecimals = Math.random() * 99 + 1;
+        model.addAttribute("rechargeDecimals", rechargeDecimals.intValue());
         return ONLINE_PAY;
     }
 

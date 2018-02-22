@@ -112,7 +112,7 @@
             <c:if test="${!fn:startsWith(url, 'http')}">
                 <c:set var="url" value="http://${rechargeUrlParam.paramValue}"/>
             </c:if>
-            <div class="deposit-tab01 szhb-bg">
+            <div class="deposit-tab01 czzx-bg">
                 <a href="<c:out value='${url}'/>" target="_blank">
                     <img src="${resRoot}/images/deposit-tab-img10.png"/>
                     <span class="pay-title prasinous-t-bg"><em>${views.fund_auto['充值中心']}</em></span>
@@ -130,7 +130,7 @@
         <c:if test="${!empty digiccyAccountInfo}">
             <div class="deposit-tab01 szhb-bg">
                 <a href="/fund/recharge/digiccy/digiccyPay.html" nav-Target="mainFrame">
-                    <img src="${resRoot}/images/deposit-tab-img12.png">
+                    <img src="${resRoot}/images/deposit-tab-img15.png">
                     <span class="pay-title dark-green-t-bg"><em>${views.fund_auto['数字货币支付']}</em></span>
                 </a>
             </div>

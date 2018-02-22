@@ -18,10 +18,7 @@
             <a href="javascript:;">${views.sysResource['存款专区']}</a>
         </div>
     </div>
-    <div class="deposit-info-warp  clearfix">
-        <div class="titleline pull-left"><h2>${views.fund_auto['在线支付']}</h2></div>
-        <a href="/fund/playerRecharge/recharge.html" class="btn-gray btn btn-big pull-right" nav-Target="mainFrame">${views.fund_auto['返回上一级']}</a>
-    </div>
+    <%@include file="Channel.jsp"%>
     <c:if test="${fn:length(payAccountMap)<=0}">
         <div class="account-list account-info-warp">
             <div class="left-ico-message">
@@ -38,28 +35,22 @@
                 <div class="bank-deposit">
                     <div class="bank-total">
                         <c:forEach items="${payAccountMap}" var="i" varStatus="vs">
+                            <c:set var="onlinePayMax" value="${i.value.singleDepositMax}"/>
+                            <c:set var="onlinePayMin" value="${i.value.singleDepositMin}"/>
+                            <c:set var="onlinePayMin" value="${empty onlinePayMin || onlinePayMin<=0?0.01:soulFn:formatCurrency(onlinePayMin)}"/>
+                            <c:set var="onlinePayMax" value="${empty onlinePayMax?'99,999,999':soulFn:formatCurrency(onlinePayMax)}"/>
+                            <c:set var="accountLimit" value="* 范围:${onlinePayMin} ~ ${onlinePayMax}"/>
+                            <c:set var="account" value="${command.getSearchId(i.value.id)}"/>
                             <c:if test="${vs.index==0}">
-                                <c:set var="onlinePayMax" value="${i.value.singleDepositMax}"/>
-                                <c:choose>
-                                    <c:when test="${empty i.value.singleDepositMin}">
-                                        <c:set var="onlinePayMin" value='1.00'/>
-                                    </c:when>
-                                    <c:when test="${i.value.singleDepositMin==0}">
-                                        <c:set var="onlinePayMin" value='0.01'/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:set var="onlinePayMin" value="${soulFn:formatCurrency(i.value.singleDepositMin)}"/>
-                                    </c:otherwise>
-                                </c:choose>
-                                <c:set var="payAccount" value="${command.getSearchId(i.value.id)}"/>
+                                <c:set var="firstAccountLimit" value="${accountLimit}"/>
+                                <c:set var="firstPayAccount" value="${i.value}"/>
+                                <c:set var="firstAccount" value="${account}"/>
                             </c:if>
                             <c:if test="${vs.index==16}"><div name="hideBank" style="display: none"></c:if>
                             <label class="bank ${vs.index==0?'select':''}">
-                                <span class="radio"><input name="result.payerBank" randomAmount="${i.value.randomAmount}" account="${command.getSearchId(i.value.id)}" value="${i.key}" type="radio" ${vs.index==0?'checked':''}></span>
+                                <span class="radio"><input name="result.payerBank" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" randomAmount="${i.value.randomAmount}" account="${account}" value="${i.key}" type="radio" ${vs.index==0?'checked':''}></span>
                                 <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-bank ${i.key}"></i></span>
                                 <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
-                                <input type="hidden" class="onlinePayMax" value="${empty i.value.singleDepositMax?'99,999,999.00':soulFn:formatCurrency(i.value.singleDepositMax)}"/>
-                                <input type="hidden" class="onlinePayMin" value="${empty i.value.singleDepositMin?'0.01':soulFn:formatCurrency(i.value.singleDepositMin)}"/>
                             </label>
                             <c:if test="${fn:length(payAccountMap)>16&&vs.index==(fn:length(payAccountMap)-1)}"></div></c:if>
                         </c:forEach>
@@ -86,36 +77,32 @@
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="result.rechargeAmount" autocomplete="off">${views.fund_auto['存款金额']}：</label>
-                        <div class="controls" style="width: 525px">
-                            <input type="text" class="input" name="result.rechargeAmount" id="result.rechargeAmount" autocomplete="off">
+                        <div class="controls">
+                            <input type="text" class="input" name="rechargeAmount" placeholder="${firstAccountLimit}">
+                            <input type="hidden" class="input" name="result.rechargeAmount" id="result.rechargeAmount">
+                            <input type="hidden" name="rechargeDecimals" value="${rechargeDecimals}"/>
+                            <span class="right-decimals" style="${firstPayAccount.randomAmount?'':'display:none'}" id="rechargeDecimals">.${rechargeDecimals}</span>
+                            <span tipsName="result.rechargeAmount-tips"></span>
                             <span class="fee"></span>
                         </div>
                     </div>
-
                     <%@include file="sale.jsp"%>
                     <%@include file="CaptchaCode.jsp"%>
                     <div class=" control-group">
                         <label class="control-label"></label>
-                        <input type="hidden" value="${payAccount}" name="account"/>
+                        <input type="hidden" value="${firstAccount}" name="account"/>
                         <soul:button target="submit" precall="validateForm" url="${root}/fund/recharge/online/onlineSubmit.html" backUrl="${root}/fund/recharge/online/onlinePay.html?realNameDialog=true" text="${views.fund_auto['立即存款']}" callback="back" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
                     </div>
-                    <div>
+                    <div class="applysale">
+                        <ul class="transfer-tips">
+                            <li>请尽可能选择同行办理转账，可快速到账。</li>
+                            <li>请保留好转账单据作为核对证明。</li>
+                            <li>如充值后未到账，请联系在线客服。
+                                <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
+                            </li>
+                        </ul>
                     </div>
                 </form>
-            </div>
-        </div>
-
-        <div class="account-list account-info-warp">
-            <div class="left-ico-message">
-                <span class="deposit-info-title">${views.fund_auto['注意事项']}<img src="${resRoot}/images/online-pay3.png"></span>
-                <ul class="attention-list">
-                    <li>1.${fn:replace(fn:replace(fn:replace(views.fund_auto['在线快速存储单笔限额范围'], "{0}",siteCurrency ), "{1}", onlinePayMin),"{2}" , empty onlinePayMax?'99,999,999.00':soulFn:formatCurrency(onlinePayMax))}
-                    </li>
-                    <!--随机额度提示-->
-                    <div name="randomAmountMsg">
-                    <li>2.${views.fund_auto['随机额度提示信息']}</li>
-                    </div>
-                </ul>
             </div>
         </div>
     </c:if>

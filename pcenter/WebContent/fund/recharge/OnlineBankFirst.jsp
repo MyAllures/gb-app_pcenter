@@ -7,8 +7,12 @@
 <!--网银存款步奏1-->
 <form>
     <div id="validateRule" style="display: none">${validateRule}</div>
-    <input type="hidden" name="onlinePayMin" value="${soulFn:formatCurrency(rank.onlinePayMin)}"/>
-    <input type="hidden" name="onlinePayMax" value="${soulFn:formatCurrency(rank.onlinePayMax)}"/>
+    <c:set var="onlinePayMax" value="${rank.onlinePayMax}"/>
+    <c:set var="onlinePayMin" value="${rank.onlinePayMin}"/>
+    <c:set var="onlinePayMin" value="${empty onlinePayMin || onlinePayMin<=0?0.01:soulFn:formatCurrency(onlinePayMin)}"/>
+    <c:set var="onlinePayMax" value="${empty onlinePayMax?'99,999,999':soulFn:formatCurrency(onlinePayMax)}"/>
+    <input type="hidden" name="onlinePayMin" value="${onlinePayMin}"/>
+    <input type="hidden" name="onlinePayMax" value="${onlinePayMax}"/>
     <input type="hidden" name="isRealName" value="${isRealName}"/>
     <input type="hidden" name="displayFee" value="${rank.isFee || rank.isReturnFee}"/>
     <a href="javascript:;" name="realNameDialog" style="display: none"></a>
@@ -150,8 +154,8 @@
                 <span class="deposit-info-title">${views.fund_auto['步骤3']}<img src="${resRoot}/images/online-pay2.png"></span>
                 <div class="control-group">
                     <label class="control-label" for="result.rechargeAmount">${views.fund_auto['存款金额']}：</label>
-                    <div class="controls " style="width: 525px">
-                        <input type="text" value="${playerRechargeVo.result.rechargeAmount}" class="input" name="result.rechargeAmount" id="result.rechargeAmount" autocomplete="off">
+                    <div class="controls">
+                        <input type="text" value="${playerRechargeVo.result.rechargeAmount}" class="input" placeholder="* 范围:${onlinePayMin} ~ ${onlinePayMax}" name="result.rechargeAmount" id="result.rechargeAmount" autocomplete="off">
                         <span class="fee"></span>
                     </div>
                 </div>

@@ -20,12 +20,22 @@ import javax.validation.constraints.Pattern;
 @Comment("柜员机/柜台存款")
 public class AtmCounterForm implements IForm {
     private String result_rechargeAmount;
-    private String result_payerBank;
-    private String result_payAccountId;
+    private String result_rechargeType;
+    private String account;
     private String $code;
 
+    @Comment("收款账号")
+    @NotBlank
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
     @Comment("存款金额")
-    @NotBlank(message = "fund.rechargeForm.rechargeAmountNotBlank")
+    @NotBlank
     @Pattern(message = "fund.rechargeForm.rechargeAmountCorrect", regexp = FormValidRegExps.MONEY)
     @Remote(message = "fund.rechargeForm.rechargeAmountOver", checkClass = CompanyRechargeController.class, checkMethod = "checkAmount", additionalProperties = {"result.payerBank"}, jsValueExp = {"$(\"[name='result.payerBank']:checked\").val()"})
     @Max(message = "fund.rechargeForm.rechargeAmountMax", value = 99999999)
@@ -38,14 +48,14 @@ public class AtmCounterForm implements IForm {
         this.result_rechargeAmount = result_rechargeAmount;
     }
 
-    @Comment("存入银行")
-    @NotBlank(message = "fund.rechargeForm.payerBankNotBlank")
-    public String getResult_payerBank() {
-        return result_payerBank;
+    @Comment("存款方式")
+    @NotBlank
+    public String getResult_rechargeType() {
+        return result_rechargeType;
     }
 
-    public void setResult_payerBank(String result_payerBank) {
-        this.result_payerBank = result_payerBank;
+    public void setResult_rechargeType(String result_rechargeType) {
+        this.result_rechargeType = result_rechargeType;
     }
 
     @Comment("验证码")
@@ -57,15 +67,5 @@ public class AtmCounterForm implements IForm {
 
     public void set$code(String $code) {
         this.$code = $code;
-    }
-
-    @Comment("尾号")
-    @NotBlank(message = "fund.rechargeForm.payAccountIdSelect")
-    public String getResult_payAccountId() {
-        return result_payAccountId;
-    }
-
-    public void setResult_payAccountId(String result_payAccountId) {
-        this.result_payAccountId = result_payAccountId;
     }
 }

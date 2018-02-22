@@ -11,7 +11,6 @@ import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +20,7 @@ import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
+import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
 import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
 import so.wwb.gamebox.model.master.dataRight.po.SysUserDataRight;
 import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightVo;
@@ -38,7 +38,6 @@ import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
 import so.wwb.gamebox.pcenter.fund.form.*;
 import so.wwb.gamebox.pcenter.session.SessionManager;
-import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.token.Token;
 
 import javax.servlet.http.HttpServletRequest;
@@ -111,37 +110,6 @@ public class CompanyRechargeController extends RechargeBaseController {
         model.addAttribute("bankCode", "ebankpay");
         model.addAttribute("customerService", getCustomerService());
         return ONLINE_BANK_FIRST;
-    }
-
-    /**
-     * 网银存款步奏2-生成存款金额
-     *
-     * @param playerRechargeVo
-     * @param form
-     * @param result
-     * @param model
-     * @return
-     */
-    @RequestMapping("/onlineBankSecond")
-    public String onlineBankSecond(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlineBankForm form, BindingResult result, Model model) {
-        boolean flag = rechargePre(result, form.get$code());
-        if (!flag) {
-            return null;
-        }
-        //获取收款账号
-        PayAccount payAccount = getPayAccount(playerRechargeVo.getResult().getPayAccountId());
-        model.addAttribute("payAccount", payAccount);
-        //是否隐藏收款账号
-        isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_ONLINE_BANKING);
-        model.addAttribute("bank", Cache.getBank().get(payAccount.getBankCode()));
-        //可用的网银转账链接
-        model.addAttribute("bankList", searchBank(BankEnum.TYPE_BANK.getCode()));
-        //生成存款金额
-        playerRechargeVo.getResult().setRechargeAmount(generalAmount(playerRechargeVo.getResult().getRechargeAmount()));
-        playerRechargeVo.getResult().setRechargeType(RechargeTypeEnum.ONLINE_BANK.getCode());
-        model.addAttribute("playerRechargeVo", playerRechargeVo);
-        model.addAttribute("validateRule", JsRuleCreator.create(OnlineBankSecondForm.class));
-        return ONLINE_BANK_SECOND;
     }
 
     /**
@@ -291,61 +259,53 @@ public class CompanyRechargeController extends RechargeBaseController {
      * @return
      */
     @RequestMapping("/atmCounterFirst")
+    @Token(generate = true)
     public String atmCountFirst(Model model) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.BANKACCOUNT.getCode(), true);
-        Map<String, List<PayAccount>> payAccountMap = new HashMap<>();
-        String bankCode;
-        String otherBank = BankCodeEnum.OTHER_BANK.getCode();
-        //其他银行在atm存款不能全部归属于其他银行，否则下拉框选择无法判定
-        for (PayAccount payAccount : payAccounts) {
-            bankCode = payAccount.getBankCode();
-            if (otherBank.equals(bankCode)) {
-                if (payAccountMap.get(payAccount.getCustomBankName()) == null) {
-                    payAccountMap.put(payAccount.getCustomBankName(), new ArrayList<PayAccount>());
-                }
-                payAccountMap.get(payAccount.getCustomBankName()).add(payAccount);
-            } else {
-                if (payAccountMap.get(bankCode) == null) {
-                    payAccountMap.put(bankCode, new ArrayList<PayAccount>());
-                }
-                payAccountMap.get(bankCode).add(payAccount);
-            }
+        PlayerRank rank = getRank();
+        boolean display = rank != null && rank.getDisplayCompanyAccount() != null && rank.getDisplayCompanyAccount();
+        //获取公司入款收款账号
+        if (!display) {
+            model.addAttribute("accounts", getCompanyPayAccount(payAccounts));
+        } else {
+            model.addAttribute("accounts", getCompanyPayAccounts(payAccounts));
         }
-        CollectionTool.groupByProperty(payAccounts, PayAccount.PROP_BANK_CODE, String.class);
-        model.addAttribute("payAccountMap", payAccountMap);
-        model.addAttribute("rank", getRank());
+        model.addAttribute("rank", rank);
         model.addAttribute("currency", getCurrencySign());
         model.addAttribute("sales", searchSales(DepositWayEnum.COMPANY_DEPOSIT.getCode()));
+        model.addAttribute("displayAccounts", display);
         //验证规则
         model.addAttribute("validateRule", JsRuleCreator.create(AtmCounterForm.class));
         model.addAttribute("isRealName", isRealName());
+        model.addAttribute("bankCode", "gyjgt");
+        model.addAttribute("customerService", getCustomerService());
+        model.addAttribute("userName", SessionManager.getUserName());
+        model.addAttribute("payAccountVo", new PayAccountVo());
         return ATM_COUNTER_FIRST;
     }
 
     /**
-     * 柜员机/柜台存款步奏2-生成存款金额
+     * 确认柜员机/柜台存款
      *
-     * @param model
      * @param playerRechargeVo
+     * @param form
+     * @param result
      * @return
      */
-    @RequestMapping("/atmCounterSecond")
-    public String atmCounterSecond(Model model, PlayerRechargeVo playerRechargeVo, HttpServletRequest request, @FormModel @Valid AtmCounterForm form, BindingResult result) {
-        boolean flag = rechargePre(result, form.get$code());
-        if (!flag) {
-            return null;
+    @RequestMapping("/atmCounterConfirm")
+    @ResponseBody
+    @Token(valid = true)
+    public Map<String, Object> atmCounterConfirm(PlayerRechargeVo playerRechargeVo, @FormModel @Valid AtmCounterForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            LOG.info("玩家存款参数有误");
+            return getResultMsg(false, null, null);
         }
-        //是否隐藏账号
-        isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_ATM_COUNTER);
-        //柜员现金无需生成小数点金额
-        if (!RechargeTypeEnum.ATM_MONEY.getCode().equals(playerRechargeVo.getResult().getRechargeType())) {
-            playerRechargeVo.getResult().setRechargeAmount(generalAmount(playerRechargeVo.getResult().getRechargeAmount()));
+        PayAccount payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
+        if (payAccount == null || !PayAccountType.COMMPANY_ACCOUNT_CODE.equals(payAccount.getType())) {
+            LOG.info("玩家存款收款帐号有误");
+            return getResultMsg(false, null, null);
         }
-        model.addAttribute("playerRechargeVo", playerRechargeVo);
-        model.addAttribute("payAccount", getPayAccount(playerRechargeVo.getResult().getPayAccountId()));
-        //验证规则
-        model.addAttribute("validateRule", JsRuleCreator.create(AtmCounterSecondForm.class));
-        return ATM_COUNTER_SECOND;
+        return companyRechargeConfirmInfo(playerRechargeVo);
     }
 
     /**
@@ -435,9 +395,14 @@ public class CompanyRechargeController extends RechargeBaseController {
      * @return
      */
     @RequestMapping("atmCounterSubmit")
+    @ResponseBody
     @Token(valid = true)
-    public String atmCounterSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid AtmCounterSecondForm form, BindingResult result) {
-        return companySubmit(playerRechargeVo, playerRechargeVo.getResult().getRechargeType(), result);
+    public Map<String, Object> atmCounterSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid AtmCounterForm form, BindingResult result) {
+        String rechargeType = playerRechargeVo.getResult().getRechargeType();
+        if (!RechargeTypeEnum.ATM_COUNTER.getCode().equals(rechargeType) && !RechargeTypeEnum.ATM_MONEY.getCode().equals(rechargeType) && !RechargeTypeEnum.ATM_RECHARGE.getCode().equals(rechargeType)) {
+            rechargeType = RechargeTypeEnum.ATM_COUNTER.getCode();
+        }
+        return commonCompanyRechargeSubmit(playerRechargeVo, result, rechargeType);
     }
 
     /**

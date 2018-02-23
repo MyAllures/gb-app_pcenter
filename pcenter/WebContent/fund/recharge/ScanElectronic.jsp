@@ -89,7 +89,7 @@
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
                         <c:set var="name" value="${account.aliasName}"/>
-                        <span class="radio"><input name="account" type="radio" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
+                        <span class="radio"><input name="account" type="radio" qrCodeUrl="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${account.bankCode}"></i>
                             <font class="diy-pay-title">${name}</font>
@@ -149,13 +149,15 @@
                     </c:if>
                 </div>
             </div>
-            <div class="pull-left" style="${!empty firstPayAccount.qrCodeUrl?'':'display:none'}">
+            <c:if test="${!isHide}">
+                <div id="qrCodeUrl" class="pull-left" style="${!empty firstPayAccount.qrCodeUrl?'':'display:none'}">
                 <span class="two-dimension">
                     <img src="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}" style="width: 176px;height: 176px;"/>
                     <em><img src="${resRoot}/images/two-dimension-ico.png" class="pull-left"/>${thirdBankName}${views.fund_auto['扫一扫付款']}</em>
                 </span>
-                <span><img src="${resRoot}/images/two-dimension123.png"></span>
-            </div>
+                    <span><img src="${resRoot}/images/two-dimension123.png"></span>
+                </div>
+            </c:if>
         </div>
     </div>
 </c:if>

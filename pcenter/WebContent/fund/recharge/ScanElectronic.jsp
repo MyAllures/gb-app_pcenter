@@ -27,7 +27,7 @@
 <div class="account-list account-info-warp">
     <div class="left-ico-message">
         <h4>选择支付方式：</h4>
-        <span class="deposit-info-title">步骤1<img src="${resRoot}/images/online-pay1.png"></span>
+        <span class="deposit-info-title">${views.fund_auto['步骤1']}<img src="${resRoot}/images/online-pay1.png"></span>
         <div class="bank-deposit">
             <div class="bank-total">
                 <c:set var="index" value="0"/>
@@ -108,7 +108,7 @@
     <div name="electronicElement" class="account-list account-info-warp" style="${firstPayAccount.type eq '1'?'':'display:none'}">
         <div class="left-ico-message clearfix">
             <h4>请用${thirdBankName}存款至以下帐户：</h4>
-            <span class="deposit-info-title">步骤2<img src="${resRoot}/images/online-pay2.png"></span>
+            <span class="deposit-info-title">${views.fund_auto['步骤2']}<img src="${resRoot}/images/online-pay2.png"></span>
             <div class="left-warp">
                 <div class="bank-paidtotal">
                     <ul>
@@ -165,7 +165,7 @@
         <h4>请填写存款金额：</h4>
         <span class="deposit-info-title">步骤<span id="step">${firstPayAccount.type eq '1'?'3':'2'}</span><img src="${resRoot}/images/online-pay2.png"></span>
         <div class="control-group" name="scanElement" style="${firstPayAccount.type eq '1'?'display:none':''}">
-            <label class="control-label">存款帐号：</label>
+            <label class="control-label">${views.fund_auto['存款账号']}：</label>
             <div class="controls">${username}</div>
         </div>
         <c:if test="${thirdBankCode eq 'alipay'}">

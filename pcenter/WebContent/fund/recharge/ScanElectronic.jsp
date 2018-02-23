@@ -151,7 +151,7 @@
             </div>
             <div class="pull-left" style="${!empty firstPayAccount.qrCodeUrl?'':'display:none'}">
                 <span class="two-dimension">
-                    <img src="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}"/>
+                    <img src="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}" style="width: 176px;height: 176px;"/>
                     <em><img src="${resRoot}/images/two-dimension-ico.png" class="pull-left"/>${thirdBankName}${views.fund_auto['扫一扫付款']}</em>
                 </span>
                 <span><img src="${resRoot}/images/two-dimension123.png"></span>

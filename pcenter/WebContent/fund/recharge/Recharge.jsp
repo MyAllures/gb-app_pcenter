@@ -39,7 +39,7 @@
             <div class="deposit-tab01 wxzf-bg">
                 <a href="/fund/recharge/ScanElectronic/wechatpay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img3.png">
-                    <span class="pay-title green-t-bg"><em>微信支付</em></span>
+                    <span class="pay-title green-t-bg"><em>微信付款</em></span>
                 </a>
             </div>
         </c:if>
@@ -47,7 +47,7 @@
             <div class="deposit-tab01 zfb-bg">
                 <a href="/fund/recharge/ScanElectronic/alipay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img4.png"/>
-                    <span class="pay-title"><em>支付宝支付</em></span>
+                    <span class="pay-title"><em>支付宝付款</em></span>
                 </a>
             </div>
         </c:if>
@@ -55,7 +55,7 @@
             <div class="deposit-tab01 qqzf-bg">
                 <a href="/fund/ronlinebecharge/ScanElectronic/qq.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img7.png">
-                    <span class="pay-title"><em>QQ支付</em></span>
+                    <span class="pay-title"><em>QQ钱包</em></span>
                 </a>
             </div>
         </c:if>
@@ -63,7 +63,7 @@
             <div class="deposit-tab01 jdzf-bg">
                 <a href="/fund/recharge/ScanElectronic/jd.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img5.png"/>
-                    <span class="pay-title"><em>京东支付</em></span>
+                    <span class="pay-title"><em>京东钱包</em></span>
                 </a>
             </div>
         </c:if>
@@ -71,7 +71,7 @@
             <div class="deposit-tab01 bdzf-bg">
                 <a href="/fund/recharge/ScanElectronic/bd.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img6.png"/>
-                    <span class="pay-title"><em>百度支付</em></span>
+                    <span class="pay-title"><em>百度钱包</em></span>
                 </a>
             </div>
         </c:if>
@@ -79,7 +79,7 @@
             <div class="deposit-tab01 ylzf-bg">
                 <a href="/fund/recharge/ScanElectronic/union.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img13.png"/>
-                    <span class="pay-title"><em>银联支付</em></span>
+                    <span class="pay-title"><em>银联扫码</em></span>
                 </a>
             </div>
         </c:if>

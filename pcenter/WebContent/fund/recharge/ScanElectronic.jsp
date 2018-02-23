@@ -27,7 +27,7 @@
 <div class="account-list account-info-warp">
     <div class="left-ico-message">
         <h4>选择支付方式：</h4>
-        <span class="deposit-info-title">步骤1<img src="${resRoot}/images/online-pay1.png"></span>
+        <span class="deposit-info-title">${views.fund_auto['步骤1']}<img src="${resRoot}/images/online-pay1.png"></span>
         <div class="bank-deposit">
             <div class="bank-total">
                 <c:set var="index" value="0"/>
@@ -89,7 +89,7 @@
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
                         <c:set var="name" value="${account.aliasName}"/>
-                        <span class="radio"><input name="account" type="radio" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
+                        <span class="radio"><input name="account" type="radio" qrCodeUrl="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${account.bankCode}"></i>
                             <font class="diy-pay-title">${name}</font>
@@ -108,7 +108,7 @@
     <div name="electronicElement" class="account-list account-info-warp" style="${firstPayAccount.type eq '1'?'':'display:none'}">
         <div class="left-ico-message clearfix">
             <h4>请用${thirdBankName}存款至以下帐户：</h4>
-            <span class="deposit-info-title">步骤2<img src="${resRoot}/images/online-pay2.png"></span>
+            <span class="deposit-info-title">${views.fund_auto['步骤2']}<img src="${resRoot}/images/online-pay2.png"></span>
             <div class="left-warp">
                 <div class="bank-paidtotal">
                     <ul>
@@ -149,13 +149,15 @@
                     </c:if>
                 </div>
             </div>
-            <div class="pull-left" style="${!empty firstPayAccount.qrCodeUrl?'':'display:none'}">
+            <c:if test="${!isHide}">
+                <div id="qrCodeUrl" class="pull-left" style="${!empty firstPayAccount.qrCodeUrl?'':'display:none'}">
                 <span class="two-dimension">
-                    <img src="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}"/>
+                    <img src="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}" style="width: 176px;height: 176px;"/>
                     <em><img src="${resRoot}/images/two-dimension-ico.png" class="pull-left"/>${thirdBankName}${views.fund_auto['扫一扫付款']}</em>
                 </span>
-                <span><img src="${resRoot}/images/two-dimension123.png"></span>
-            </div>
+                    <span><img src="${resRoot}/images/two-dimension123.png"></span>
+                </div>
+            </c:if>
         </div>
     </div>
 </c:if>
@@ -165,7 +167,7 @@
         <h4>请填写存款金额：</h4>
         <span class="deposit-info-title">步骤<span id="step">${firstPayAccount.type eq '1'?'3':'2'}</span><img src="${resRoot}/images/online-pay2.png"></span>
         <div class="control-group" name="scanElement" style="${firstPayAccount.type eq '1'?'display:none':''}">
-            <label class="control-label">存款帐号：</label>
+            <label class="control-label">${views.fund_auto['存款账号']}：</label>
             <div class="controls">${username}</div>
         </div>
         <c:if test="${thirdBankCode eq 'alipay'}">

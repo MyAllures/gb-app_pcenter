@@ -75,11 +75,11 @@
                 </a>
             </div>
         </c:if>
-        <c:if test="${map['unionpay']>0}">
-            <div class="deposit-tab01 ylzf-bg">
-                <a href="/fund/recharge/ScanElectronic/union.html" nav-Target="mainFrame">
-                    <img src="${resRoot}/images/deposit-tab-img13.png"/>
-                    <span class="pay-title"><em>银联扫码</em></span>
+        <c:if test="${map['bitcoin']>0}">
+            <div class="deposit-tab01 btb-bg">
+                <a href="/fund/recharge/company/bitCoinFirst.html" nav-Target="mainFrame">
+                    <img src="${resRoot}/images/deposit-tab-img8.png">
+                    <span class="pay-title yellow-t-bg"><em>${views.fund_auto['比特币支付']}</em></span>
                 </a>
             </div>
         </c:if>
@@ -88,6 +88,26 @@
                 <a href="/fund/recharge/ScanElectronic/onecodepay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img9.png"/>
                     <span class="pay-title prasinous-t-bg"><em>一码付</em></span>
+                </a>
+            </div>
+        </c:if>
+        <c:if test="${map['unionpay']>0}">
+            <div class="deposit-tab01 ylzf-bg">
+                <a href="/fund/recharge/ScanElectronic/union.html" nav-Target="mainFrame">
+                    <img src="${resRoot}/images/deposit-tab-img13.png"/>
+                    <span class="pay-title"><em>银联扫码</em></span>
+                </a>
+            </div>
+        </c:if>
+        <c:if test="${isFastRecharge}">
+            <c:set var="url" value="${rechargeUrlParam.paramValue}"/>
+            <c:if test="${!fn:startsWith(url, 'http')}">
+                <c:set var="url" value="http://${rechargeUrlParam.paramValue}"/>
+            </c:if>
+            <div class="deposit-tab01 czzx-bg">
+                <a href="<c:out value='${url}'/>" target="_blank">
+                    <img src="${resRoot}/images/deposit-tab-img10.png"/>
+                    <span class="pay-title prasinous-t-bg"><em>${views.fund_auto['充值中心']}</em></span>
                 </a>
             </div>
         </c:if>
@@ -104,26 +124,6 @@
                 <a href="/fund/recharge/ScanElectronic/other.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img14.png"/>
                     <span class="pay-title prasinous-t-bg"><em>其他支付</em></span>
-                </a>
-            </div>
-        </c:if>
-        <c:if test="${isFastRecharge}">
-            <c:set var="url" value="${rechargeUrlParam.paramValue}"/>
-            <c:if test="${!fn:startsWith(url, 'http')}">
-                <c:set var="url" value="http://${rechargeUrlParam.paramValue}"/>
-            </c:if>
-            <div class="deposit-tab01 czzx-bg">
-                <a href="<c:out value='${url}'/>" target="_blank">
-                    <img src="${resRoot}/images/deposit-tab-img10.png"/>
-                    <span class="pay-title prasinous-t-bg"><em>${views.fund_auto['充值中心']}</em></span>
-                </a>
-            </div>
-        </c:if>
-        <c:if test="${map['bitcoin']>0}">
-            <div class="deposit-tab01 btb-bg">
-                <a href="/fund/recharge/company/bitCoinFirst.html" nav-Target="mainFrame">
-                    <img src="${resRoot}/images/deposit-tab-img8.png">
-                    <span class="pay-title yellow-t-bg"><em>${views.fund_auto['比特币支付']}</em></span>
                 </a>
             </div>
         </c:if>

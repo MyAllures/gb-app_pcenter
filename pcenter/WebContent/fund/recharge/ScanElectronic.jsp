@@ -82,6 +82,10 @@
                         <c:set var="thirdBankName" value="${dicts.common.bankname[account.bankCode]}"/>
                         <c:set var="thirdBankCode" value="${account.bankCode}"/>
                     </c:if>
+                    <c:set var="name" value="  ${thirdBankName}"/>
+                    <c:if test="${account.bankCode == 'other'}">
+                        <c:set var="name" value="  ${i.customBankName}"/>
+                    </c:if>
                     <c:set var="onlinePayMax" value="${rank.onlinePayMax}"/>
                     <c:set var="onlinePayMin" value="${rank.onlinePayMin}"/>
                     <c:set var="onlinePayMin" value="${empty onlinePayMin || onlinePayMin<=0?0.01:soulFn:formatCurrency(onlinePayMin)}"/>

@@ -84,7 +84,7 @@
                     </c:if>
                     <c:set var="name" value="  ${thirdBankName}"/>
                     <c:if test="${account.bankCode == 'other'}">
-                        <c:set var="name" value="  ${i.customBankName}"/>
+                        <c:set var="name" value="  ${account.customBankName}"/>
                     </c:if>
                     <c:set var="onlinePayMax" value="${rank.onlinePayMax}"/>
                     <c:set var="onlinePayMin" value="${rank.onlinePayMin}"/>

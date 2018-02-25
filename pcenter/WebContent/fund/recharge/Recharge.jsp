@@ -53,7 +53,7 @@
         </c:if>
         <c:if test="${map['qq']>0}">
             <div class="deposit-tab01 qqzf-bg">
-                <a href="/fund/ronlinebecharge/ScanElectronic/qq.html" nav-Target="mainFrame">
+                <a href="/fund/recharge/ScanElectronic/qq.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img7.png">
                     <span class="pay-title"><em>QQ钱包</em></span>
                 </a>

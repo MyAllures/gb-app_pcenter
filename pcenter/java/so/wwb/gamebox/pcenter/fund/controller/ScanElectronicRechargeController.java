@@ -173,7 +173,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
      * @return
      */
     @RequestMapping("/other")
-    @Token
+    @Token(generate = true)
     public String other(Model model) {
         PlayerRank rank = getRank();
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.OTHER.getCode(), RechargeTypeEnum.OTHER_FAST.getCode()));

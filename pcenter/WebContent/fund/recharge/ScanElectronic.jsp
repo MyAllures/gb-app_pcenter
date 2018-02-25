@@ -89,7 +89,7 @@
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
                         <c:set var="name" value="${account.aliasName}"/>
-                        <span class="radio"><input name="account" type="radio" qrCodeUrl="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
+                        <span class="radio"><input name="account" type="radio" qrCodeUrl="${empty account.qrCodeUrl?'':soulFn:getThumbPath(domain,account.qrCodeUrl,176,176)}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${account.bankCode}"></i>
                             <font class="diy-pay-title">${name}</font>
@@ -126,14 +126,14 @@
                                     </c:when>
                                     <c:otherwise>
                                         <span class="orange paidname select" data-clipboard-target="bankNum" data-clipboard-text="" name="copy">
-                                            <em class="bank-number" ${thirdBankCode eq 'onecodepay'?'id="bankNum"':''}>${thirdBankCode eq 'onecodepay'?'不显示':firstPayAccount.account}</em>
+                                            <em class="bank-number" ${thirdBankCode != 'onecodepay'?'id="bankNum"':''}>${thirdBankCode eq 'onecodepay'?'不显示':firstPayAccount.account}</em>
                                             <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
                                         </span>
                                     </c:otherwise>
                                 </c:choose>
                                  <span class="paidname select" data-clipboard-target="bankName" data-clipboard-text="" name="copy">
                                     <em class="gray">${views.fund_auto['姓名']}：</em>
-                                    <em class="gathering-name" ${thirdBankCode eq 'onecodepay'?'id="bankName"':''}>${thirdBankCode eq 'onecodepay'?'不显示':firstPayAccount.fullName}</em>
+                                    <em class="gathering-name" ${thirdBankCode != 'onecodepay'?'id="bankName"':''}>${thirdBankCode eq 'onecodepay'?'不显示':firstPayAccount.fullName}</em>
                                     <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
                                 </span>
                             </div>

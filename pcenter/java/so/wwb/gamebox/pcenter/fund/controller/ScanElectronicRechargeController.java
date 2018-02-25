@@ -394,6 +394,8 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
             rechargeType = RechargeTypeEnum.BDWALLET_FAST.getCode();
         } else if (BankCodeEnum.ONECODEPAY.getCode().equals(bankCode)) {
             rechargeType = RechargeTypeEnum.ONECODEPAY_FAST.getCode();
+        } else if (BankCodeEnum.OTHER.getCode().equals(bankCode)) {
+            rechargeType = RechargeTypeEnum.OTHER_FAST.getCode();
         }
         return companySaveRecharge(playerRechargeVo, payAccount, rechargeType);
     }

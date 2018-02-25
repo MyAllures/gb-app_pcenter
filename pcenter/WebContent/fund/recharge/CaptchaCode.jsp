@@ -9,7 +9,7 @@
             <input type="hidden" name="rechargeCount" value="${rechargeCount}"/>
             <input type="text" name="code" class="input" showSuccMsg="false"/>
             <img class="captcha-code" src="${root}/captcha/recharge.html?t=${random}" reloadable>
-            <span name="codeTitle"></span>
+            <span tipsName="code-tips"></span>
         </div>
     </div>
 </c:if>

@@ -53,6 +53,10 @@
                             <c:set var="name" value="${dicts.content.account_type[accountType]}"/>
                             <c:set var="thirdAccountType" value="${name}"/>
                         </c:when>
+                        <c:otherwise>
+                            <c:set var="key" value="recharge.scanElectronic.accountType.${accountType}"/>
+                            <c:set var="name" value="${views.fund[key]}"/>
+                        </c:otherwise>
                     </c:choose>
                     <c:set var="onlinePayMax" value="${account.singleDepositMax}"/>
                     <c:set var="onlinePayMin" value="${account.singleDepositMin}"/>

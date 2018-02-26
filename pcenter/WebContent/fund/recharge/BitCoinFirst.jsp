@@ -1,10 +1,12 @@
 <%--@elvariable id="payAccountList" type="java.util.List<so.wwb.gamebox.model.master.content.po.PayAccount>"--%>
 <%--@elvariable id="rank" type="so.wwb.gamebox.model.master.player.po.PlayerRank"--%>
+<%--@elvariable id="command" type="so.wwb.gamebox.model.master.content.vo.PayAccountVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
 <!--电子支付平台-->
 <form>
     <input type="hidden" name="isRealName" value="${isRealName}"/>
+    <gb:token/>
     <a href="javascript:;" name="realNameDialog" style="display: none"></a>
     <div class="notice">
         <div class="notice-left"><em class="path"></em></div>
@@ -30,7 +32,7 @@
                     <div class="bank-total">
                         <c:forEach items="${payAccountList}" varStatus="vs" var="i">
                             <label class="bank ${vs.index==0?'select':''}">
-                                <span class="radio"><input name="result.payAccountId" value="${i.id}" type="radio" ${vs.index==0?'checked':''}></span>
+                                <span class="radio"><input name="account" value="${command.getSearchId(i.id)}" account="${i.account}" type="radio" ${vs.index==0?'checked':''}></span>
                                 <span class="radio-bank" title="${dicts.common.bankname[i.bankCode]}"><i class="pay-third ${i.bankCode}"></i></span>
                                 <span class="bank-logo-name">${dicts.common.bankname[i.bankCode]}</span>
                             </label>
@@ -42,7 +44,7 @@
         </div>
         <div class="account-list account-info-warp">
             <c:forEach items="${payAccountList}" varStatus="vs" var="i">
-                <div class="left-ico-message clearfix accountMap" id="payAccount${i.id}" style="${vs.index==0?'':'display:none'}">
+                <div class="left-ico-message clearfix accountMap" id="payAccount${i.account}" style="${vs.index==0?'':'display:none'}">
                     <h4>${fn:replace(views.fund_auto['请存款至以下账户'], "{0}",dicts.common.bankname[i.bankCode])}：</h4>
                     <span class="deposit-info-title">${views.fund_auto['步骤2']}<img src="${resRoot}/images/online-pay2.png"></span>
                     <div class="left-warp">
@@ -136,12 +138,14 @@
                 <%@include file="CaptchaCode.jsp" %>
                 <div class=" control-group">
                     <label class="control-label"></label>
-                    <soul:button target="confirm" precall="validateForm" text="${views.fund_auto['提交申请']}" opType="function" cssClass="btn-blue btn large-big _submit"/>
+                    <soul:button target="submit" precall="validateForm" text="${views.fund_auto['提交申请']}" opType="function" cssClass="btn-blue btn large-big _submit"/>
                 </div>
             </div>
         </div>
+        <%@include file="CompanyRechargeDialog.jsp"%>
     </c:if>
 </form>
+
 <script type="text/javascript">
     curl(['site/fund/recharge/BitCoinFirst'], function(Page) {
         page = new Page();

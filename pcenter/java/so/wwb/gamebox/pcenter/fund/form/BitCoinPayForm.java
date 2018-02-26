@@ -23,6 +23,7 @@ public class BitCoinPayForm implements IForm {
     private String result_bitAmount;
     private String $code;
     private String result_returnTime;
+    private String account;
 
     @Comment("玩家比特币钱包地址")
     @NotBlank
@@ -78,5 +79,15 @@ public class BitCoinPayForm implements IForm {
 
     public void setResult_returnTime(String result_returnTime) {
         this.result_returnTime = result_returnTime;
+    }
+
+    @Comment("收款账号")
+    @NotBlank
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 }

@@ -119,6 +119,7 @@ public class CompanyRechargeController extends RechargeBaseController {
      * @return
      */
     @RequestMapping("/bitCoinFirst")
+    @Token(generate = true)
     public String bitCoinFirst(Model model) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
         //获取公司入款收款账号
@@ -131,6 +132,8 @@ public class CompanyRechargeController extends RechargeBaseController {
         model.addAttribute("rank", rank);
         model.addAttribute("currency", getCurrencySign());
         model.addAttribute("isRealName", isRealName());
+        model.addAttribute("bankCode", BankCodeEnum.BITCOIN.getCode());
+        model.addAttribute("command", new PayAccountVo());
         return BIT_COIN_FIRST;
     }
 
@@ -364,27 +367,37 @@ public class CompanyRechargeController extends RechargeBaseController {
         return companySubmit(playerRechargeVo, playerRechargeVo.getResult().getRechargeType(), result);
     }
 
-    @RequestMapping("bitCoinSubmit")
+    @RequestMapping("/bitCoinConfirm")
+    @ResponseBody
     @Token(valid = true)
-    public String bitCoinSubmit(PlayerRechargeVo playerRechargeVo, HttpServletRequest request, @FormModel @Valid BitCoinPayForm form, BindingResult result, Model model) {
+    public Map<String, Object> bitCoinConfirm(PlayerRechargeVo playerRechargeVo, @FormModel @Valid BitCoinPayForm form, BindingResult result) {
         boolean flag = rechargePre(result, form.get$code());
         if (!flag) {
-            playerRechargeVo.setSuccess(false);
-            model.addAttribute("customerService", getCustomerService());
-            return ONLINE_FAIL;
+            return getResultMsg(false, null, null);
         }
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
-        PayAccount payAccount = getPayAccount(playerRecharge.getPayAccountId());
+        PayAccount payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
         if (payAccount == null) {
-            playerRechargeVo.setSuccess(false);
-            model.addAttribute("customerService", getCustomerService());
-            return ONLINE_FAIL;
+            return getResultMsg(false, null, null);
+        }
+        return companyRechargeConfirmInfo(playerRechargeVo);
+    }
+
+    @RequestMapping("/bitCoinSubmit")
+    @ResponseBody
+    @Token(valid = true)
+    public Map<String, Object> bitCoinSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid BitCoinPayForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            return getResultMsg(false, null, null);
+        }
+        PayAccount payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
+        if (payAccount == null || !BankCodeEnum.BITCOIN.getCode().equals(payAccount.getBankCode())) {
+            return getResultMsg(false, null, null);
         }
         String rechargeType = RechargeTypeEnum.BITCOIN_FAST.getCode();
-        playerRecharge.setRechargeAmount(0d);
-        playerRechargeVo = saveRecharge(playerRechargeVo, payAccount, RechargeTypeParentEnum.COMPANY_DEPOSIT.getCode(), rechargeType);
-        return depositAfter(playerRechargeVo, model);
+        return companySaveRecharge(playerRechargeVo, payAccount, rechargeType);
     }
+
 
     /**
      * 柜员机柜台存款公司入款提交

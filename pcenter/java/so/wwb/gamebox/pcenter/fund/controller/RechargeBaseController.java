@@ -473,7 +473,7 @@ public abstract class RechargeBaseController {
         if (StringTool.isNotBlank(url) && !url.contains("http")) {
             url = "http://" + url;
         }
-        return url;
+        return url.replace("\r\n","");
     }
 
     /**

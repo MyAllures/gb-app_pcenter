@@ -135,8 +135,16 @@
                 </a>
             </div>
         </c:if>
+        <c:if test="${map['easy']>0}">
+            <div class="deposit-tab01 szhb-bg">
+                <a href="/fund/recharge/online/ysfpay.html" nav-Target="mainFrame">
+                    <img src="${resRoot}/images/deposit-tab-img12.png">
+                    <span class="pay-title dark-green-t-bg"><em>易收付</em></span>
+                </a>
+            </div>
+        </c:if>
     </div>
-    <c:if test="${map['online']<=0&&map['company']<=0&&map['wechat']<=0&&map['alipay']<=0&&map['qq']<=0&&map['jd']<=0&&map['bd']<=0&&map['unionpay']<=0&&map['onecodepay']<=0&&map['bitcoin']<=0&&!isFastRecharge&&empty digiccyAccountInfo}">
+    <c:if test="${map['online']<=0&&map['company']<=0&&map['wechat']<=0&&map['alipay']<=0&&map['qq']<=0&&map['jd']<=0&&map['bd']<=0&&map['unionpay']<=0&&map['onecodepay']<=0&&map['bitcoin']<=0&&map['other']<=0&&map['easy']<=0&&!isFastRecharge&&empty digiccyAccountInfo}">
         <div class="rgeechar">
             <div class="title deposit-hint">
             <span class="tips">

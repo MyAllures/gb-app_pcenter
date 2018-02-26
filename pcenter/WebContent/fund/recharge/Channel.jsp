@@ -86,6 +86,11 @@
                         <a role="menuitem" tabindex="-1" href="/fund/recharge/digiccy/digiccyPay.html" nav-Target="mainFrame" key="30"><i class="pay-third szhb"></i></a>
                     </li>
                 </c:if>
+                <c:if test="${map['easy']>0}">
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1" href="/fund/recharge/online/ysfpay.html" nav-Target="mainFrame" key="30"><i class="pay-third ysfpay"></i></a>
+                    </li>
+                </c:if>
             </ul>
         </div>
     </div>

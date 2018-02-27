@@ -146,6 +146,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         playerRechargeVo.setResult(playerRecharge);
         //上一次填写的账号/昵称
         model.addAttribute("payerBankcard", playerRechargeService().searchLastPayerBankcard(playerRechargeVo));
+        model.addAttribute("customerService",getCustomerService());
         return BIT_COIN_FIRST;
     }
 

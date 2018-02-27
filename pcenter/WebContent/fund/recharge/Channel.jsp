@@ -13,7 +13,7 @@
                 <c:set var="map" value="${channelMap['channel']}"/>
                 <c:if test="${map['online']>0}">
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1" href="/fund/recharge/online/onlinePay.html" key="10" nav-Target="mainFrame"><i class="pay-third unionpay"></i></a>
+                        <a role="menuitem" tabindex="-1" href="/fund/recharge/online/onlinePay.html" key="10" nav-Target="mainFrame"><i class="pay-third onlinepay"></i></a>
                     </li>
                 </c:if>
                 <c:if test="${map['company']>0}">
@@ -63,7 +63,7 @@
                 </c:if>
                 <c:if test="${map['other']>0}">
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1" href="/fund/recharge/ScanElectronic/other.html" nav-Target="mainFrame" key="30"><i class="pay-third other"></i></a>
+                        <a role="menuitem" tabindex="-1" href="/fund/recharge/ScanElectronic/other.html" nav-Target="mainFrame" key="30"><i class="pay-third else"></i></a>
                     </li>
                 </c:if>
                 <c:if test="${channelMap['isFastRecharge']}">

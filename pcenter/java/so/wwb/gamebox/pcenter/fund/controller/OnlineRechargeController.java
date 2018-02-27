@@ -105,7 +105,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         model.addAttribute("realNameDialog", realNameDialog);
         model.addAttribute("rank", rank);
         model.addAttribute("command", payAccountListVo);
-        model.addAttribute("bankCode", "unionpay");
+        model.addAttribute("bankCode", "onlinepay");
         model.addAttribute("customerService", getCustomerService());
         Double rechargeDecimals = Math.random() * 99 + 1;
         model.addAttribute("rechargeDecimals", rechargeDecimals.intValue());

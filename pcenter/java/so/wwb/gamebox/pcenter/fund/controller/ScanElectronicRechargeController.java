@@ -178,7 +178,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.OTHER.getCode(), RechargeTypeEnum.OTHER_FAST.getCode()));
         commonPage(model, rank, null, RechargeTypeEnum.OTHER_FAST.getCode());
-        model.addAttribute("bankCode", BankCodeEnum.OTHER.getCode());
+        model.addAttribute("bankCode", "else");
         return SCAN_ELECTRONIC_URI;
     }
 

@@ -183,6 +183,22 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
     }
 
     /**
+     * 易收付
+     *
+     * @param model
+     * @return
+     */
+    @RequestMapping("/easyPay")
+    @Token(generate = true)
+    public String easyPay(Model model) {
+        PlayerRank rank = getRank();
+        model.addAttribute("scan", getScanAccount(rank, PayAccountAccountType.EASY_PAY.getCode(), null));
+        commonPage(model, rank, RechargeTypeEnum.EASY_PAY.getCode(), null);
+        model.addAttribute("bankCode", "ysfpay");
+        return SCAN_ELECTRONIC_URI;
+    }
+
+    /**
      * 支付页面公共页面元素部分
      *
      * @param model
@@ -356,6 +372,8 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
                 rechargeType = RechargeTypeEnum.QQWALLET_SCAN.getCode();
             } else if (PayAccountAccountType.UNION_PAY.getCode().equals(payAccountType)) {
                 rechargeType = RechargeTypeEnum.UNION_PAY_SCAN.getCode();
+            } else if (PayAccountAccountType.EASY_PAY.getCode().equals(payAccountType)) {
+                rechargeType = RechargeTypeEnum.EASY_PAY.getCode();
             }
             playerRecharge.setRechargeType(rechargeType);
             return commonOnlineSubmit(playerRechargeVo, payAccount);

@@ -88,7 +88,7 @@
                 </c:if>
                 <c:if test="${map['easy']>0}">
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1" href="/fund/recharge/online/ysfpay.html" nav-Target="mainFrame" key="30"><i class="pay-third ysfpay"></i></a>
+                        <a role="menuitem" tabindex="-1" href="/fund/recharge/ScanElectronic/easyPay.html" nav-Target="mainFrame" key="30"><i class="pay-third ysfpay"></i></a>
                     </li>
                 </c:if>
             </ul>

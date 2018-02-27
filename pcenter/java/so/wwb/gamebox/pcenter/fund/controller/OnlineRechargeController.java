@@ -40,7 +40,6 @@ import so.wwb.gamebox.model.master.operation.po.VActivityMessage;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.fund.form.OnlinePayForm;
 import so.wwb.gamebox.pcenter.fund.form.ScanCodeForm;
-import so.wwb.gamebox.pcenter.fund.form.YsfPayForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.token.Token;
@@ -111,29 +110,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         Double rechargeDecimals = Math.random() * 99 + 1;
         model.addAttribute("rechargeDecimals", rechargeDecimals.intValue());
         return ONLINE_PAY;
-    }
-
-    @RequestMapping("ysfpay")
-    @Token(generate = true)
-    public String ysfpay(Model model) {
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT_CODE, PayAccountAccountType.EASY_PAY.getCode(), TerminalEnum.PC.getCode(), null, null);
-        deleteMaintainChannel(payAccounts);
-        //层级
-        PlayerRank rank = getRank();
-        PayAccountListVo payAccountListVo = new PayAccountListVo();
-        payAccountListVo.setPlayerRank(rank);
-        payAccountListVo.setResult(payAccounts);
-        model.addAttribute("payAccountMap", ServiceSiteTool.payAccountService().getEasyPayAccountMap(payAccountListVo));
-        model.addAttribute("username", SessionManager.getUserName());
-        model.addAttribute("customerService", getCustomerService());
-        Double rechargeDecimals = Math.random() * 99 + 1;
-        model.addAttribute("rechargeDecimals", rechargeDecimals.intValue());
-        model.addAttribute("bankCode", "ysfpay");
-        model.addAttribute("validateRule", JsRuleCreator.create(YsfPayForm.class));
-        model.addAttribute("sales", searchSales(DepositWayEnum.EASY_PAY.getCode()));
-        model.addAttribute("rank", rank);
-        model.addAttribute("command", new PayAccountVo());
-        return YSF_PAY;
     }
 
     /**
@@ -228,13 +204,6 @@ public class OnlineRechargeController extends RechargeBaseController {
     @ResponseBody
     public Map<String, Object> onlineSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlinePayForm form, BindingResult result) {
         return onlineSubmit(playerRechargeVo, form.get$code(), result, RechargeTypeEnum.ONLINE_DEPOSIT.getCode());
-    }
-
-    @RequestMapping("/ysfSubmit")
-    @Token(valid = true)
-    @ResponseBody
-    public Map<String, Object> ysfSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid YsfPayForm form, BindingResult result) {
-        return onlineSubmit(playerRechargeVo, form.get$code(), result, RechargeTypeEnum.EASY_PAY.getCode());
     }
 
     /**

@@ -1,6 +1,7 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
 import org.soul.commons.collections.CollectionTool;
+import org.soul.commons.currency.CurrencyTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
@@ -39,9 +40,11 @@ import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
 import so.wwb.gamebox.pcenter.fund.form.*;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.common.token.Token;
+import so.wwb.gamebox.web.common.token.TokenHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -134,6 +137,15 @@ public class CompanyRechargeController extends RechargeBaseController {
         model.addAttribute("isRealName", isRealName());
         model.addAttribute("bankCode", BankCodeEnum.BITCOIN.getCode());
         model.addAttribute("command", new PayAccountVo());
+        //验证规则
+        model.addAttribute("validateRule", JsRuleCreator.create(BitCoinPayForm.class));
+        PlayerRechargeVo playerRechargeVo = new PlayerRechargeVo();
+        PlayerRecharge playerRecharge = new PlayerRecharge();
+        playerRecharge.setRechargeType(RechargeTypeEnum.BITCOIN_FAST.getCode());
+        playerRecharge.setPlayerId(SessionManager.getUserId());
+        playerRechargeVo.setResult(playerRecharge);
+        //上一次填写的账号/昵称
+        model.addAttribute("payerBankcard", playerRechargeService().searchLastPayerBankcard(playerRechargeVo));
         return BIT_COIN_FIRST;
     }
 
@@ -375,12 +387,16 @@ public class CompanyRechargeController extends RechargeBaseController {
         if (!flag) {
             return getResultMsg(false, null, null);
         }
-        PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         PayAccount payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
         if (payAccount == null) {
             return getResultMsg(false, null, null);
         }
-        return companyRechargeConfirmInfo(playerRechargeVo);
+        Map<String, Object> map = new HashMap<>(7, 1f);
+        map.put("state", true);
+        DecimalFormat format = new DecimalFormat("#.########");
+        map.put("bitAmount", format.format(playerRechargeVo.getResult().getBitAmount()));
+        map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
+        return map;
     }
 
     @RequestMapping("/bitCoinSubmit")
@@ -395,6 +411,7 @@ public class CompanyRechargeController extends RechargeBaseController {
             return getResultMsg(false, null, null);
         }
         String rechargeType = RechargeTypeEnum.BITCOIN_FAST.getCode();
+        playerRechargeVo.getResult().setRechargeAmount(0d);
         return companySaveRecharge(playerRechargeVo, payAccount, rechargeType);
     }
 

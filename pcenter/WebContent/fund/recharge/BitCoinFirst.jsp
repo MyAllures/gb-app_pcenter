@@ -8,6 +8,7 @@
     <input type="hidden" name="isRealName" value="${isRealName}"/>
     <gb:token/>
     <a href="javascript:;" name="realNameDialog" style="display: none"></a>
+    <div id="validateRule" style="display: none">${validateRule}</div>
     <div class="notice">
         <div class="notice-left"><em class="path"></em></div>
         <div class="path-right">
@@ -32,7 +33,7 @@
                     <div class="bank-total">
                         <c:forEach items="${payAccountList}" varStatus="vs" var="i">
                             <label class="bank ${vs.index==0?'select':''}">
-                                <span class="radio"><input name="account" value="${command.getSearchId(i.id)}" account="${i.account}" type="radio" ${vs.index==0?'checked':''}></span>
+                                <span class="radio"><input name="account" showSuccMsg="false" value="${command.getSearchId(i.id)}" account="${i.account}" type="radio" ${vs.index==0?'checked':''}></span>
                                 <span class="radio-bank" title="${dicts.common.bankname[i.bankCode]}"><i class="pay-third ${i.bankCode}"></i></span>
                                 <span class="bank-logo-name">${dicts.common.bankname[i.bankCode]}</span>
                             </label>

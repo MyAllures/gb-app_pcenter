@@ -14,18 +14,22 @@
             </div>
             <div class="modal-body">
                 <div class="withdraw-not text-15p">
-                    <div class="form-group clearfix line-hi45 m-b-xxs">
+                    <div class="form-group clearfix line-hi45 m-b-xxs" name="bitcoinRecharge">
+                        <label class="col-xs-5 al-right bold">${views.fund_auto['比特币']}：</label>
+                        <div class="col-xs-6 p-x  f-size26" id="bitAmount"></div>
+                    </div>
+                    <div class="form-group clearfix line-hi45 m-b-xxs" name="companyRecharge">
                         <label class="col-xs-5 al-right bold">${views.fund_auto['存款金额']}：</label>
                         <div class="col-xs-6 p-x f-size26" id="confirmRechargeAmount"></div>
                     </div>
-                    <div class="form-group clearfix line-hi45 m-b-xxs">
+                    <div class="form-group clearfix line-hi45 m-b-xxs" name="companyRecharge">
                         <label class="col-xs-5 al-right bold">${views.fund_auto['手续费/返手续费']}：</label>
                         <div class="col-xs-6 p-x">
                             <%--green--%>
                             <em class="red f-size26" id="confirmFee"></em>
                         </div>
                     </div>
-                    <div class="form-group clearfix line-hi45 m-b-xxs">
+                    <div class="form-group clearfix line-hi45 m-b-xxs" name="companyRecharge">
                         <label class="col-xs-5 al-right bold">${views.fund_auto['实际到账']}：</label>
                         <div class="col-xs-6 p-x">
                             <em class="red f-size26" id="confirmRechargeTotal"></em>

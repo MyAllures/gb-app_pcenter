@@ -48,7 +48,7 @@
                             </c:if>
                             <c:if test="${vs.index==16}"><div name="hideBank" style="display: none"></c:if>
                             <label class="bank ${vs.index==0?'select':''}">
-                                <span class="radio"><input name="result.payerBank" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" randomAmount="${i.value.randomAmount}" account="${account}" value="${i.key}" type="radio" ${vs.index==0?'checked':''}></span>
+                                <span class="radio"><input showSuccMsg="false"  name="result.payerBank" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" randomAmount="${i.value.randomAmount}" account="${account}" value="${i.key}" type="radio" ${vs.index==0?'checked':''}></span>
                                 <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-bank ${i.key}"></i></span>
                                 <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
                             </label>

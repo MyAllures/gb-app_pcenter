@@ -194,7 +194,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         model.addAttribute("scan", getScanAccount(rank, PayAccountAccountType.EASY_PAY.getCode(), null));
         commonPage(model, rank, RechargeTypeEnum.EASY_PAY.getCode(), null);
-        model.addAttribute("bankCode", "ysfpay");
+        model.addAttribute("bankCode", BankCodeEnum.EASY_PAY.getCode());
         return SCAN_ELECTRONIC_URI;
     }
 

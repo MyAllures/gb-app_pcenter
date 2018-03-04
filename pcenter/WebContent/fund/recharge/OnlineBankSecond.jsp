@@ -51,25 +51,25 @@
                                     </span>
                                 </c:when>
                                 <c:otherwise>
-                                    <span class="orange cardnumber select" data-clipboard-target="bankCard${payAccount.id}" data-clipboard-text="Default clipboard text from attribute" name="copy">
+                                    <span class="orange cardnumber select" data-clipboard-text="${soulFn:formatBankCard(payAccount.account)}" name="copy">
                                         <em class="bank-number" id="bankCard${payAccount.id}">${soulFn:formatBankCard(payAccount.account)}</em>
                                         <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
                                     </span>
                                 </c:otherwise>
                             </c:choose>
-                            <span class="paidname select" data-clipboard-target="fullName${payAccount.id}" data-clipboard-text="Default clipboard text from attribute" name="copy">
+                            <span class="paidname select" data-clipboard-text="${payAccount.fullName}" name="copy">
                                 <em class="gray">${views.fund_auto['银行用户名']}：</em>
                                 <em class="gathering-name" id="fullName${payAccount.id}">${payAccount.fullName}</em>
                                 <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
                             </span>
                             <c:if test="${!empty payAccount.openAcountName}">
-                                <span class="paidname select" data-clipboard-target="openAcountName${payAccount.id}" data-clipboard-text="Default clipboard text from attribute" name="copy">
+                                <span class="paidname select" data-clipboard-text="${payAccount.openAcountName}" name="copy">
                                     <em class="gray">${views.fund_auto['开户支行']}：</em>
                                     <em class="gathering-name" id="openAcountName${payAccount.id}">${payAccount.openAcountName}</em>
                                     <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
                                 </span>
                             </c:if>
-                            <span class="paidname select" data-clipboard-target="rechargeAmount${payAccount.id}" data-clipboard-text="Default clipboard text from attribute" name="copy">
+                            <span class="paidname select" data-clipboard-text="${soulFn:formatInteger(playerRechargeVo.result.rechargeAmount)}${soulFn:formatDecimals(playerRechargeVo.result.rechargeAmount)}" name="copy">
                                 <em class="gray">${views.fund_auto['存款金额']}：</em>
                                 <em class="gathering-name orange fontsbig" id="rechargeAmount${payAccount.id}">${soulFn:formatInteger(playerRechargeVo.result.rechargeAmount)}${soulFn:formatDecimals(playerRechargeVo.result.rechargeAmount)}</em>
                                 <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>

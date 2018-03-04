@@ -65,13 +65,13 @@
                                                </span>
                                             </c:when>
                                             <c:otherwise>
-                                              <span class="orange paidname select" data-clipboard-target="bankCard${i.id}" data-clipboard-text="Default clipboard text from attribute" name="copy">
+                                              <span class="orange paidname select" data-clipboard-text="${i.account}" name="copy">
                                                 <em class="bank-number" id="bankCard${i.id}">${i.account}</em>
                                                 <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
                                             </span>
                                             </c:otherwise>
                                         </c:choose>
-                                        <span class="paidname select" data-clipboard-target="fullName${i.id}" data-clipboard-text="Default clipboard text from attribute" name="copy">
+                                        <span class="paidname select" data-clipboard-text="${i.fullName}" name="copy">
                                             <em class="gray">${views.fund_auto['姓名']}：</em>
                                             <em class="gathering-name" id="fullName${i.id}">${i.fullName}</em>
                                            <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>

@@ -6,7 +6,8 @@
     curl(['gb/components/selectPure'], function(Page) {
         select = new Page();
     });
-    curl(['zeroClipboard'], function (zeroClipboard) {
+    curl(['zeroClipboard','clipboard'], function (zeroClipboard, Clipboard) {
         window.ZeroClipboard=zeroClipboard;
+        window.clipboard = Clipboard;
     });
 </script>

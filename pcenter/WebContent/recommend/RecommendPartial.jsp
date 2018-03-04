@@ -26,7 +26,7 @@
                 <p class="gray">${views.recommend['recommend.Recommend.copyRecommendUrl']}</p>
             </div>
             <div class="invite-button">
-                <button class="btn-blue btn large-big lar-l" type="button" data-clipboard-target="recommendUrl" data-clipboard-text="Default clipboard text from attribute" name="copy">${views.common['copy']}</button>
+                <a class="btn-blue btn large-big lar-l" data-clipboard-text="<%=request.getServerName()%>/register.html?c=${invitationCode}" name="copy">${views.common['copy']}</a>
             </div>
         </div>
     </div>

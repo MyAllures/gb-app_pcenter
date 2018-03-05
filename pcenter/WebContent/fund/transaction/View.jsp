@@ -229,6 +229,11 @@
                             <i style="font-size: medium">${isOther?command.result._describe['customBankName']:''}</i>
                         </h1>
                     </c:when>
+                    <c:when test="${fundType eq 'easy_pay'}">
+                        <h1>
+                            <i class="pay-third easy_pay"></i>
+                        </h1>
+                    </c:when>
                     <c:when test="${fundType eq 'digiccy_scan'}">
                         <h1>
                             <i class="pay-third ${bankCode}"></i>

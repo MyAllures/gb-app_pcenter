@@ -27,7 +27,7 @@
                         <tr class="${s.receiveStatus=='12'?"":"on"}">
                             <td width="12px"><input type="checkbox" value="${s.id}" class="i-checks"></td>
                             <td>
-                                <a href="/operation/pAnnouncementMessage/messageList.html?&isDetail=1&paging.pageNumber=${(command.paging.pageNumber-1)*command.paging.pageSize+dex.index+1}"
+                                <a href="/operation/pAnnouncementMessage/messageList.html?isDetail=1&paging.pageNumber=${(command.paging.pageNumber-1)*command.paging.pageSize+dex.index+1}"
                                    nav-target="mainFrame" title="${s.title}"> ${fn:substring(s.title,0,50)}<c:if test="${fn:length(s.title)>50}">...</c:if></a>
                             </td>
                             <td><span class="datemessage"><i

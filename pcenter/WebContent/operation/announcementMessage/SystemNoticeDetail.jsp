@@ -24,11 +24,11 @@
         <div class="al-right pull-right">
             &lt;
             <c:if test="${vSystemAnnouncementListVo.paging.pageNumber != 1}">
-                <a href="/operation/pAnnouncementMessage/systemNoticeHistory.html?&isDetail=1&search.startTime=${soulFn:formatDateTz(command.search.startTime, DateFormat.DAY_SECOND,timeZone)}&search.endTime=${soulFn:formatDateTz(command.search.endTime, DateFormat.DAY_SECOND,timeZone)}&paging.pageNumber=${command.paging.pageNumber-1}"  nav-target="mainFrame" class="co-gray6">上一条</a>
+                <a href="/operation/pAnnouncementMessage/systemNoticeHistory.html?&isDetail=1&search.startTime=${soulFn:formatDateTz(command.search.startTime, DateFormat.DAY_SECOND,timeZone)}&search.endTime=${soulFn:formatDateTz(command.search.endTime, DateFormat.DAY_SECOND,timeZone)}&paging.pageNumber=${command.paging.pageNumber-1}"  nav-target="mainFrame" class="co-gray6">${views.column['上一条']}</a>
             </c:if>
             &nbsp;
             <c:if test="${vSystemAnnouncementListVo.paging.pageNumber != vSystemAnnouncementListVo.paging.totalCount}">
-                <a href="/operation/pAnnouncementMessage/systemNoticeHistory.html?&isDetail=1&search.startTime=${soulFn:formatDateTz(command.search.startTime, DateFormat.DAY_SECOND,timeZone)}&search.endTime=${soulFn:formatDateTz(command.search.endTime, DateFormat.DAY_SECOND,timeZone)}&paging.pageNumber=${command.paging.pageNumber+1}"  nav-target="mainFrame" class="co-gray6">下一条</a>
+                <a href="/operation/pAnnouncementMessage/systemNoticeHistory.html?&isDetail=1&search.startTime=${soulFn:formatDateTz(command.search.startTime, DateFormat.DAY_SECOND,timeZone)}&search.endTime=${soulFn:formatDateTz(command.search.endTime, DateFormat.DAY_SECOND,timeZone)}&paging.pageNumber=${command.paging.pageNumber+1}"  nav-target="mainFrame" class="co-gray6">${views.column['下一条']}</a>
             </c:if>
 
             &gt;&nbsp;&nbsp;&nbsp;

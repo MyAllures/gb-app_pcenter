@@ -39,11 +39,11 @@
         <div class="al-right pull-right">
             &lt;
             <c:if test="${command.paging.pageNumber != 1}">
-                <a href="/operation/pAnnouncementMessage/messageList.html?&isDetail=1&paging.pageNumber=${command.paging.pageNumber-1}"  nav-target="mainFrame" class="co-gray6">上一条</a>
+                <a href="/operation/pAnnouncementMessage/messageList.html?&isDetail=1&paging.pageNumber=${command.paging.pageNumber-1}"  nav-target="mainFrame" class="co-gray6">${views.column['上一条']}</a>
             </c:if>
             &nbsp;
             <c:if test="${command.paging.pageNumber != command.paging.totalCount}">
-                <a href="/operation/pAnnouncementMessage/messageList.html?&isDetail=1&paging.pageNumber=${command.paging.pageNumber+1}"  nav-target="mainFrame" class="co-gray6">下一条</a>
+                <a href="/operation/pAnnouncementMessage/messageList.html?&isDetail=1&paging.pageNumber=${command.paging.pageNumber+1}"  nav-target="mainFrame" class="co-gray6">${views.column['下一条']}</a>
             </c:if>
 
             &gt;&nbsp;&nbsp;&nbsp;

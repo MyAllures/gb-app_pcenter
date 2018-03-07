@@ -321,6 +321,7 @@ public class CompanyRechargeController extends RechargeBaseController {
             LOG.info("玩家存款收款帐号有误");
             return getResultMsg(false, null, null);
         }
+        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
         return companyRechargeConfirmInfo(playerRechargeVo);
     }
 
@@ -355,10 +356,11 @@ public class CompanyRechargeController extends RechargeBaseController {
             LOG.info("玩家存款收款帐号有误");
             return getResultMsg(false, null, null);
         }
+        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
         return companyRechargeConfirmInfo(playerRechargeVo);
     }
 
-    /**
+    /**签证
      * 网银存款提交
      *
      * @param playerRechargeVo
@@ -392,11 +394,14 @@ public class CompanyRechargeController extends RechargeBaseController {
         if (payAccount == null) {
             return getResultMsg(false, null, null);
         }
+        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
+        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo,SessionManager.getUserId());
         Map<String, Object> map = new HashMap<>(7, 1f);
         map.put("state", true);
         DecimalFormat format = new DecimalFormat("#.########");
         map.put("bitAmount", format.format(playerRechargeVo.getResult().getBitAmount()));
         map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
+        map.put("failureCount",failureCount);
         return map;
     }
 

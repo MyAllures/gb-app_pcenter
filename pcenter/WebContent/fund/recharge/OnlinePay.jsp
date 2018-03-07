@@ -4,6 +4,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
 <!--在线支付-->
+<div class="modal-backdrop in" style="display: none" id="backdrop"></div>
 <form name="onlineForm">
     <gb:token/>
     <div id="validateRule" style="display: none">${validateRule}</div>
@@ -95,11 +96,18 @@
                     </div>
                     <div class="applysale">
                         <ul class="transfer-tips">
-                            <li>请尽可能选择同行办理转账，可快速到账。</li>
+                           <%-- <li>请尽可能选择同行办理转账，可快速到账。</li>
                             <li>请保留好转账单据作为核对证明。</li>
                             <li>如充值后未到账，请联系在线客服。
                                 <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
-                            </li>
+                            </li>--%>
+                           <li>温馨提示：</li>
+                           <li>先查看要入款的账号或二维码信息，然后通过网上银行、ATM、柜台或手机银行进行转账，转账成功后再如实提交转账信息，财务专员查收到信息后会及时添加您的款项。</li>
+                               <li>单笔储值最低为<span style="color:red">CNY10.00</span>，最高为<span style="color:red">CNY1,000,000.00</span>，如存款高于上限请分多笔支付。</li>
+                           <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
+                           <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。
+                               <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
+                           </li>
                         </ul>
                     </div>
                 </form>
@@ -108,4 +116,27 @@
     </c:if>
 
 </form>
+<%--失败多次后弹窗提醒--%>
+<div class="modal inmodal in" style="display: none" id="onlineManyFailures" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight family">
+            <div class="modal-header">
+                <span class="filter"><h3 class="popalign">${views.fund_auto['提示']}</h3></span>
+            </div>
+            <div class="modal-body">
+                <div class="theme-popcon">
+                    <h3 class="popalign"><i class="tipbig fail"></i></h3>
+                    <div class="text">
+                        <p>${views.fund_auto['失败多次提示信息']}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" id="onlineContinueDeposit" value="${views.fund_auto['仍要继续']}" class="btn btn-outline btn-filter"/>
+                <a href="${root}/#/fund/playerRecharge/recharge.html" class="btn btn-filter">${views.fund_auto['重新存款']}</a>
+                <%--<input type="button" id="back" value="${views.fund_auto['重新存款']}" class="btn btn-filter"/>--%>
+            </div>
+        </div>
+    </div>
+</div>
 <soul:import res="site/fund/recharge/OnlinePay"/>

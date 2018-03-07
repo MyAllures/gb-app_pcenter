@@ -102,3 +102,26 @@
         </div>
     </div>
 </div>
+<%--失败多次后弹窗提醒--%>
+<div class="modal inmodal in" style="display: none" id="manyFailures" tabindex="-1" role="dialog">
+    <input type="hidden" id="isNotThird" value=""/>
+    <div class="modal-dialog">
+        <div class="modal-content animated bounceInRight family">
+            <div class="modal-header">
+                <span class="filter"><h3 class="popalign">${views.fund_auto['提示']}</h3></span>
+            </div>
+            <div class="modal-body">
+                <div class="theme-popcon">
+                    <h3 class="popalign"><i class="tipbig fail"></i></h3>
+                    <div class="text">
+                        <p>${views.fund_auto['失败多次提示信息']}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <soul:button tag="button" target="notThirdContinueDeposit" text="${views.fund_auto['仍要继续']}" cssClass="btn btn-outline btn-filter" opType="function"/>
+                <soul:button tag="button" target="back" text="${views.fund_auto['重新存款']}" opType="function" cssClass="btn btn-filter"/>
+            </div>
+        </div>
+    </div>
+</div>

@@ -654,6 +654,7 @@ public abstract class RechargeBaseController {
         PlayerRank rank = getRank();
         Double rechargeAmount = playerRechargeVo.getResult().getRechargeAmount();
         double fee = calculateFee(rank, rechargeAmount);
+        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo,SessionManager.getUserId());
         Map<String, Object> map = new HashMap<>(7, 1f);
         map.put("state", true);
         map.put("fee", fee);
@@ -662,6 +663,7 @@ public abstract class RechargeBaseController {
         map.put("rechargeTotal", CurrencyTool.formatCurrency(rechargeAmount + fee));
         map.put("isThird", true);
         map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
+        map.put("failureCount",failureCount);
         return map;
     }
 

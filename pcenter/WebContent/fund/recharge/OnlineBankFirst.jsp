@@ -181,7 +181,7 @@
                             <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
                         </li>--%>
                         <li>温馨提示：</li>
-                            <li>单笔储值最低<span style="color:red">CNY10</span>，最高为<span style="color:red">CNY10,000</span>，并须视各家银行转款上限而定。</li>
+                            <li>单笔储值最低<span style="color:red">${siteCurrency}${onlinePayMin}</span>，最高为<span style="color:red">${siteCurrency}${onlinePayMax}</span>，并须视各家银行转款上限而定。</li>
                             <li>支付成功后，请等待几秒钟，提示<span style="color:red">「支付成功」</span>按确认键后再关闭支付窗口。</li>
                         <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
                         <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。

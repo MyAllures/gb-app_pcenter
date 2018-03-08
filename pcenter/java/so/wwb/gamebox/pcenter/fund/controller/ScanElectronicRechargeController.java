@@ -214,6 +214,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("rechargeDecimals", rechargeDecimals.intValue());
         model.addAttribute("onlineType", onlineType);
         model.addAttribute("companyType", companyType);
+        model.addAttribute("currency",SessionManager.getUser().getDefaultCurrency());
     }
 
     private Map<String, PayAccount> getScanAccount(PlayerRank rank, String accountType, String[] accountTypes) {

@@ -21,7 +21,7 @@
                                             <div class="item">
                                                 <h2 class="orange">${gbFn:getSiteApiName((s.apiId).toString())}<c:if test="${s.gameId!=null}">——${gbFn:getGameName((s.gameId).toString())}</c:if></h2>
                                                 <p>
-                                                    <a href="/operation/pAnnouncementMessage/gameNoticeDetail.html?searchId=${command.getSearchId(s.id)}"
+                                                    <a href="/operation/pAnnouncementMessage/gameNotice.html?isDetail=1&search.apiId=${command.search.apiId}&search.startTime=${soulFn:formatDateTz(command.search.startTime, DateFormat.DAY_SECOND,timeZone)}&search.endTime=${soulFn:formatDateTz(command.search.endTime, DateFormat.DAY_SECOND,timeZone)}&paging.pageNumber=${(command.paging.pageNumber-1)*command.paging.pageSize+dex.index+1}"
                                                        nav-target="mainFrame">${s.shortContentText80}</a>
                                                 </p>
                                             </div>

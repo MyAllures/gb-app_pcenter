@@ -223,7 +223,11 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
         playerRecharge.setRechargeType(rechargeType);
-        return commonOnlineSubmit(playerRechargeVo, payAccount);
+        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
+        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo,SessionManager.getUserId());
+        Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount);
+        map.put("failureCount",failureCount);
+        return map;
     }
 
     @RequestMapping("/scanCodeSubmit")

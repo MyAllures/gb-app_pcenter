@@ -10,7 +10,7 @@
                     <c:forEach items="${command.result}" var="s" varStatus="dex">
                         <tr class="${(dex.index % 2)==0 ? '':'gameback'}">
                             <td class="al-left">
-                                <a href="/operation/pAnnouncementMessage/systemNoticeDetail.html?searchId=${command.getSearchId(s.id)}"
+                                <a href="/operation/pAnnouncementMessage/systemNoticeHistory.html?&isDetail=1&search.startTime=${soulFn:formatDateTz(command.search.startTime, DateFormat.DAY_SECOND,timeZone)}&search.endTime=${soulFn:formatDateTz(command.search.endTime, DateFormat.DAY_SECOND,timeZone)}&paging.pageNumber=${(command.paging.pageNumber-1)*command.paging.pageSize+dex.index+1}"
                                    nav-target="mainFrame">${s.shortContentText50}</a>
                             </td>
                             <td><span class="datemessage"><i class="clock"></i>${soulFn:formatDateTz(s.publishTime, DateFormat.DAY_SECOND,timeZone)}</span></td>

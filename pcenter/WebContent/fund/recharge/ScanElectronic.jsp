@@ -157,7 +157,7 @@
                     </c:if>
                 </div>
             </div>
-            <c:if test="${!isHide}">
+            <%--<c:if test="${!isHide}">--%>
                 <div id="qrCodeUrl" class="pull-left" style="${!empty firstPayAccount.qrCodeUrl?'':'display:none'}">
                 <span class="two-dimension">
                     <img src="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}" style="width: 176px;height: 176px;"/>
@@ -165,7 +165,7 @@
                 </span>
                     <span><img src="${resRoot}/images/two-dimension123.png"></span>
                 </div>
-            </c:if>
+            <%--</c:if>--%>
         </div>
     </div>
 </c:if>

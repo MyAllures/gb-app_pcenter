@@ -139,7 +139,7 @@
             <div class="deposit-tab01 szhb-bg">
                 <a href="/fund/recharge/ScanElectronic/easyPay.html" nav-Target="mainFrame">
                     <img src="${resRoot}/images/deposit-tab-img12.png">
-                    <span class="pay-title dark-green-t-bg"><em>易收付</em></span>
+                    <span class="pay-title dark-green-t-bg"><em></em></span>
                 </a>
             </div>
         </c:if>

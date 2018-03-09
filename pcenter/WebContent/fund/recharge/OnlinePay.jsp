@@ -5,7 +5,7 @@
 <%@ include file="/include/include.inc.jsp" %>
 <!--在线支付-->
 <div class="modal-backdrop in" style="display: none" id="backdrop"></div>
-<form name="onlineForm">
+<form name="onlineForm" id="onlineForm">
     <gb:token/>
     <div id="validateRule" style="display: none">${validateRule}</div>
     <input type="hidden" name="isRealName" value="${isRealName}"/>
@@ -110,30 +110,30 @@
             </div>
         </div>
     </c:if>
-
-</form>
-<%--失败多次后弹窗提醒--%>
-<div class="modal inmodal in" style="display: none" id="manyFailures" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content animated bounceInRight family">
-            <div class="modal-header">
-                <span class="filter"><h3 class="popalign">${views.fund_auto['提示']}</h3></span>
-            </div>
-            <div class="modal-body">
-                <div class="theme-popcon">
-                    <h3 class="popalign"><i class="tipbig fail"></i></h3>
-                    <div class="text">
-                        <p>${views.fund_auto['失败多次提示信息']}</p>
+    <%--失败多次后弹窗提醒--%>
+    <div class="modal inmodal in" style="display: none" id="manyFailures" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content animated bounceInRight family">
+                <div class="modal-header">
+                    <span class="filter"><h3 class="popalign">${views.fund_auto['提示']}</h3></span>
+                </div>
+                <div class="modal-body">
+                    <div class="theme-popcon">
+                        <h3 class="popalign"><i class="tipbig fail"></i></h3>
+                        <div class="text">
+                            <p>${views.fund_auto['失败多次提示信息']}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <soul:button tag="button" target="onlinePayContinueDeposit" text="${views.fund_auto['仍要继续']}" cssClass="btn btn-outline btn-filter" opType="function"/>
-                <% double num = Math.random();%>
-                <a href="${root}/#/fund/playerRecharge/recharge.html?t="+<%=num%> class="btn btn-filter">${views.fund_auto['重新存款']}</a>
-                <%--<soul:button tag="button" target="back" text="${views.fund_auto['重新存款']}" opType="function" cssClass="btn btn-filter"/>--%>
+                <div class="modal-footer">
+                    <input type="button" id="onlineContinueDeposit" value="${views.fund_auto['仍要继续']}" class="btn btn-outline btn-filter"/>
+                    <%--<soul:button target="onlineContinueDeposit" text="${views.fund_auto['仍要继续']}" cssClass="btn btn-outline btn-filter" opType="function"/>--%>
+                    <input type="button" id="againDeposit" value="${views.fund_auto['重新存款']}" class="btn btn-filter" />
+                   <%-- <% double num = Math.random();%>
+                    <a href="${root}/#/fund/playerRecharge/recharge.html?t=<%=num%>" class="btn btn-filter">${views.fund_auto['重新存款']}</a>--%>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
 <soul:import res="site/fund/recharge/OnlinePay"/>

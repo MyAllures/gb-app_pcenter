@@ -96,18 +96,14 @@
                     </div>
                     <div class="applysale">
                         <ul class="transfer-tips">
-                           <%-- <li>请尽可能选择同行办理转账，可快速到账。</li>
+                            <li>温馨提示：</li>
+                            <li>单笔储值最低<span style="color:red">${siteCurrency}${onlinePayMin}</span>，最高为<span style="color:red">${siteCurrency}${onlinePayMax}</span>，并须视各家银行转款上限而定。</li>
+                            <li>请尽可能选择同行办理转账，可快速到账。</li>
                             <li>请保留好转账单据作为核对证明。</li>
-                            <li>如充值后未到账，请联系在线客服。
+                            <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
+                            <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。
                                 <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
-                            </li>--%>
-                           <li>温馨提示：</li>
-                           <li>先查看要入款的账号或二维码信息，然后通过网上银行、ATM、柜台或手机银行进行转账，转账成功后再如实提交转账信息，财务专员查收到信息后会及时添加您的款项。</li>
-                               <li>单笔储值最低为<span style="color:red">${siteCurrency}${onlinePayMin}</span>，最高为<span style="color:red">${siteCurrency}${onlinePayMax}</span>，如存款高于上限请分多笔支付。</li>
-                           <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
-                           <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。
-                               <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
-                           </li>
+                            </li>
                         </ul>
                     </div>
                 </form>
@@ -117,7 +113,7 @@
 
 </form>
 <%--失败多次后弹窗提醒--%>
-<div class="modal inmodal in" style="display: none" id="onlineManyFailures" tabindex="-1" role="dialog">
+<div class="modal inmodal in" style="display: none" id="manyFailures" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content animated bounceInRight family">
             <div class="modal-header">
@@ -132,9 +128,10 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <input type="button" id="onlineContinueDeposit" value="${views.fund_auto['仍要继续']}" class="btn btn-outline btn-filter"/>
-                <a href="${root}/#/fund/playerRecharge/recharge.html" class="btn btn-filter">${views.fund_auto['重新存款']}</a>
-                <%--<input type="button" id="back" value="${views.fund_auto['重新存款']}" class="btn btn-filter"/>--%>
+                <soul:button tag="button" target="onlinePayContinueDeposit" text="${views.fund_auto['仍要继续']}" cssClass="btn btn-outline btn-filter" opType="function"/>
+                <% double num = Math.random();%>
+                <a href="${root}/#/fund/playerRecharge/recharge.html?t="+<%=num%> class="btn btn-filter">${views.fund_auto['重新存款']}</a>
+                <%--<soul:button tag="button" target="back" text="${views.fund_auto['重新存款']}" opType="function" cssClass="btn btn-filter"/>--%>
             </div>
         </div>
     </div>

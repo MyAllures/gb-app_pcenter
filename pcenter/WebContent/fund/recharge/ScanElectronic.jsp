@@ -69,7 +69,7 @@
                         <c:set var="firstAccountLimit" value="${accountLimit}"/>
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
-                        <span class="radio"><input name="account" showSuccMsg="false" isThird="false" rechargeType="${onlineType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${account.randomAmount}" ${index == 0?'checked':''} value="${command.getSearchId(account.id)}"></span>
+                        <span class="radio"><input name="account" depositType="scan" showSuccMsg="false" isThird="false" rechargeType="${onlineType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${account.randomAmount}" ${index == 0?'checked':''} value="${command.getSearchId(account.id)}"></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${bankCode}"></i><font class="diy-pay-title">${name}</font>
                         </span>
@@ -97,7 +97,7 @@
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
                         <c:set var="name" value="${account.aliasName}"/>
-                        <span class="radio"><input name="account" type="radio" accountRemark="${account.remark}" qrCodeUrl="${empty account.qrCodeUrl?'':soulFn:getThumbPath(domain,account.qrCodeUrl,176,176)}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
+                        <span class="radio"><input name="account" depositType="electronic" type="radio" accountRemark="${account.remark}" qrCodeUrl="${empty account.qrCodeUrl?'':soulFn:getThumbPath(domain,account.qrCodeUrl,176,176)}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${account.bankCode}"></i>
                             <font class="diy-pay-title">${name}</font>
@@ -244,15 +244,25 @@
             <soul:button target="submit" precall="validateForm" text="立即存款" opType="function" cssClass="btn-blue btn large-big" tag="button"/>
         </div>
         <div class="applysale">
-            <ul class="transfer-tips">
-                <%--<li>支付成功后，请等待几秒钟，提示[<span class="red">支付成功</span>]后按确认件后再关闭支付窗口。</li>
-                <li>
-                    如充值后未到账，请联系在线客服。
-                    <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
-                </li>--%>
+            <%--扫码--%>
+            <ul id="scanDocument" class="transfer-tips" style="display: none">
                 <li>温馨提示：</li>
-                <li>单笔储值最低<span style="color:red">${currency}</span><span id="payMin" style="color:red"></span>
-                    ，最高为<span style="color:red">${currency}</span><span id="payMax" style="color:red"></span>，并须视各家银行转款上限而定。</li>
+                <li>单笔储值最低<span style="color:red">${currency}</span><span id="payMin" style="color:red"></span>，最高为<span style="color:red">${currency}</span><span id="payMax" style="color:red"></span>，如存款高于上限请分多笔支付。</li>
+                <c:if test="${firstPayAccount.randomAmount}">
+                    <li>为了提高对账速度及成功率，当前支付方式已开随机额度，请输入整数存款金额，将随机增加0.11~0.99元！</li>
+                </c:if>
+                <li>支付成功后，请等待几秒钟，提示<span style="color:red">「支付成功」</span>按确认键后再关闭支付窗口。</li>
+                <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
+                <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。
+                    <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
+                </li>
+            </ul>
+            <%--电子支付--%>
+            <ul id="electronicDocument" class="transfer-tips" style="display: none">
+                <li>温馨提示：</li>
+                <li>请先搜索账号或扫描二维码添加好友。</li>
+                <li>单笔储值最低<span style="color:red">${siteCurrency}${onlinePayMin}</span>，最高为<span style="color:red">${siteCurrency}${onlinePayMax}</span>，如存款高于上限请分多笔支付。</li>
+                <li>存款金额请加以小数点或尾数，以便区别。如充值200元，请输入201元或200.1之类小数。</li>
                 <li>支付成功后，请等待几秒钟，提示<span style="color:red">「支付成功」</span>按确认键后再关闭支付窗口。</li>
                 <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
                 <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。

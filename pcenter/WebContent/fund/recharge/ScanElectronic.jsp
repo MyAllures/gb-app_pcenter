@@ -122,7 +122,14 @@
                     <ul>
                         <li>
                             <div class="bankinfo bankinfo-m">
-                                <h1><i class="pay-third ${thirdBankCode}"></i></h1>
+                                <c:choose>
+                                    <c:when test="${empty firstPayAccount.customBankName}">
+                                        <h1><i class="pay-third ${thirdBankCode}"></i></h1>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <h1><span class="bank-logo-name">${firstPayAccount.customBankName}</span></h1>
+                                    </c:otherwise>
+                                </c:choose>
                                 <c:choose>
                                     <c:when test="${isHide}">
                                        <span class="orange select">
@@ -211,7 +218,7 @@
         <div name="electronicElement" class="control-group" style="${firstPayAccount.type eq '1'?'':'display:none'}">
             <label class="control-label">${views.fund_auto['订单号（后5位）']}：</label>
             <div class="controls">
-                <input type="text" class="input" placeholder="${views.fund_auto['请填写订单号非商户订单号']}" maxlength="5" name="result.bankOrder" autocomplete="off">
+                <input type="text" class="input" placeholder="" maxlength="5" name="result.bankOrder" autocomplete="off">
             </div>
         </div>
         <c:if test="${!empty thirdAccountType}">

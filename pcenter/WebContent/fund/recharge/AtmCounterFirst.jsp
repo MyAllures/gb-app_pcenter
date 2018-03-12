@@ -162,16 +162,11 @@
                 </div>
                 <div class="applysale">
                     <ul class="transfer-tips \AMG">
-                        <%--<li>先查看要入款的银行信息，然后通过网上银行、	ATM、柜台或手机银行转账。转账成功后再如实提交转账信息，财务专员查收到信息后会及时添加您的款项。</li>
+                        <li>温馨提示：</li>
+                        <li>单笔储值最低<span style="color:red">${siteCurrency}${onlinePayMin}</span>，最高为<span style="color:red">${siteCurrency}${onlinePayMax}</span>，并须视各家银行转款上限而定。</li>
+                        <li>先查看要入款的银行账号信息，然后通过网上银行、ATM、柜台或手机银行进行转账，转账成功后再如实提交转账信息，财务专员查收到信息后会及时添加您的款项。</li>
                         <li>请尽可能选择同行办理转账，可快速到账。</li>
                         <li>存款完成后，保留单据以利核对并确保您的权益。</li>
-                        <li>
-                            如充值后未到账，请联系在线客服，
-                            <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
-                        </li>--%>
-                        <li>温馨提示：</li>
-                        <li>先查看要入款的账号或二维码信息，然后通过网上银行、ATM、柜台或手机银行进行转账，转账成功后再如实提交转账信息，财务专员查收到信息后会及时添加您的款项。</li>
-                        <li>单笔储值最低为<span style="color:red">CNY10.00</span>，最高为<span style="color:red">CNY1,000,000.00</span>，如存款高于上限请分多笔支付。</li>
                         <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
                         <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。
                             <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>

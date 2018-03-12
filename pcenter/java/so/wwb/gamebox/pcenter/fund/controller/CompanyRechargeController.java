@@ -394,14 +394,14 @@ public class CompanyRechargeController extends RechargeBaseController {
         if (payAccount == null) {
             return getResultMsg(false, null, null);
         }
-        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
-        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo,SessionManager.getUserId());
+//        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
+//        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo,SessionManager.getUserId());
         Map<String, Object> map = new HashMap<>(7, 1f);
         map.put("state", true);
         DecimalFormat format = new DecimalFormat("#.########");
         map.put("bitAmount", format.format(playerRechargeVo.getResult().getBitAmount()));
         map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
-        map.put("failureCount",failureCount);
+//        map.put("failureCount",failureCount);
         return map;
     }
 

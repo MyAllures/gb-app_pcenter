@@ -223,8 +223,10 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
         playerRecharge.setRechargeType(rechargeType);
-        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
-        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo,SessionManager.getUserId());
+//        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
+        PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
+        playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
+        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count,SessionManager.getUserId());
         Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount);
         map.put("failureCount",failureCount);
         return map;

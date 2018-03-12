@@ -97,7 +97,7 @@
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
                         <c:set var="name" value="${account.aliasName}"/>
-                        <span class="radio"><input name="account" depositType="electronic" type="radio" accountRemark="${account.remark}" qrCodeUrl="${empty account.qrCodeUrl?'':soulFn:getThumbPath(domain,account.qrCodeUrl,176,176)}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
+                        <span class="radio"><input name="account" depositType="electronic" type="radio" accountRemark="${account.remark}" qrCodeUrl="${empty account.qrCodeUrl?'':soulFn:getThumbPath(domain,account.qrCodeUrl,176,176)}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" customBankName="${account.customBankName}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${account.bankCode}"></i>
                             <font class="diy-pay-title">${name}</font>
@@ -122,14 +122,7 @@
                     <ul>
                         <li>
                             <div class="bankinfo bankinfo-m">
-                                <c:choose>
-                                    <c:when test="${empty firstPayAccount.customBankName}">
-                                        <h1><i class="pay-third ${thirdBankCode}"></i></h1>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <h1><span class="bank-logo-name">${firstPayAccount.customBankName}</span></h1>
-                                    </c:otherwise>
-                                </c:choose>
+                                <h1><i class="pay-third ${thirdBankCode}"></i><i id="customBankName">${firstPayAccount.customBankName}</i></h1>
                                 <c:choose>
                                     <c:when test="${isHide}">
                                        <span class="orange select">
@@ -189,7 +182,7 @@
             <div class="control-group" name="electronicElement">
                 <label class="control-label" for="result.payerName">您的支付户名：</label>
                 <div class="controls">
-                    <input type="text" class="input" id="result.payerName" name="result.payerName" placeholder="请填写存款时使用的真实姓名">
+                    <input style="width: 200px" type="text" class="input" id="result.payerName" name="result.payerName" placeholder="请填写存款时使用的真实姓名">
                 </div>
             </div>
         </c:if>
@@ -211,14 +204,14 @@
                 </c:choose>
                 <label class="control-label" for="result.payerBankcard">${accountLabel}</label>
                 <div class="controls">
-                    <input type="text" id="result.payerBankcard" name="result.payerBankcard" class="input" placeholder="* 如：陈XX">
+                    <input style="width: 200px" type="text" id="result.payerBankcard" name="result.payerBankcard" class="input" placeholder="* 如：陈XX">
                 </div>
             </div>
         </c:if>
         <div name="electronicElement" class="control-group" style="${firstPayAccount.type eq '1'?'':'display:none'}">
             <label class="control-label">${views.fund_auto['订单号（后5位）']}：</label>
             <div class="controls">
-                <input type="text" class="input" placeholder="" maxlength="5" name="result.bankOrder" autocomplete="off">
+                <input style="width: 200px" type="text" class="input" placeholder="${views.fund_auto['请填写商户订单号']}" maxlength="5" name="result.bankOrder" autocomplete="off">
             </div>
         </div>
         <c:if test="${!empty thirdAccountType}">
@@ -226,14 +219,14 @@
                 <input type="hidden" name="isAuthCode" value="${isAuthCode}"/>
                 <label class="control-label" for="payerBankcard">授权码：</label>
                 <div class="controls" style="width: 525px">
-                    <input type="text" class="input" name="payerBankcard" id="payerBankcard" placeholder="获取授权码，参考下方教程" autocomplete="off"/>
+                    <input  style="width: 200px" type="text" class="input" name="payerBankcard" id="payerBankcard" placeholder="获取授权码，参考下方教程" autocomplete="off"/>
                 </div>
             </div>
         </c:if>
         <div class="control-group">
             <label class="control-label" for="result.rechargeAmount">存款金额：</label>
             <div class="controls">
-                <input type="text" class="input" name="rechargeAmount" placeholder="${firstAccountLimit}">
+                <input style="width: 200px" type="text" class="input" name="rechargeAmount" placeholder="${firstAccountLimit}">
                 <input type="hidden" class="input" name="result.rechargeAmount" id="result.rechargeAmount">
                 <input type="hidden" name="rechargeDecimals" value="${rechargeDecimals}"/>
                 <span class="right-decimals" style="${firstPayAccount.randomAmount?'':'display:none'}" id="rechargeDecimals">.${rechargeDecimals}</span>

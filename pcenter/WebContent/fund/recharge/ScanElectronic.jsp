@@ -69,7 +69,7 @@
                         <c:set var="firstAccountLimit" value="${accountLimit}"/>
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
-                        <span class="radio"><input name="account" depositType="scan" showSuccMsg="false" isThird="false" rechargeType="${onlineType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${account.randomAmount}" ${index == 0?'checked':''} value="${command.getSearchId(account.id)}"></span>
+                        <span class="radio"><input name="account" bankCode="${bankCode}" depositType="scan" showSuccMsg="false" isThird="false" rechargeType="${onlineType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${account.randomAmount}" ${index == 0?'checked':''} value="${command.getSearchId(account.id)}"></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${bankCode}"></i><font class="diy-pay-title">${name}</font>
                         </span>

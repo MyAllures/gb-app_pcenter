@@ -348,7 +348,9 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
             return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
         }
         //公司入款展示确认弹窗：存款金额、实际到账、手续费
-        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
+        PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
+        playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
+//        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
         if (PayAccountType.COMMPANY_ACCOUNT_CODE.equals(payAccount.getType())) {
             return companyRechargeConfirmInfo(playerRechargeVo);
         } else { //线上支付保存存款订单
@@ -378,7 +380,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
                 rechargeType = RechargeTypeEnum.EASY_PAY.getCode();
             }
             playerRecharge.setRechargeType(rechargeType);
-            Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo,SessionManager.getUserId());
+            Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count,SessionManager.getUserId());
             Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount);
             map.put("failureCount",failureCount);
             return map;

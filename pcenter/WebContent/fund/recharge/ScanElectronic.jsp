@@ -269,6 +269,11 @@
                     <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
                 </li>
             </ul>
+            <%--易收付--%>
+            <ul id="easyPayDocument" class="transfer-tips" style="display: none">
+                <li style="color:red;font-size: large">温馨提示：</li>
+                <li style="color:red;font-size: large">当前支付额度必须精确到小数点，请严格核对您的转账金额精确到分，如：100.51，否则无法提高对账速度及成功率，谢谢您的配合。</li>
+            </ul>
         </div>
         <div name="authCode" class="fansao-wrap" style="${isAuthCode?'':'display:none'}">
             <div class="fansao-title">${thirdAccountType}教程</div>

@@ -150,7 +150,7 @@
                     </ul>
                 </div>
                 <div class="control-group">
-                    <div class="" id="accountRemark">
+                    <div class="m-l" id="accountRemark">
                         ${firstPayAccount.remark}
                     </div>
                     <%--<c:if test="${!empty firstPayAccount.remark}">

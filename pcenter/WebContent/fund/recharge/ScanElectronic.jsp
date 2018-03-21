@@ -96,13 +96,14 @@
                         <c:set var="firstAccountLimit" value="${accountLimit}"/>
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
-                        <c:set var="name" value="${account.aliasName}"/>
-                        <span class="radio"><input name="account" depositType="electronic" accountInformation="${account.accountInformation}" accountPrompt="${account.accountPrompt}" type="radio" accountRemark="${account.remark}" qrCodeUrl="${empty account.qrCodeUrl?'':soulFn:getThumbPath(domain,account.qrCodeUrl,176,176)}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" customBankName="${account.customBankName}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" value="${command.getSearchId(account.id)}"/></span>
+                        <c:set var="name" value="${account.aliasName}"/><%--accountRemark="${account.remark}"--%>
+                        <span class="radio"><input name="account" depositType="electronic" accountInformation="${account.accountInformation}" accountPrompt="${account.accountPrompt}" type="radio" qrCodeUrl="${empty account.qrCodeUrl?'':soulFn:getThumbPath(domain,account.qrCodeUrl,176,176)}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" customBankName="${account.customBankName}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" accountId="${account.id}" value="${command.getSearchId(account.id)}"/></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${account.bankCode}"></i>
                             <font class="diy-pay-title">${name}</font>
                         </span>
                         <span class="bank-logo-name">${name}</span>
+                        <font style="display: none" class="remark${account.id}">${account.remark}</font>
                     </label>
                     <c:set var="index" value="${index+1}"/>
                 </c:forEach>
@@ -152,6 +153,11 @@
                     <div class="m-l" id="accountRemark">
                         ${firstPayAccount.remark}
                     </div>
+                    <%--<c:if test="${!empty firstPayAccount.remark}">
+                        <div id="">
+                            <p style="margin: 15px 23px">${firstPayAccount.remark}</p>
+                        </div>
+                    </c:if>--%>
                     <c:if test="${firstPayAccount.bankCode eq 'alipay'}">
                         <a href="javascript:;" data-href="/commonPage/help.html?pageNumber=1&pagingKey=hpdc&dataChildren=62" class="m-l openPage">${fn:replace(views.fund_auto['是否查看转账演示'],"{0}", thirdBankName)}</a>
                     </c:if>

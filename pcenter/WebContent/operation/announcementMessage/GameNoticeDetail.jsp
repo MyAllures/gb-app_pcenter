@@ -22,7 +22,6 @@
     <!--消息详情页-->
     <div class="salemore">
         <div class="al-right pull-right">
-            &lt;
             <c:if test="${vSystemAnnouncementListVo.paging.pageNumber != 1}">
                 <a href="/operation/pAnnouncementMessage/gameNotice.html?&isDetail=1&search.apiId=${command.search.apiId}&paging.pageNumber=${vSystemAnnouncementListVo.paging.pageNumber-1}"  nav-target="mainFrame" class="co-gray6">${views.column['上一条']}</a>
             </c:if>
@@ -31,7 +30,7 @@
                 <a href="/operation/pAnnouncementMessage/gameNotice.html?&isDetail=1&search.apiId=${command.search.apiId}&paging.pageNumber=${vSystemAnnouncementListVo.paging.pageNumber+1}"  nav-target="mainFrame" class="co-gray6">${views.column['下一条']}</a>
             </c:if>
 
-            &gt;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
         </div>
 
         <h2><span class="name">${vSystemAnnouncementListVo.result.get(0).title}</span><br/>

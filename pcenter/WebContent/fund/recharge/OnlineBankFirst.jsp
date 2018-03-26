@@ -189,4 +189,4 @@
         <%@include file="CompanyRechargeDialog.jsp"%>
     </c:if>
 </form>
-<soul:import res="site\"/>
+<soul:import res="site/fund/recharge/OnlineBankFirst"/>

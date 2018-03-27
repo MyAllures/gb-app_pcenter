@@ -573,11 +573,12 @@ public class PersonalInfoController {
         }
 
         //判断是否是100秒后,再次发起请求
-        /*if (validCountDown(PHONE)) {
+        if (validCountDown(PHONE)) {
             return map;
         }
-        SessionManager.setLastSendTime(SessionManager.getDate().getNow(),PHONE);*/
+        SessionManager.setLastSendTime(SessionManager.getDate().getNow(),PHONE);
 
+        //保存手机和验证码匹配成对
         String verificationCode = RandomStringTool.randomNumeric(6);
         SmsInterface smsInterface = getSiteSmsInterface();
         SmsMessageVo smsMessageVo = new SmsMessageVo();
@@ -595,7 +596,6 @@ public class PersonalInfoController {
         } catch (Exception ex) {
             LOG.error(ex, "发送手机验证码错误");
         }
-
 
         setToSession(phone, verificationCode, PHONE);
 

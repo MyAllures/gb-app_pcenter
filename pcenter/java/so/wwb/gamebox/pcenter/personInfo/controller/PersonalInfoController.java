@@ -143,6 +143,8 @@ public class PersonalInfoController {
 
         model.addAttribute("regFieldSortsMap", regFieldSortsMap);
 
+        model.addAttribute("playerCallMaster",ParamTool.playerCallMaster());
+
 
         return PERSON_INFO_PERSON_INFO;
 

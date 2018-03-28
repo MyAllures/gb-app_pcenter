@@ -145,6 +145,8 @@ public class PersonalInfoController {
 
         model.addAttribute("playerCallMaster",ParamTool.playerCallMaster());
 
+        model.addAttribute("openPhoneCall",ParamTool.isOpenPhoneCall());
+
 
         return PERSON_INFO_PERSON_INFO;
 

@@ -90,7 +90,8 @@
                             </c:if>
                             <c:if test="${noticeContactWayMap['110'].status eq 11}">
                                 <em class="orange">${soulFn:overlayTel(noticeContactWayMap['110'].contactValue)}</em>${views.personInfo_auto['此号码可用于接收通知,找回密码']}
-                                <c:if test="${playerCallMaster}">
+                                <%--开通电销且玩家可以联系站长--%>
+                                <c:if test="${playerCallMaster && openPhoneCall}">
                                     <soul:button target="callPlayer" text="联系站长" opType="function" playerId="${sysUser.id}"></soul:button>
                                 </c:if>
 

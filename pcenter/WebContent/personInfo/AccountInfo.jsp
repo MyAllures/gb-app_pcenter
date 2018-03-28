@@ -31,7 +31,7 @@
     <div class="left-ico-message">
         <span class="account-info-title">${views.personInfo_auto['账户安全']}<img src="${resRoot}/images/safety-b.png"></span>
 
-        <c:if test="${not empty regFieldSortsMap['110']}">
+        <c:if test="${not empty regFieldSortsMap['110'] && fn:substring(personal_information.paramValue,4,5)==1}">
             <c:choose>
                 <c:when test="${empty noticeContactWayMap['110'].contactValue && noticeContactWayMap['110'].status ne 22}">
                     <div class="control-grouptwo clearfix">
@@ -103,7 +103,7 @@
         </c:if>
 
 
-        <c:if test="${not empty regFieldSortsMap['201']}">
+        <c:if test="${not empty regFieldSortsMap['201']&&fn:substring(personal_information.paramValue,5,6)==1}">
             <c:choose>
                 <c:when test="${empty noticeContactWayMap['201'].contactValue && noticeContactWayMap['201'].status ne 22}">
                     <div class="control-grouptwo clearfix">
@@ -232,6 +232,7 @@
     <div class="left-ico-message">
         <span class="account-info-title">${views.personInfo_auto['个人信息']}<img src="${resRoot}/images/info-b.png"></span>
 
+        <c:if test="${fn:substring(personal_information.paramValue,0,1)==1}">
         <div class="control-group">
             <label class="control-label">${views.account['AccountSetting.personal.realName']}：</label>
             <div class="controls">
@@ -252,7 +253,9 @@
                 </c:choose>
             </div>
         </div>
+        </c:if>
 
+        <c:if test="${fn:substring(personal_information.paramValue,1,2)==1}">
         <div class="control-group clearfix">
             <label class="control-label">${views.account['AccountSetting.personal.language']}：</label>
             <div class="controls">
@@ -276,7 +279,7 @@
 
             </div>
         </div>
-
+        </c:if>
 
         <%--<div class="control-group clearfix">
             <label class="control-label">${views.account['AccountSetting.personal.country']}：</label>
@@ -336,6 +339,7 @@
 
             </div>
         </div>--%>
+        <c:if test="${fn:substring(personal_information.paramValue,2,3 )==1}">
         <c:if test="${siteId!=119}">
         <div class="control-group">
             <label class="control-label">${views.account['AccountSetting.personal.sex']}：</label>
@@ -356,6 +360,12 @@
                 </c:choose>
             </div>
         </div>
+        </c:if>
+        </c:if>
+
+
+
+        <c:if test="${fn:substring(personal_information.paramValue,3,4)==1}">
         <div class="control-group">
             <label class="control-label">${views.account['AccountSetting.personal.birthday']}：</label>
             <div class="controls">
@@ -372,10 +382,13 @@
                 </c:choose>
             </div>
         </div>
-        </c:if>
         <c:if test="${siteId==119}">
-            <input type="hidden" name="result.birthday" value="${empty sysUserVo.result.birthday?null:soulFn:formatDateTz(sysUserVo.result.birthday,DateFormat.DAY,timeZone)}"/>
+                <input type="hidden" name="result.birthday" value="${empty sysUserVo.result.birthday?null:soulFn:formatDateTz(sysUserVo.result.birthday,DateFormat.DAY,timeZone)}"/>
         </c:if>
+        </c:if>
+
+
+
 
         <%--<div class="control-group">
             <label class="control-label">${views.account['AccountSetting.personal.constellation']}：</label>
@@ -397,8 +410,9 @@
                 </c:choose>
             </div>
         </div>--%>
+        <c:if test="${fn:substring(personal_information.paramValue,6,7)==1}">
         <c:if test="${siteId!=185}">
-            <c:if test="${not empty regFieldSortsMap['304']}">
+           <%-- <c:if test="${not empty regFieldSortsMap['304']}">--%>
                 <div class="control-group">
                     <label class="control-label">${views.personInfo_auto['微信']}：</label>
                     <div class="controls">
@@ -429,9 +443,14 @@
                         </c:choose>
                     </div>
                 </div>
+            <%--</c:if>--%>
             </c:if>
+        </c:if>
 
-            <c:if test="${not empty regFieldSortsMap['301']}">
+
+
+            <c:if test="${fn:substring(personal_information.paramValue,7,8)==1}">
+          <%--  <c:if test="${not empty regFieldSortsMap['301']}">--%>
                 <div class="control-group">
                     <label class="control-label">QQ：</label>
                     <div class="controls">
@@ -461,7 +480,7 @@
                         </c:choose>
                     </div>
                 </div>
-            </c:if>
+           <%-- </c:if>--%>
         </c:if>
 
 

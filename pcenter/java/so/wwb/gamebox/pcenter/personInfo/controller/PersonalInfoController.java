@@ -94,7 +94,9 @@ public class PersonalInfoController {
     @DemoModel(menuCode = DemoMenuEnum.GRZL)
     @Token(generate = true)
     public String index(Model model) {
-
+        //获取玩家资料信息展示
+        SysParam personalInformation= ParamTool.getSysParam(SiteParamEnum.CONNECTION_SETTING_PERSONAL_INFORMATION);
+        model.addAttribute("personal_information",personalInformation);
         //获取玩家用户
         SysUserVo sysUserVo = getSysUser();
         model.addAttribute("sysUser", sysUserVo.getResult());

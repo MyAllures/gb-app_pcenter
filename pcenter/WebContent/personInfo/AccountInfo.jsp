@@ -31,7 +31,7 @@
     <div class="left-ico-message">
         <span class="account-info-title">${views.personInfo_auto['账户安全']}<img src="${resRoot}/images/safety-b.png"></span>
 
-        <c:if test="${not empty regFieldSortsMap['110'] && fn:substring(personal_information.paramValue,4,5)==1}">
+        <c:if test="${ fn:substring(personal_information.paramValue,4,5)==1}">
             <c:choose>
                 <c:when test="${empty noticeContactWayMap['110'].contactValue && noticeContactWayMap['110'].status ne 22}">
                     <div class="control-grouptwo clearfix">
@@ -103,7 +103,7 @@
         </c:if>
 
 
-        <c:if test="${not empty regFieldSortsMap['201']&&fn:substring(personal_information.paramValue,5,6)==1}">
+        <c:if test="${fn:substring(personal_information.paramValue,5,6)==1}">
             <c:choose>
                 <c:when test="${empty noticeContactWayMap['201'].contactValue && noticeContactWayMap['201'].status ne 22}">
                     <div class="control-grouptwo clearfix">

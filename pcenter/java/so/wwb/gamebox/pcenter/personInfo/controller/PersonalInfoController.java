@@ -198,7 +198,6 @@ public class PersonalInfoController {
      */
     @RequestMapping("/updatePersonInfo")
     @ResponseBody
-    @Token(valid = true)
     public Map updatePersonInfo(SysUserVo sysUserVo, UserPlayerVo userPlayerVo,
                                 @FormModel @Valid PersonInfoForm form, BindingResult result) {
         Map map = new HashMap();

@@ -204,7 +204,6 @@ public class PersonalInfoController {
      */
     @RequestMapping("/updatePersonInfo")
     @ResponseBody
-    @Token(valid = true)
     public Map updatePersonInfo(SysUserVo sysUserVo, UserPlayerVo userPlayerVo,
                                 @FormModel @Valid PersonInfoForm form, BindingResult result) {
         Map map = new HashMap();
@@ -586,6 +585,7 @@ public class PersonalInfoController {
 
         //保存手机和验证码匹配成对
         String verificationCode = RandomStringTool.randomNumeric(6);
+        LOG.info("手机{0}-验证码：{1}",phone,verificationCode);
         SmsInterface smsInterface = getSiteSmsInterface();
         SmsMessageVo smsMessageVo = new SmsMessageVo();
         smsMessageVo.setUserIp(ServletTool.getIpAddr(request));

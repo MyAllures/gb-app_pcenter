@@ -65,6 +65,7 @@
                             <div class="controls">
                                 <input type="text" class="input-code" name="phoneVerificationCode" id="phoneVerificationCode" showSuccMsg="false">
                                 <input type="hidden" value="phone" name="phoneFlag">
+                                <input type="hidden" name="phone.status" value="11">
                                 <soul:button target="sendPhoneCode" text="${views.account['AccountSetting.setting.email.freeCaptcha']}" opType="function" cssClass="btn btn-outline btn-filter">${views.account['AccountSetting.setting.email.freeCaptcha']}</soul:button><span tipsName="phoneVerificationCode-tips"></span></span>
                             </div>
                         </div>

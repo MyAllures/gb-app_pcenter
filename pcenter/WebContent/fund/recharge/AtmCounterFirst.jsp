@@ -130,7 +130,7 @@
                 <h4>${views.fund_auto['请选择银行']}</h4>
                 <span class="deposit-info-title">${views.fund_auto['步骤3']}<img src="${resRoot}/images/online-pay3.png"></span>
                 <div class="control-group">
-                    <label class="control-label">存款账号：</label>
+                    <label class="control-label">${views.fund_auto['存款账号']}：</label>
                     <div class="controls">${userName}</div>
                 </div>
                 <div class="control-group">
@@ -145,6 +145,18 @@
                         <label>
                             <span class="radio"><input name="result.rechargeType" showSuccMsg="false" value="atm_counter" type="radio">${views.fund_auto['银行柜台存款']}</span>
                         </label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="result.payerName">${views.fund_auto['存款人姓名']}：</label>
+                    <div class="controls">
+                        <input type="text" name="result.payerName" id="result.payerName" placeholder="${views.fund_auto['您转账时使用的银行卡姓名']}" class="input" style="width:240px;">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="result.rechargeAddress">${views.fund_auto['交易地点']}：</label>
+                    <div class="controls">
+                        <input type="text" id="result.rechargeAddress" name="result.rechargeAddress" maxlength="20" class="input" placeholder="${views.fund_auto['请填写路名']}" style="width:270px;">
                     </div>
                 </div>
                 <div class="control-group">

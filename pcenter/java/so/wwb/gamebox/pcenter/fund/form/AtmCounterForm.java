@@ -1,11 +1,13 @@
 package so.wwb.gamebox.pcenter.fund.form;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.soul.commons.query.enums.Operator;
 import org.soul.commons.validation.form.constraints.Depends;
 import org.soul.commons.validation.form.constraints.Remote;
 import org.soul.commons.validation.form.support.Comment;
 import org.soul.web.support.IForm;
+import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.fund.controller.CompanyRechargeController;
 import so.wwb.gamebox.pcenter.fund.controller.RechargeController;
@@ -23,6 +25,7 @@ public class AtmCounterForm implements IForm {
     private String result_rechargeType;
     private String account;
     private String $code;
+    private String result_rechargeAddress;
 
     @Comment("收款账号")
     @NotBlank
@@ -67,5 +70,15 @@ public class AtmCounterForm implements IForm {
 
     public void set$code(String $code) {
         this.$code = $code;
+    }
+
+    @Comment("存款地址")
+    @Length(max = 20)
+    public String getResult_rechargeAddress() {
+        return result_rechargeAddress;
+    }
+
+    public void setResult_rechargeAddress(String result_rechargeAddress) {
+        this.result_rechargeAddress = result_rechargeAddress;
     }
 }

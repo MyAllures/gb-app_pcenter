@@ -63,7 +63,7 @@
                         </soul:button>
                     </c:if>
                     <p class="game-left api-logo-box ${empty i.id?'':'active'}">
-                        <i class="api-logo-${i.apiId}"></i>
+                        <i class="api-logo-${i.apiId} site${siteId}"></i>
                     </p>
                     <p class="game-right">
                         <span class="title">${gbFn:getSiteApiName(i.apiId.toString())}</span>

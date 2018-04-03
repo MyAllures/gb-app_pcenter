@@ -38,6 +38,7 @@ import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
 import so.wwb.gamebox.model.master.fund.enums.FundTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransferResultStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransferSourceEnum;
+import so.wwb.gamebox.model.master.fund.po.PlayerTransfer;
 import so.wwb.gamebox.model.master.fund.vo.PlayerTransferVo;
 import so.wwb.gamebox.model.master.fund.vo.PlayerWithdrawVo;
 import so.wwb.gamebox.model.master.player.po.PlayerApi;
@@ -102,9 +103,9 @@ public class PlayerTransferController {
             searchAssets(model, new PlayerApiListVo());
             return "/fund/transfers/auto/Index";
         } else {
-            if(SessionManager.isMockAccountModel()){
+            if (SessionManager.isMockAccountModel()) {
                 model.addAttribute("apiList", searchTransferApiByMock());
-            }else{
+            } else {
                 model.addAttribute("apiList", searchTransferApis());
             }
 
@@ -128,7 +129,7 @@ public class PlayerTransferController {
         Api api;
         SiteApi siteApi;
         for (String id : siteApis.keySet()) {
-            if(ApiProviderEnum.BSG.getCode().equals(id)){
+            if (ApiProviderEnum.BSG.getCode().equals(id)) {
                 continue;
             }
             api = apis.get(id);
@@ -140,14 +141,14 @@ public class PlayerTransferController {
         return transableApis;
     }
 
-    private List<Api> searchTransferApiByMock(){
+    private List<Api> searchTransferApiByMock() {
         List<Api> transableApis = new ArrayList<>();
         Map<String, Api> apis = Cache.getApi();
         Map<String, SiteApi> siteApis = Cache.getSiteApi();
         Api api;
         SiteApi siteApi;
         for (String id : siteApis.keySet()) {
-            if(ApiProviderEnum.PL.getCode().equals(id) || ApiProviderEnum.DWT.getCode().equals(id)){
+            if (ApiProviderEnum.PL.getCode().equals(id) || ApiProviderEnum.DWT.getCode().equals(id)) {
                 api = apis.get(id);
                 siteApi = siteApis.get(id);
                 if (api != null && siteApi != null && !GameStatusEnum.DISABLE.getCode().equals(api.getSystemStatus()) && !GameStatusEnum.DISABLE.getCode().equals(siteApi.getStatus())) {
@@ -170,7 +171,7 @@ public class PlayerTransferController {
         listVo = ServiceSiteTool.playerApiService().fundRecord(listVo);
         model.addAttribute("player", listVo.getUserPlayer());
         //模拟账号过滤不要的API
-        if(SessionManager.isMockAccountModel()){
+        if (SessionManager.isMockAccountModel()) {
             listVo = filterPlayerApiByMock(listVo);
         }
         model.addAttribute("playerApiListVo", listVo);
@@ -186,14 +187,14 @@ public class PlayerTransferController {
         model.addAttribute("transfer", playerTransferService().queryProcessAmount(playerTransferVo));
     }
 
-    private PlayerApiListVo filterPlayerApiByMock(PlayerApiListVo listVo){
-        if(listVo.getResult()==null){
+    private PlayerApiListVo filterPlayerApiByMock(PlayerApiListVo listVo) {
+        if (listVo.getResult() == null) {
             return listVo;
         }
         List<PlayerApi> resList = new ArrayList<>();
-        for(PlayerApi playerApi : listVo.getResult()){
+        for (PlayerApi playerApi : listVo.getResult()) {
             Integer apiId = playerApi.getApiId();
-            if(ApiProviderEnum.PL.getCode().equals(apiId.toString()) || ApiProviderEnum.DWT.getCode().equals(apiId.toString())){
+            if (ApiProviderEnum.PL.getCode().equals(apiId.toString()) || ApiProviderEnum.DWT.getCode().equals(apiId.toString())) {
                 resList.add(playerApi);
             }
         }
@@ -334,6 +335,7 @@ public class PlayerTransferController {
      * @return 为空则本次转账请求正常
      */
     private Map<String, Object> isAbleToTransfer(PlayerTransferVo playerTransferVo) {
+        PlayerTransfer result = playerTransferVo.getResult();
         if (playerTransferVo.getResult().getTransferAmount() <= 0) {
             return getErrorMessage(TransferResultStatusEnum.TRANSFER_ERROR_AMOUNT.getCode(), playerTransferVo.getResult().getApiId());
         }
@@ -358,11 +360,17 @@ public class PlayerTransferController {
             return getErrorMessage(TransferResultStatusEnum.API_TRANSFER_SWITCH_COLSE.getCode(), playerTransferVo.getResult().getApiId());
         //模拟账号且是自主api可用,其他试玩模式下不支持转账
         if (SessionManagerCommon.getDemoModelEnum() != null) {
-                if (DemoModelEnum.MODEL_4_MOCK_ACCOUNT.equals(SessionManagerCommon.getDemoModelEnum()) && (apiId == Integer.valueOf(ApiProviderEnum.PL.getCode()) || apiId == Integer.valueOf(ApiProviderEnum.DWT.getCode()))) {
-                    //模拟账号且是自主体育可用
-                }else{
-                    return getErrorMessage(TransferResultStatusEnum.TRANSFER_DEMO_UNSUPPORTED.getCode(), playerTransferVo.getResult().getApiId());
-                }
+            if (DemoModelEnum.MODEL_4_MOCK_ACCOUNT.equals(SessionManagerCommon.getDemoModelEnum()) && (apiId == Integer.valueOf(ApiProviderEnum.PL.getCode()) || apiId == Integer.valueOf(ApiProviderEnum.DWT.getCode()))) {
+                //模拟账号且是自主体育可用
+            } else {
+                return getErrorMessage(TransferResultStatusEnum.TRANSFER_DEMO_UNSUPPORTED.getCode(), playerTransferVo.getResult().getApiId());
+            }
+        }
+        //实时更新转账上限统计值，判断是否超出转账上限
+        boolean isOverTransfer = playerTransferService().transferLimit(playerTransferVo);
+        //转账上限
+        if (FundTypeEnum.TRANSFER_OUT.getCode().equals(playerTransferVo.getResult().getTransferType()) && (ParamTool.getTransLimit() || isOverTransfer)) {
+            return getErrorMessage(TransferResultStatusEnum.TRANSFER_LIMIT.getCode(), result.getApiId());
         }
         return null;
     }
@@ -450,7 +458,7 @@ public class PlayerTransferController {
      * @return
      */
     private Map<String, Object> getSuccessMessage(Integer apiId) {
-        Map<String, Object> resultMap = new HashMap<>(5,1f);
+        Map<String, Object> resultMap = new HashMap<>(5, 1f);
         resultMap.put("state", true);
         //用于站点站进入API前的转账窗口
         resultMap.put("api", apiId);
@@ -465,7 +473,7 @@ public class PlayerTransferController {
      * @return
      */
     private Map<String, Object> getErrorMessage(String messageCode, Integer apiId) {
-        Map<String, Object> resultMap = new HashMap<>(5,1f);
+        Map<String, Object> resultMap = new HashMap<>(5, 1f);
         resultMap.put("state", false);
         resultMap.put("msg", LocaleTool.tranMessage(Module.FUND.getCode(), messageCode));
         //用于站点站进入API前的转账窗口
@@ -502,7 +510,7 @@ public class PlayerTransferController {
     @RequestMapping("/reconnectTransfer")
     @ResponseBody
     public Map reconnectTransfer(PlayerTransferVo playerTransferVo) {
-        Map<String, Object> map = new HashMap<>(4,1f);
+        Map<String, Object> map = new HashMap<>(4, 1f);
         if (StringTool.isBlank(playerTransferVo.getSearch().getTransactionNo())) {
             map.put("state", false);
             return map;
@@ -558,7 +566,7 @@ public class PlayerTransferController {
     @RequestMapping("refreshApi")
     @ResponseBody
     public String refreshApi(PlayerApiListVo listVo, String isRefresh) {
-        Map<String, String> map = new HashMap<>(4,1f);
+        Map<String, String> map = new HashMap<>(4, 1f);
         if (StringTool.isBlank(isRefresh)) {
             //同步玩家api余额
             fetchPlayerAllApiBalance(listVo);

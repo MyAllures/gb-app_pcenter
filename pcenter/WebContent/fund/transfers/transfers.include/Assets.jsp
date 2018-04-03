@@ -91,7 +91,7 @@
                     <a data-rel='{"precall":"","callback":"",post:"",opType:"function",dataType:"",target:"refreshApi",confirm:"",text:"",size:"","type":"api","apiId":"${i.apiId}" }'></a>
                 </c:if>
                 <p class="game-left api-logo-box ${empty i.id?'':'active'}">
-                    <i class="api-logo-${i.apiId}"></i>
+                    <i class="api-logo-${i.apiId} site${siteId}"></i>
                 </p>
                 <p class="game-right">
                     <i class="arr-down" style="display: none" name="${i.apiId}down"></i>

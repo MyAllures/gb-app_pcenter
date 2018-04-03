@@ -48,6 +48,7 @@ import so.wwb.gamebox.model.master.setting.po.FieldSort;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.personInfo.form.*;
 import so.wwb.gamebox.pcenter.session.SessionManager;
+import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.bank.BankHelper;
 import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.SiteCustomerServiceHelper;
@@ -93,7 +94,9 @@ public class PersonalInfoController {
     @DemoModel(menuCode = DemoMenuEnum.GRZL)
     @Token(generate = true)
     public String index(Model model) {
-
+        //获取玩家资料信息展示
+        SysParam personalInformation= ParamTool.getSysParam(SiteParamEnum.CONNECTION_SETTING_PERSONAL_INFORMATION);
+        model.addAttribute("personal_information",personalInformation);
         //获取玩家用户
         SysUserVo sysUserVo = getSysUser();
         model.addAttribute("sysUser", sysUserVo.getResult());
@@ -141,6 +144,10 @@ public class PersonalInfoController {
         /*必填的注册项name的json*/
 
         model.addAttribute("regFieldSortsMap", regFieldSortsMap);
+
+        model.addAttribute("playerCallMaster",ParamTool.playerCallMaster());
+
+        model.addAttribute("openPhoneCall",ParamTool.isOpenPhoneCall());
 
 
         return PERSON_INFO_PERSON_INFO;
@@ -197,7 +204,6 @@ public class PersonalInfoController {
      */
     @RequestMapping("/updatePersonInfo")
     @ResponseBody
-    @Token(valid = true)
     public Map updatePersonInfo(SysUserVo sysUserVo, UserPlayerVo userPlayerVo,
                                 @FormModel @Valid PersonInfoForm form, BindingResult result) {
         Map map = new HashMap();
@@ -572,28 +578,30 @@ public class PersonalInfoController {
         }
 
         //判断是否是100秒后,再次发起请求
-        /*if (validCountDown(PHONE)) {
+        if (validCountDown(PHONE)) {
             return map;
         }
-        SessionManager.setLastSendTime(SessionManager.getDate().getNow(),PHONE);*/
+        SessionManager.setLastSendTime(SessionManager.getDate().getNow(),PHONE);
 
+        //保存手机和验证码匹配成对
         String verificationCode = RandomStringTool.randomNumeric(6);
+        LOG.info("手机{0}-验证码：{1}",phone,verificationCode);
         SmsInterface smsInterface = getSiteSmsInterface();
         SmsMessageVo smsMessageVo = new SmsMessageVo();
         smsMessageVo.setUserIp(ServletTool.getIpAddr(request));
-        smsMessageVo.setProviderId(Integer.parseInt(smsInterface.getFullName()));
+        smsMessageVo.setProviderId(smsInterface.getId());
         smsMessageVo.setProviderName(smsInterface.getUsername());
         smsMessageVo.setProviderPwd(smsInterface.getPassword());
         smsMessageVo.setProviderKey(smsInterface.getDataKey());
         smsMessageVo.setPhoneNum(phone);
         smsMessageVo.setType(SmsTypeEnum.YZM.getCode());
-        smsMessageVo.setContent(verificationCode);
+        String siteName = SessionManagerCommon.getSiteName(request);
+        smsMessageVo.setContent("验证码："+verificationCode+" 【"+siteName+"】");
         try {
             ServiceTool.messageService().sendSmsMessage(smsMessageVo);
         } catch (Exception ex) {
             LOG.error(ex, "发送手机验证码错误");
         }
-
 
         setToSession(phone, verificationCode, PHONE);
 

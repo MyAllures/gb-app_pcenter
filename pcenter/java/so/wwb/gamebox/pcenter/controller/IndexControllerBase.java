@@ -20,7 +20,6 @@ import org.soul.model.security.privilege.so.SysUserSo;
 import org.soul.model.security.privilege.vo.SysResourceVo;
 import org.soul.model.security.privilege.vo.SysUserVo;
 import org.soul.model.sys.po.SysParam;
-import org.soul.web.controller.BaseIndexController;
 import org.soul.web.security.privilege.controller.SysResourceController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +42,7 @@ import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
 import so.wwb.gamebox.pcenter.init.ConfigManager;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.web.phoneapi.controller.BasePhoneApiController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,7 +53,7 @@ import java.util.*;
  * Created by tony on 15-4-29.
  */
 @Controller
-public class IndexController extends BaseIndexController {
+public class IndexControllerBase extends BasePhoneApiController {
     private static final String INDEX_URI = "index";
     private static final String DIALOG_INDEX_URI = "DialogIndex";
     private static final String INDEX_PLAYER_INFO_URI = "index.include/PlayerInfo";
@@ -273,5 +273,11 @@ public class IndexController extends BaseIndexController {
         jb.put("languageI18n", dicts.get("common").get("language"));
 
         return jb.toString();
+    }
+
+    @Override
+    protected String fetchExtNo() {
+        String extNo = ParamTool.getPlayerCallExtNo();
+        return extNo;
     }
 }

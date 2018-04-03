@@ -36,13 +36,13 @@
             <c:forEach items="${command.result}" var="i" varStatus="vs">
                 <tr style="${vs.index%2==0?'':'background: #f9f9f9;'}">
                     <c:if test="${isLottery.paramValue!='true'}">
-                        <td>${gbFn:getSiteApiName(i.apiId.toString())}
+                        <td>${i.apiName}
                                  <c:if test="${not empty i.gameType}" >
                                     <br/>${dicts.game.game_type[i.gameType]}
                                  </c:if>
                         </td>
                     </c:if>
-                    <td>${gbFn:getGameName(i.gameId.toString())}</td>
+                    <td>${i.gameName}</td>
                     <td>
                         <c:choose>
                             <c:when test="${i.terminal eq '2'}">

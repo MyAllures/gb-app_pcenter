@@ -53,7 +53,7 @@ import java.util.*;
  * Created by tony on 15-4-29.
  */
 @Controller
-public class IndexControllerBase extends BasePhoneApiController {
+public class IndexController extends BasePhoneApiController {
     private static final String INDEX_URI = "index";
     private static final String DIALOG_INDEX_URI = "DialogIndex";
     private static final String INDEX_PLAYER_INFO_URI = "index.include/PlayerInfo";

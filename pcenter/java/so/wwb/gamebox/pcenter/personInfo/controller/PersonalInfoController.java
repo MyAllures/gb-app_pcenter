@@ -515,6 +515,8 @@ public class PersonalInfoController {
     @RequestMapping("/toBindPhone")
     public String toBindPhone(Model model) {
         model.addAttribute("validateRule", JsRuleCreator.create(BindPhoneForm.class));
+        NoticeContactWayVo noticeContactWayVo = getContactWayByType(SessionManager.getUserId(), ContactWayType.CELLPHONE.getCode());
+        model.addAttribute("noticeContactWay", noticeContactWayVo.getResult());
         return PERSON_INFO_BIND_PHONE;
     }
 
@@ -651,11 +653,11 @@ public class PersonalInfoController {
         boolean success = ServiceSiteTool.userPlayerService().updatePhone(sysUserVo, userPlayerVo);
         map.put("state", success);
         if (success) {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.success")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.success"));
             SessionManager.clearPrivilegeStatus();
             SessionManager.removeEmailOrPhoneSession(PHONE);
         } else {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.failed"));
         }
         return map;
     }
@@ -817,7 +819,7 @@ public class PersonalInfoController {
      */
     @RequestMapping(value = "/verifyPhoneVerificationCode")
     @ResponseBody
-    public String verifyPhoneVerificationCode(@RequestParam("phoneVerificationCode") String phoneVerificationCode) {
+    public String verifyPhoneVerificationCode(@RequestParam("phone.phoneVerificationCode") String phoneVerificationCode) {
         boolean flag = false;
         boolean isExpired = false;
         boolean isError = false;

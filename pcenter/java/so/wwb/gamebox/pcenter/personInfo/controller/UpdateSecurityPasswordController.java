@@ -145,7 +145,7 @@ public class UpdateSecurityPasswordController {
                 SessionManager.getUserName());
         if (newPrivilegePwd.equals(SessionManager.getUser().getPermissionPwd())) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.PRIVILEGE, "security.update.same")));
+            map.put("msg", LocaleTool.tranMessage(Module.PRIVILEGE, "security.update.same"));
             return map;
         }
 
@@ -186,13 +186,13 @@ public class UpdateSecurityPasswordController {
         map.put("state", success);
         if (success) {
             SessionManager.refreshUser();
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.PRIVILEGE, "security.update.success")));
+            map.put("msg", LocaleTool.tranMessage(Module.PRIVILEGE, "security.update.success"));
             map.put("stateCode", PrivilegeStatusEnum.CODE_100.getCode());
             SessionManager.clearPrivilegeStatus();
             resetSecPwdFreezen(sysUser);
             resetBalanceFreeze(sysUser);
         } else {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.PRIVILEGE, "security.update.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.PRIVILEGE, "security.update.failed"));
         }
         return map;
     }

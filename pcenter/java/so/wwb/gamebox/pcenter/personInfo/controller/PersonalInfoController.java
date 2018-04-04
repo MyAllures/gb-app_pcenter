@@ -180,7 +180,7 @@ public class PersonalInfoController {
         SysUser sysUser = sysUserVo.getResult();
         if (sysUser == null || StringTool.isBlank(sysUser.getAvatarUrl())) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.avatar.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.avatar.failed"));
             return map;
         }
         sysUser.setId(SessionManager.getUserId());
@@ -211,7 +211,7 @@ public class PersonalInfoController {
         //前置验证
         if (result.hasErrors()) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             return map;
         }
 
@@ -223,7 +223,7 @@ public class PersonalInfoController {
             if (StringTool.isBlank(userPlayerVo.getVerificationCode())
                     || "false".equals(verifyCode(userPlayerVo.getVerificationCode()))) {
                 map.put("state", false);
-                map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.email.code")));
+                map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.email.code"));
                 map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
                 return map;
             }
@@ -237,7 +237,7 @@ public class PersonalInfoController {
             if (StringTool.isBlank(userPlayerVo.getPhoneVerificationCode())
                     || "false".equals(verifyCode(userPlayerVo.getVerificationCode()))) {
                 map.put("state", false);
-                map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code")));
+                map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code"));
                 map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
                 return map;
             }
@@ -290,12 +290,12 @@ public class PersonalInfoController {
         map.put("state", sysUserVo.isSuccess());
         if (sysUserVo.isSuccess()) {
             SessionManager.refreshUser();
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.success")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.success"));
             SessionManager.clearPrivilegeStatus();
             SessionManager.removeEmailOrPhoneSession(EMAIL);
             SessionManager.removeEmailOrPhoneSession(PHONE);
         } else {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
         }
         return map;
@@ -377,13 +377,13 @@ public class PersonalInfoController {
         Map map = new HashMap();
         if (email == null || "".equals(email)) {
             map.put("state", false);
-            map.put("emailMsg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.notBlank")));
+            map.put("emailMsg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.notBlank"));
             return map;
         }
 
         if (StringTool.isNotBlank(email) && !email.matches(FormValidRegExps.EMAIL)) {
             map.put("state", false);
-            map.put("emailMsg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.format.error")));
+            map.put("emailMsg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.format.error"));
             return map;
         }
 
@@ -497,11 +497,11 @@ public class PersonalInfoController {
         boolean success = ServiceSiteTool.userPlayerService().updateEmail(sysUserVo, userPlayerVo);
         map.put("state", success);
         if (success) {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.success")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.success"));
             SessionManager.clearPrivilegeStatus();
             SessionManager.removeEmailOrPhoneSession(EMAIL);
         } else {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.failed"));
         }
         return map;
     }
@@ -569,13 +569,13 @@ public class PersonalInfoController {
         Map map = new HashMap();
         if (phone == null || "".equals(phone)) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.notBlank")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.notBlank"));
             return map;
         }
 
         if (StringTool.isNotBlank(phone) && !phone.matches(FormValidRegExps.NUMBER_PHONE)) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.format.error")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.format.error"));
             return map;
         }
 
@@ -755,21 +755,21 @@ public class PersonalInfoController {
             if (email.equals(SessionManager.getEmailOrPhoneCode(EMAIL).get(2))) {
                 if (DateTool.minutesBetween(SessionManager.getDate().getNow(), (Date) SessionManager.getEmailOrPhoneCode(EMAIL).get(1)) > 30) {
                     map.put("state", false);
-                    map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.captcha.due")));
+                    map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.captcha.due"));
                     flag = true;
                 } else if (!emailCode.equals(SessionManager.getEmailOrPhoneCode(EMAIL).get(0))) {
                     map.put("state", false);
-                    map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.captcha.error")));
+                    map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.captcha.error"));
                     flag = true;
                 }
             } else {//验证获取验证码后邮箱是否更改
                 map.put("state", false);
-                map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.error")));
+                map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.error"));
                 flag = true;
             }
         } else {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.captcha.error")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.captcha.error"));
             flag = true;
         }
         return flag;
@@ -845,21 +845,21 @@ public class PersonalInfoController {
             if (email.equals(SessionManager.getEmailOrPhoneCode(PHONE).get(2))) {
                 if (DateTool.minutesBetween(SessionManager.getDate().getNow(), (Date) SessionManager.getEmailOrPhoneCode(PHONE).get(1)) > 30) {
                     map.put("state", false);
-                    map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code.due")));
+                    map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code.due"));
                     flag = true;
                 } else if (!phoneCode.equals(SessionManager.getEmailOrPhoneCode(PHONE).get(0))) {
                     map.put("state", false);
-                    map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code.error")));
+                    map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code.error"));
                     flag = true;
                 }
             } else {//验证获取验证码后邮箱是否更改
                 map.put("state", false);
-                map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.error")));
+                map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.error"));
                 flag = true;
             }
         } else {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.captcha.error")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.captcha.error"));
             flag = true;
         }
         return flag;

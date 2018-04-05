@@ -840,15 +840,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/verifyPhonePhoneVerificationCode")
     @ResponseBody
     public String verifyPhonePhoneVerificationCode(@RequestParam("phone.phoneVerificationCode") String phoneVerificationCode) {
-        boolean flag = false;
-        boolean isExpired = false;
-        boolean isError = false;
-        if (SessionManager.getEmailOrPhoneCode(PHONE) != null) {
-            isExpired = DateTool.minutesBetween(SessionManager.getDate().getNow(), (Date) SessionManager.getEmailOrPhoneCode(PHONE).get(1)) > 30;
-            isError = phoneVerificationCode.equals(SessionManager.getEmailOrPhoneCode(PHONE).get(0));
-            flag = !isExpired && isError;
-        }
-        return flag ? "true" : "false";
+       return verifyPhoneVerificationCode(phoneVerificationCode);
     }
 
     /**

@@ -16,7 +16,7 @@ import javax.validation.constraints.Pattern;
 public class BindPhoneForm implements IForm {
 
     private String phone_contactValue;
-    private String phoneVerificationCode;
+    private String phone_phoneVerificationCode;
 
     @NotBlank(message = "passport.edit.info.phone.notBlank")
     @Pattern(message = "passport.edit.info.format.error",regexp = FormValidRegExps.NUMBER_PHONE)
@@ -31,13 +31,13 @@ public class BindPhoneForm implements IForm {
     }
 
     @NotBlank(message = "passport.required.captcha")
-    @Remote(checkClass = PersonalInfoController.class, checkMethod = "verifyPhoneVerificationCode", additionalProperties = {"phoneVerificationCode"}, message = "passport.passport.edit.info.captcha.error.due")
+    @Remote(checkClass = PersonalInfoController.class, checkMethod = "verifyPhonePhoneVerificationCode", additionalProperties = {"phone_phoneVerificationCode"}, message = "passport.passport.edit.info.captcha.error.due")
     @Comment("手机验证码")
-    public String getPhoneVerificationCode() {
-        return phoneVerificationCode;
+    public String getPhone_phoneVerificationCode() {
+        return phone_phoneVerificationCode;
     }
 
-    public void setPhoneVerificationCode(String phoneVerificationCode) {
-        this.phoneVerificationCode = phoneVerificationCode;
+    public void setPhone_phoneVerificationCode(String phone_phoneVerificationCode) {
+        this.phone_phoneVerificationCode = phone_phoneVerificationCode;
     }
 }

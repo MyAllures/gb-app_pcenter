@@ -95,8 +95,8 @@ public class PersonalInfoController {
     @Token(generate = true)
     public String index(Model model) {
         //获取玩家资料信息展示
-        SysParam personalInformation= ParamTool.getSysParam(SiteParamEnum.CONNECTION_SETTING_PERSONAL_INFORMATION);
-        model.addAttribute("personal_information",personalInformation);
+        SysParam personalInformation = ParamTool.getSysParam(SiteParamEnum.CONNECTION_SETTING_PERSONAL_INFORMATION);
+        model.addAttribute("personal_information", personalInformation);
         //获取玩家用户
         SysUserVo sysUserVo = getSysUser();
         model.addAttribute("sysUser", sysUserVo.getResult());
@@ -145,9 +145,9 @@ public class PersonalInfoController {
 
         model.addAttribute("regFieldSortsMap", regFieldSortsMap);
 
-        model.addAttribute("playerCallMaster",ParamTool.playerCallMaster());
+        model.addAttribute("playerCallMaster", ParamTool.playerCallMaster());
 
-        model.addAttribute("openPhoneCall",ParamTool.isOpenPhoneCall());
+        model.addAttribute("openPhoneCall", ParamTool.isOpenPhoneCall());
 
 
         return PERSON_INFO_PERSON_INFO;
@@ -163,7 +163,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/toUploadHeadPortrait")
     public String toUploadHeadPortrait(Model model) {
         model.addAttribute("url", SessionManager.getUser().getAvatarUrl());
-        model.addAttribute("playerId",SessionManager.getUser().getId());
+        model.addAttribute("playerId", SessionManager.getUser().getId());
         return PERSON_INFO_UPLOAD_HEAD_PORTRAIT;
     }
 
@@ -176,11 +176,11 @@ public class PersonalInfoController {
     @RequestMapping(value = "/uploadHeadPortrait")
     @ResponseBody
     public Map uploadHeadPortrait(SysUserVo sysUserVo) {
-        Map map = new HashMap(2,1f);
+        Map map = new HashMap(2, 1f);
         SysUser sysUser = sysUserVo.getResult();
         if (sysUser == null || StringTool.isBlank(sysUser.getAvatarUrl())) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.avatar.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.avatar.failed"));
             return map;
         }
         sysUser.setId(SessionManager.getUserId());
@@ -211,7 +211,7 @@ public class PersonalInfoController {
         //前置验证
         if (result.hasErrors()) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             return map;
         }
 
@@ -223,7 +223,7 @@ public class PersonalInfoController {
             if (StringTool.isBlank(userPlayerVo.getVerificationCode())
                     || "false".equals(verifyCode(userPlayerVo.getVerificationCode()))) {
                 map.put("state", false);
-                map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.email.code")));
+                map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.email.code"));
                 map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
                 return map;
             }
@@ -237,7 +237,7 @@ public class PersonalInfoController {
             if (StringTool.isBlank(userPlayerVo.getPhoneVerificationCode())
                     || "false".equals(verifyCode(userPlayerVo.getVerificationCode()))) {
                 map.put("state", false);
-                map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code")));
+                map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code"));
                 map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
                 return map;
             }
@@ -290,12 +290,12 @@ public class PersonalInfoController {
         map.put("state", sysUserVo.isSuccess());
         if (sysUserVo.isSuccess()) {
             SessionManager.refreshUser();
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.success")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.success"));
             SessionManager.clearPrivilegeStatus();
             SessionManager.removeEmailOrPhoneSession(EMAIL);
             SessionManager.removeEmailOrPhoneSession(PHONE);
         } else {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
         }
         return map;
@@ -377,13 +377,13 @@ public class PersonalInfoController {
         Map map = new HashMap();
         if (email == null || "".equals(email)) {
             map.put("state", false);
-            map.put("emailMsg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.notBlank")));
+            map.put("emailMsg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.notBlank"));
             return map;
         }
 
         if (StringTool.isNotBlank(email) && !email.matches(FormValidRegExps.EMAIL)) {
             map.put("state", false);
-            map.put("emailMsg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.format.error")));
+            map.put("emailMsg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.format.error"));
             return map;
         }
 
@@ -484,7 +484,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/updateEmail")
     @ResponseBody
     public Map updateEmail(SysUserVo sysUserVo, UserPlayerVo userPlayerVo) {
-        Map map = new HashMap(2,1f);
+        Map map = new HashMap(2, 1f);
 
         String emailCode = userPlayerVo.getVerificationCode();
         String email = userPlayerVo.getEmail().getContactValue();
@@ -497,11 +497,11 @@ public class PersonalInfoController {
         boolean success = ServiceSiteTool.userPlayerService().updateEmail(sysUserVo, userPlayerVo);
         map.put("state", success);
         if (success) {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.success")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.success"));
             SessionManager.clearPrivilegeStatus();
             SessionManager.removeEmailOrPhoneSession(EMAIL);
         } else {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.failed"));
         }
         return map;
     }
@@ -515,6 +515,8 @@ public class PersonalInfoController {
     @RequestMapping("/toBindPhone")
     public String toBindPhone(Model model) {
         model.addAttribute("validateRule", JsRuleCreator.create(BindPhoneForm.class));
+        NoticeContactWayVo noticeContactWayVo = getContactWayByType(SessionManager.getUserId(), ContactWayType.CELLPHONE.getCode());
+        model.addAttribute("noticeContactWay", noticeContactWayVo.getResult());
         return PERSON_INFO_BIND_PHONE;
     }
 
@@ -567,13 +569,13 @@ public class PersonalInfoController {
         Map map = new HashMap();
         if (phone == null || "".equals(phone)) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.notBlank")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.notBlank"));
             return map;
         }
 
         if (StringTool.isNotBlank(phone) && !phone.matches(FormValidRegExps.NUMBER_PHONE)) {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.format.error")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.format.error"));
             return map;
         }
 
@@ -581,11 +583,11 @@ public class PersonalInfoController {
         if (validCountDown(PHONE)) {
             return map;
         }
-        SessionManager.setLastSendTime(SessionManager.getDate().getNow(),PHONE);
+        SessionManager.setLastSendTime(SessionManager.getDate().getNow(), PHONE);
 
         //保存手机和验证码匹配成对
         String verificationCode = RandomStringTool.randomNumeric(6);
-        LOG.info("手机{0}-验证码：{1}",phone,verificationCode);
+        LOG.info("手机{0}-验证码：{1}", phone, verificationCode);
         SmsInterface smsInterface = getSiteSmsInterface();
         SmsMessageVo smsMessageVo = new SmsMessageVo();
         smsMessageVo.setUserIp(ServletTool.getIpAddr(request));
@@ -596,7 +598,7 @@ public class PersonalInfoController {
         smsMessageVo.setPhoneNum(phone);
         smsMessageVo.setType(SmsTypeEnum.YZM.getCode());
         String siteName = SessionManagerCommon.getSiteName(request);
-        smsMessageVo.setContent("验证码："+verificationCode+" 【"+siteName+"】");
+        smsMessageVo.setContent("验证码：" + verificationCode + " 【" + siteName + "】");
         try {
             ServiceTool.messageService().sendSmsMessage(smsMessageVo);
         } catch (Exception ex) {
@@ -634,7 +636,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/updatePhone")
     @ResponseBody
     public Map updatePhone(SysUserVo sysUserVo, UserPlayerVo userPlayerVo) {
-        Map map = new HashMap(2,1f);
+        Map map = new HashMap(2, 1f);
 
         String phoneCode = userPlayerVo.getPhoneVerificationCode();
         String phone = userPlayerVo.getPhone().getContactValue();
@@ -651,11 +653,11 @@ public class PersonalInfoController {
         boolean success = ServiceSiteTool.userPlayerService().updatePhone(sysUserVo, userPlayerVo);
         map.put("state", success);
         if (success) {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.success")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.success"));
             SessionManager.clearPrivilegeStatus();
             SessionManager.removeEmailOrPhoneSession(PHONE);
         } else {
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.failed")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.phone.failed"));
         }
         return map;
     }
@@ -753,21 +755,21 @@ public class PersonalInfoController {
             if (email.equals(SessionManager.getEmailOrPhoneCode(EMAIL).get(2))) {
                 if (DateTool.minutesBetween(SessionManager.getDate().getNow(), (Date) SessionManager.getEmailOrPhoneCode(EMAIL).get(1)) > 30) {
                     map.put("state", false);
-                    map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.captcha.due")));
+                    map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.captcha.due"));
                     flag = true;
                 } else if (!emailCode.equals(SessionManager.getEmailOrPhoneCode(EMAIL).get(0))) {
                     map.put("state", false);
-                    map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.captcha.error")));
+                    map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.captcha.error"));
                     flag = true;
                 }
             } else {//验证获取验证码后邮箱是否更改
                 map.put("state", false);
-                map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.error")));
+                map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.error"));
                 flag = true;
             }
         } else {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.captcha.error")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.email.captcha.error"));
             flag = true;
         }
         return flag;
@@ -830,6 +832,18 @@ public class PersonalInfoController {
     }
 
     /**
+     * 手机验证码远程验证
+     *
+     * @param phoneVerificationCode
+     * @return
+     */
+    @RequestMapping(value = "/verifyPhonePhoneVerificationCode")
+    @ResponseBody
+    public String verifyPhonePhoneVerificationCode(@RequestParam("phone.phoneVerificationCode") String phoneVerificationCode) {
+       return verifyPhoneVerificationCode(phoneVerificationCode);
+    }
+
+    /**
      * 判断验证码是否可用
      *
      * @param map
@@ -843,21 +857,21 @@ public class PersonalInfoController {
             if (email.equals(SessionManager.getEmailOrPhoneCode(PHONE).get(2))) {
                 if (DateTool.minutesBetween(SessionManager.getDate().getNow(), (Date) SessionManager.getEmailOrPhoneCode(PHONE).get(1)) > 30) {
                     map.put("state", false);
-                    map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code.due")));
+                    map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code.due"));
                     flag = true;
                 } else if (!phoneCode.equals(SessionManager.getEmailOrPhoneCode(PHONE).get(0))) {
                     map.put("state", false);
-                    map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code.error")));
+                    map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.code.error"));
                     flag = true;
                 }
             } else {//验证获取验证码后邮箱是否更改
                 map.put("state", false);
-                map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.error")));
+                map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.error"));
                 flag = true;
             }
         } else {
             map.put("state", false);
-            map.put("msg", LocaleTool.tranMessage("player", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.captcha.error")));
+            map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.captcha.error"));
             flag = true;
         }
         return flag;
@@ -907,8 +921,8 @@ public class PersonalInfoController {
      */
     @RequestMapping(value = "/checkRealNameExist")
     @ResponseBody
-    public String checkRealNameExist(@RequestParam("result.realName") String realName, @RequestParam("realName") String name){
-        if (!ParamTool.isOnlyFiled("realName") || !"undefined".equals(name)){
+    public String checkRealNameExist(@RequestParam("result.realName") String realName, @RequestParam("realName") String name) {
+        if (!ParamTool.isOnlyFiled("realName") || !"undefined".equals(name)) {
             return "true";
         }
         SysUserVo sysUserVo = new SysUserVo();

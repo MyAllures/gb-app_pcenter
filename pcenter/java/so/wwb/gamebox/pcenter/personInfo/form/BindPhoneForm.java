@@ -31,7 +31,7 @@ public class BindPhoneForm implements IForm {
     }
 
     @NotBlank(message = "passport.required.captcha")
-    @Remote(checkClass = PersonalInfoController.class, checkMethod = "verifyPhoneVerificationCode", additionalProperties = {"phone_phoneVerificationCode"}, message = "passport.passport.edit.info.captcha.error.due")
+    @Remote(checkClass = PersonalInfoController.class, checkMethod = "verifyPhonePhoneVerificationCode", additionalProperties = {"phone_phoneVerificationCode"}, message = "passport.passport.edit.info.captcha.error.due")
     @Comment("手机验证码")
     public String getPhone_phoneVerificationCode() {
         return phone_phoneVerificationCode;

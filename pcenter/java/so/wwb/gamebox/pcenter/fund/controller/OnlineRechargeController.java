@@ -9,8 +9,6 @@ import org.soul.commons.math.NumberTool;
 import org.soul.commons.net.ServletTool;
 import org.soul.commons.security.CryptoTool;
 import org.soul.model.pay.enums.CommonFieldsConst;
-import org.soul.model.pay.enums.PayApiTypeConst;
-import org.soul.model.pay.vo.OnlinePayVo;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
@@ -20,15 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
-import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.CacheBase;
 import so.wwb.gamebox.model.TerminalEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.company.po.Bank;
-import so.wwb.gamebox.model.company.sys.po.VSysSiteDomain;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
-import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
 import so.wwb.gamebox.model.master.enums.DepositWayEnum;
 import so.wwb.gamebox.model.master.enums.PayAccountAccountType;
 import so.wwb.gamebox.model.master.enums.PayAccountType;
@@ -41,7 +36,6 @@ import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.fund.form.OnlinePayForm;
 import so.wwb.gamebox.pcenter.fund.form.ScanCodeForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
-import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.token.Token;
 
 import javax.servlet.http.HttpServletRequest;
@@ -215,7 +209,7 @@ public class OnlineRechargeController extends RechargeBaseController {
      * @param rechargeType
      * @return
      */
-    private Map<String, Object> onlineSubmit(PlayerRechargeVo playerRechargeVo, String code, BindingResult result, String rechargeType) {
+    private Map<String, Object> onlineSubmit(PlayerRechargeVo playerRechargeVo, String code, BindingResult result, String rechargeType, HttpServletRequest request) {
         boolean flag = rechargePre(result, code);
         if (!flag) {
             return getResultMsg(false, null, null);
@@ -226,9 +220,9 @@ public class OnlineRechargeController extends RechargeBaseController {
 //        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
         PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
         playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
-        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count,SessionManager.getUserId());
+        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count, SessionManager.getUserId());
         Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount);
-        map.put("failureCount",failureCount);
+        map.put("failureCount", failureCount);
         return map;
     }
 
@@ -291,33 +285,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         }
     }
 
-    public String getDomain(String domain, PayAccount payAccount) {
-        domain = domain.replace("http://", "");
-        VSysSiteDomain siteDomain = Cache.getSiteDomain(domain);
-        Boolean sslEnabled = false;
-        if (siteDomain != null && siteDomain.getSslEnabled() != null && siteDomain.getSslEnabled()) {
-            sslEnabled = true;
-        }
-        String sslDomain = "https://" + domain;
-        String notSslDomain = "http://" + domain;
-        ;
-        if (!sslEnabled) {
-            return notSslDomain;
-        }
-        try {
-            OnlinePayVo onlinePayVo = new OnlinePayVo();
-            onlinePayVo.setChannelCode(payAccount.getBankCode());
-            onlinePayVo.setApiType(PayApiTypeConst.PAY_SSL_ENABLE);
-            sslEnabled = ServiceTool.onlinePayService().getSslEnabled(onlinePayVo);
-            LOG.info("支付{0}是否支持ssl:{1}", payAccount.getBankCode(), sslEnabled);
-        } catch (Exception e) {
-            LOG.error(e);
-        }
-        if (sslEnabled) {
-            return sslDomain;
-        }
-        return notSslDomain;
-    }
 
     @RequestMapping("/onlinePending")
     public String onlinePending(Model model, Boolean state, String msg) {

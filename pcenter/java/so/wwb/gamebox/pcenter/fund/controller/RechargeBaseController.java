@@ -1,5 +1,6 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.soul.commons.collections.CollectionQueryTool;
 import org.soul.commons.collections.CollectionTool;
 import org.soul.commons.currency.CurrencyTool;
@@ -11,10 +12,14 @@ import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
+import org.soul.commons.net.ServletTool;
 import org.soul.commons.query.Criteria;
 import org.soul.commons.query.enums.Operator;
 import org.soul.commons.query.sort.Order;
 import org.soul.model.comet.vo.MessageVo;
+import org.soul.model.pay.enums.CommonFieldsConst;
+import org.soul.model.pay.enums.PayApiTypeConst;
+import org.soul.model.pay.vo.OnlinePayVo;
 import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.vo.SysUserVo;
 import org.soul.model.session.SessionKey;
@@ -29,10 +34,7 @@ import so.wwb.gamebox.common.dubbo.ServiceActivityTool;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.iservice.master.fund.IPlayerRechargeService;
-import so.wwb.gamebox.model.Module;
-import so.wwb.gamebox.model.ParamTool;
-import so.wwb.gamebox.model.SiteI18nEnum;
-import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.*;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
@@ -40,6 +42,7 @@ import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.setting.po.SysCurrency;
 import so.wwb.gamebox.model.company.site.po.SiteCustomerService;
 import so.wwb.gamebox.model.company.site.po.SiteI18n;
+import so.wwb.gamebox.model.company.sys.po.VSysSiteDomain;
 import so.wwb.gamebox.model.master.content.enums.PayAccountStatusEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.content.so.PayAccountSo;
@@ -51,6 +54,7 @@ import so.wwb.gamebox.model.master.enums.ActivityTypeEnum;
 import so.wwb.gamebox.model.master.enums.PayAccountType;
 import so.wwb.gamebox.model.master.enums.RankFeeType;
 import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
+import so.wwb.gamebox.model.master.fund.enums.RechargeStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeParentEnum;
 import so.wwb.gamebox.model.master.fund.po.PlayerRecharge;
@@ -67,6 +71,7 @@ import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.token.TokenHandler;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -554,7 +559,7 @@ public abstract class RechargeBaseController {
      * @param payAccount
      * @return
      */
-    public Map<String, Object> commonOnlineSubmit(PlayerRechargeVo playerRechargeVo, PayAccount payAccount) {
+    public Map<String, Object> commonOnlineSubmit(PlayerRechargeVo playerRechargeVo, PayAccount payAccount, HttpServletRequest request) {
         if (payAccount == null) {
             return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
         }
@@ -566,11 +571,69 @@ public abstract class RechargeBaseController {
             setRechargeCount();
             Map<String, Object> resultMap = getResultMsg(true, null, playerRechargeVo.getResult().getTransactionNo());
             //组装跳转第三方链接地址
-
+            resultMap.put("payUrl", getOnlinePayUrl(payAccount, playerRechargeVo.getResult(), request));
             return resultMap;
         } else {
             return getResultMsg(false, playerRechargeVo.getErrMsg(), null);
         }
+    }
+
+    private String getOnlinePayUrl(PayAccount payAccount, PlayerRecharge playerRecharge, HttpServletRequest request) {
+        try {
+            List<Map<String, String>> accountJson = JsonTool.fromJson(payAccount.getChannelJson(), new TypeReference<ArrayList<Map<String, String>>>() {
+            });
+
+            String domain = ServletTool.getDomainPath(request);
+            for (Map<String, String> map : accountJson) {
+                if (map.get("column").equals(CommonFieldsConst.PAYDOMAIN)) {
+                    domain = map.get("value");
+                    break;
+                }
+            }
+
+            if (domain != null && (RechargeStatusEnum.PENDING_PAY.getCode().equals(playerRecharge.getRechargeStatus())
+                    || RechargeStatusEnum.OVER_TIME.getCode().equals(playerRecharge.getRechargeStatus()))) {
+                String uri = "/onlinePay/abcefg.html?search.transactionNo=" + playerRecharge.getTransactionNo() + "&origin=" + TerminalEnum.PC.getCode();
+                domain = getDomain(domain, payAccount);
+                String url = domain + uri;
+                //添加支付网址
+                playerRecharge.setPayUrl(domain);
+          /*  playerRechargeVo.setProperties(PlayerRecharge.PROP_PAY_URL);
+            ServiceSiteTool.playerRechargeService().updateOnly(playerRechargeVo);*/
+                return url;
+            }
+        } catch (Exception e) {
+            LOG.error(e);
+        }
+        return "";
+    }
+
+    public String getDomain(String domain, PayAccount payAccount) {
+        domain = domain.replace("http://", "");
+        VSysSiteDomain siteDomain = Cache.getSiteDomain(domain);
+        Boolean sslEnabled = false;
+        if (siteDomain != null && siteDomain.getSslEnabled() != null && siteDomain.getSslEnabled()) {
+            sslEnabled = true;
+        }
+        String sslDomain = "https://" + domain;
+        String notSslDomain = "http://" + domain;
+        ;
+        if (!sslEnabled) {
+            return notSslDomain;
+        }
+        try {
+            OnlinePayVo onlinePayVo = new OnlinePayVo();
+            onlinePayVo.setChannelCode(payAccount.getBankCode());
+            onlinePayVo.setApiType(PayApiTypeConst.PAY_SSL_ENABLE);
+            sslEnabled = ServiceTool.onlinePayService().getSslEnabled(onlinePayVo);
+            LOG.info("支付{0}是否支持ssl:{1}", payAccount.getBankCode(), sslEnabled);
+        } catch (Exception e) {
+            LOG.error(e);
+        }
+        if (sslEnabled) {
+            return sslDomain;
+        }
+        return notSslDomain;
     }
 
     public Map<String, Object> getResultMsg(boolean isSuccess, String msg, String transactionNo) {

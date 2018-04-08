@@ -473,7 +473,7 @@ public abstract class RechargeBaseController {
         if (StringTool.isNotBlank(url) && !url.contains("http")) {
             url = "http://" + url;
         }
-        return url.replace("\r\n","");
+        return url.replace("\r\n", "");
     }
 
     /**
@@ -564,7 +564,10 @@ public abstract class RechargeBaseController {
             onlineToneWarn();
             //设置session相关存款数据
             setRechargeCount();
-            return getResultMsg(true, null, playerRechargeVo.getResult().getTransactionNo());
+            Map<String, Object> resultMap = getResultMsg(true, null, playerRechargeVo.getResult().getTransactionNo());
+            //组装跳转第三方链接地址
+
+            return resultMap;
         } else {
             return getResultMsg(false, playerRechargeVo.getErrMsg(), null);
         }

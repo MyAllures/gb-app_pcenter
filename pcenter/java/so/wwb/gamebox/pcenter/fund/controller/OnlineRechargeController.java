@@ -34,7 +34,6 @@ import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
 import so.wwb.gamebox.model.master.operation.po.VActivityMessage;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.fund.form.OnlinePayForm;
-import so.wwb.gamebox.pcenter.fund.form.ScanCodeForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.common.token.Token;
 
@@ -54,8 +53,6 @@ import java.util.Map;
 public class OnlineRechargeController extends RechargeBaseController {
     //线上支付页面
     private static final String ONLINE_PAY = "/fund/recharge/OnlinePay";
-    //扫码支付
-    private static final String SCAN_CODE = "/fund/recharge/ScanCode";
     //线上支付（含微信支付、支付宝支付）等待支付页面
     private static final String ONLINE_PENDING_PAY = "/fund/recharge/OnlinePendingPay";
     //线上支付（含微信支付、支付宝支付）存款失败页面
@@ -64,8 +61,6 @@ public class OnlineRechargeController extends RechargeBaseController {
     private static final String ONLINE_SUCCESS = "/fund/recharge/OnlineSuccess";
     //线上支付（含微信支付、支付宝支付）存款超时页面
     private static final String ONLINE_OVERTIME = "/fund/recharge/OnlineOvertime";
-    //易收付支付页面
-    private static final String YSF_PAY = "/fund/recharge/Ysfpay";
     private static Log LOG = LogFactory.getLog(OnlineRechargeController.class);
 
     /**
@@ -124,33 +119,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         }
     }
 
-    /**
-     * 扫码支付
-     *
-     * @param model
-     * @return
-     */
-    @RequestMapping("/scanCode")
-    @Token(generate = true)
-    public String scanCode(Model model, String realNameDialog) {
-        PlayerRank rank = getRank();
-        String[] accountTypes = new String[]{PayAccountAccountType.WECHAT.getCode(), PayAccountAccountType.ALIPAY.getCode(), PayAccountAccountType.QQWALLET.getCode(), PayAccountAccountType.JD_PAY.getCode(), PayAccountAccountType.BAIFU_PAY.getCode(), PayAccountAccountType.UNION_PAY.getCode(), PayAccountAccountType.WECHAT_MICROPAY.getCode(), PayAccountAccountType.QQ_MICROPAY.getCode(), PayAccountAccountType.ALIPAY_MICROPAY.getCode()};
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), null, TerminalEnum.PC.getCode(), null, accountTypes);
-        PayAccountListVo payAccountListVo = new PayAccountListVo();
-        payAccountListVo.setResult(payAccounts);
-        payAccountListVo.setPlayerRank(rank);
-        payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
-        model.addAttribute("payAccountMap", ServiceSiteTool.payAccountService().getScanAccount(payAccountListVo));
-        model.addAttribute("currency", getCurrencySign());
-        model.addAttribute("username", SessionManager.getUserName());
-        //验证规则
-        model.addAttribute("validateRule", JsRuleCreator.create(ScanCodeForm.class));
-        model.addAttribute("isRealName", isRealName());
-        model.addAttribute("realNameDialog", realNameDialog);
-        model.addAttribute("rank", rank);
-        model.addAttribute("command", payAccountListVo);
-        return SCAN_CODE;
-    }
 
     /**
      * 更改扫码支付方式,相应的优惠要变更
@@ -196,8 +164,8 @@ public class OnlineRechargeController extends RechargeBaseController {
     @RequestMapping("/onlineSubmit")
     @Token(valid = true)
     @ResponseBody
-    public Map<String, Object> onlineSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlinePayForm form, BindingResult result) {
-        return onlineSubmit(playerRechargeVo, form.get$code(), result, RechargeTypeEnum.ONLINE_DEPOSIT.getCode());
+    public Map<String, Object> onlineSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlinePayForm form, BindingResult result, HttpServletRequest request) {
+        return onlineSubmit(playerRechargeVo, form.get$code(), result, RechargeTypeEnum.ONLINE_DEPOSIT.getCode(), request);
     }
 
     /**
@@ -221,25 +189,9 @@ public class OnlineRechargeController extends RechargeBaseController {
         PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
         playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
         Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count, SessionManager.getUserId());
-        Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount);
+        Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount, request);
         map.put("failureCount", failureCount);
         return map;
-    }
-
-    @RequestMapping("/scanCodeSubmit")
-    @ResponseBody
-    @Token(valid = true)
-    public Map<String, Object> ScanCodeSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanCodeForm form, BindingResult result) {
-        boolean flag = rechargePre(result, form.get$code());
-        if (!flag) {
-            return getResultMsg(false, null, null);
-        }
-
-        PlayerRecharge playerRecharge = playerRechargeVo.getResult();
-        PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
-        //如果账号支持随机金额 重新设置存款金额
-        playerRecharge.setRechargeAmount(getRechargeAmount(payAccount, playerRecharge));
-        return commonOnlineSubmit(playerRechargeVo, payAccount);
     }
 
     /**

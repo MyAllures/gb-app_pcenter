@@ -571,7 +571,12 @@ public abstract class RechargeBaseController {
             setRechargeCount();
             Map<String, Object> resultMap = getResultMsg(true, null, playerRechargeVo.getResult().getTransactionNo());
             //组装跳转第三方链接地址
-            resultMap.put("payUrl", getOnlinePayUrl(payAccount, playerRechargeVo.getResult(), request));
+            String payUrl = getOnlinePayUrl(payAccount, playerRechargeVo.getResult(), request);
+            resultMap.put("payUrl", payUrl);
+           /* //添加支付网址
+            playerRechargeVo.getResult().setPayUrl(payUrl);
+            playerRechargeVo.setProperties(PlayerRecharge.PROP_PAY_URL);
+            playerRechargeService().updateOnly(playerRechargeVo);*/
             return resultMap;
         } else {
             return getResultMsg(false, playerRechargeVo.getErrMsg(), null);
@@ -579,6 +584,7 @@ public abstract class RechargeBaseController {
     }
 
     private String getOnlinePayUrl(PayAccount payAccount, PlayerRecharge playerRecharge, HttpServletRequest request) {
+        String url = "";
         try {
             List<Map<String, String>> accountJson = JsonTool.fromJson(payAccount.getChannelJson(), new TypeReference<ArrayList<Map<String, String>>>() {
             });
@@ -595,17 +601,12 @@ public abstract class RechargeBaseController {
                     || RechargeStatusEnum.OVER_TIME.getCode().equals(playerRecharge.getRechargeStatus()))) {
                 String uri = "/onlinePay/abcefg.html?search.transactionNo=" + playerRecharge.getTransactionNo() + "&origin=" + TerminalEnum.PC.getCode();
                 domain = getDomain(domain, payAccount);
-                String url = domain + uri;
-                //添加支付网址
-                playerRecharge.setPayUrl(domain);
-          /*  playerRechargeVo.setProperties(PlayerRecharge.PROP_PAY_URL);
-            ServiceSiteTool.playerRechargeService().updateOnly(playerRechargeVo);*/
-                return url;
+                 url = domain + uri;
             }
         } catch (Exception e) {
             LOG.error(e);
         }
-        return "";
+        return url;
     }
 
     public String getDomain(String domain, PayAccount payAccount) {

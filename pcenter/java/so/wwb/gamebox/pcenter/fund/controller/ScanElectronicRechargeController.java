@@ -34,6 +34,7 @@ import so.wwb.gamebox.pcenter.fund.form.ScanElectronicRechargeForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.common.token.Token;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -214,7 +215,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("rechargeDecimals", rechargeDecimals.intValue());
         model.addAttribute("onlineType", onlineType);
         model.addAttribute("companyType", companyType);
-        model.addAttribute("currency",SessionManager.getUser().getDefaultCurrency());
+        model.addAttribute("currency", SessionManager.getUser().getDefaultCurrency());
     }
 
     private Map<String, PayAccount> getScanAccount(PlayerRank rank, String accountType, String[] accountTypes) {
@@ -339,7 +340,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
     @RequestMapping("/submit")
     @ResponseBody
     @Token(valid = true)
-    public Map<String, Object> submit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result, Model model) {
+    public Map<String, Object> submit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return getResultMsg(false, LocaleTool.tranView(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PARAMS_DATA_ERROR), null);
         }
@@ -380,9 +381,9 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
                 rechargeType = RechargeTypeEnum.EASY_PAY.getCode();
             }
             playerRecharge.setRechargeType(rechargeType);
-            Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count,SessionManager.getUserId());
-            Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount);
-            map.put("failureCount",failureCount);
+            Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count, SessionManager.getUserId());
+            Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount, request);
+            map.put("failureCount", failureCount);
             return map;
         }
     }

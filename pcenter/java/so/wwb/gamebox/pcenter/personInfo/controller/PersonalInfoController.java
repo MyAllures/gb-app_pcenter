@@ -210,6 +210,7 @@ public class PersonalInfoController {
 
         //前置验证
         if (result.hasErrors()) {
+            LOG.info("个人资料："+String.valueOf(result.getFieldError()));
             map.put("state", false);
             map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             return map;
@@ -242,6 +243,7 @@ public class PersonalInfoController {
                 return map;
             }
         }
+
         if(sysUserVo.getResult()==null){
             sysUserVo.setResult(new SysUser());
         }
@@ -589,7 +591,7 @@ public class PersonalInfoController {
 
         //保存手机和验证码匹配成对
         String verificationCode = RandomStringTool.randomNumeric(6);
-        LOG.info("手机{0}-验证码：{1}", phone, verificationCode);
+
         SmsInterface smsInterface = getSiteSmsInterface();
         SmsMessageVo smsMessageVo = new SmsMessageVo();
         smsMessageVo.setUserIp(ServletTool.getIpAddr(request));
@@ -601,6 +603,7 @@ public class PersonalInfoController {
         smsMessageVo.setType(SmsTypeEnum.YZM.getCode());
         String siteName = SessionManagerCommon.getSiteName(request);
         smsMessageVo.setContent("验证码：" + verificationCode + " 【" + siteName + "】");
+        LOG.info("个人资料验证：手机号：{0}-验证码：{1}-签名：{2}",phone,verificationCode,siteName);
         try {
             ServiceTool.messageService().sendSmsMessage(smsMessageVo);
         } catch (Exception ex) {

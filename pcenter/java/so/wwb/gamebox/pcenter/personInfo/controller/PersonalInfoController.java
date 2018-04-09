@@ -244,6 +244,9 @@ public class PersonalInfoController {
             }
         }
 
+        if(sysUserVo.getResult()==null){
+            sysUserVo.setResult(new SysUser());
+        }
         sysUserVo.getResult().setId(SessionManager.getUserId());
         userPlayerVo.setIsNormal(true);
 

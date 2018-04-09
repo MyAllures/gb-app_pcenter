@@ -142,7 +142,7 @@ public class PersonInfoForm implements IForm {
         this.result_birthday = result_birthday;
     }
 
-    @Depends(property ={"result_birthday"}, operator = {Operator.NE,Operator.IS_NOT_NULL}, value = {"",""}, message = "passport.edit.info.select.constellation")
+//    @Depends(property ={"result_birthday"}, operator = {Operator.NE,Operator.IS_NOT_NULL}, value = {"",""}, message = "passport.edit.info.select.constellation")
     @Comment("星座")
     public String getResult_constellation() {
         return result_constellation;

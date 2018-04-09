@@ -210,6 +210,7 @@ public class PersonalInfoController {
 
         //前置验证
         if (result.hasErrors()) {
+            LOG.info("个人资料："+String.valueOf(result.getFieldError()));
             map.put("state", false);
             map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             return map;

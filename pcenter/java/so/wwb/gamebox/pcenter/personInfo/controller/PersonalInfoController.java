@@ -210,7 +210,6 @@ public class PersonalInfoController {
 
         //前置验证
         if (result.hasErrors()) {
-            LOG.info("个人资料："+String.valueOf(result.getFieldError()));
             map.put("state", false);
             map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             return map;
@@ -243,7 +242,9 @@ public class PersonalInfoController {
                 return map;
             }
         }
-
+        if(sysUserVo.getResult()==null){
+            sysUserVo.setResult(new SysUser());
+        }
         sysUserVo.getResult().setId(SessionManager.getUserId());
         userPlayerVo.setIsNormal(true);
 

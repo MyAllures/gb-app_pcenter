@@ -95,8 +95,8 @@ public class PersonalInfoController {
     @Token(generate = true)
     public String index(Model model) {
         //获取玩家资料信息展示
-        SysParam personalInformation= ParamTool.getSysParam(SiteParamEnum.CONNECTION_SETTING_PERSONAL_INFORMATION);
-        model.addAttribute("personal_information",personalInformation);
+        SysParam personalInformation = ParamTool.getSysParam(SiteParamEnum.CONNECTION_SETTING_PERSONAL_INFORMATION);
+        model.addAttribute("personal_information", personalInformation);
         //获取玩家用户
         SysUserVo sysUserVo = getSysUser();
         model.addAttribute("sysUser", sysUserVo.getResult());
@@ -145,9 +145,9 @@ public class PersonalInfoController {
 
         model.addAttribute("regFieldSortsMap", regFieldSortsMap);
 
-        model.addAttribute("playerCallMaster",ParamTool.playerCallMaster());
+        model.addAttribute("playerCallMaster", ParamTool.playerCallMaster());
 
-        model.addAttribute("openPhoneCall",ParamTool.isOpenPhoneCall());
+        model.addAttribute("openPhoneCall", ParamTool.isOpenPhoneCall());
 
 
         return PERSON_INFO_PERSON_INFO;
@@ -163,7 +163,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/toUploadHeadPortrait")
     public String toUploadHeadPortrait(Model model) {
         model.addAttribute("url", SessionManager.getUser().getAvatarUrl());
-        model.addAttribute("playerId",SessionManager.getUser().getId());
+        model.addAttribute("playerId", SessionManager.getUser().getId());
         return PERSON_INFO_UPLOAD_HEAD_PORTRAIT;
     }
 
@@ -176,7 +176,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/uploadHeadPortrait")
     @ResponseBody
     public Map uploadHeadPortrait(SysUserVo sysUserVo) {
-        Map map = new HashMap(2,1f);
+        Map map = new HashMap(2, 1f);
         SysUser sysUser = sysUserVo.getResult();
         if (sysUser == null || StringTool.isBlank(sysUser.getAvatarUrl())) {
             map.put("state", false);
@@ -210,6 +210,7 @@ public class PersonalInfoController {
 
         //前置验证
         if (result.hasErrors()) {
+            LOG.info("个人资料："+String.valueOf(result.getFieldError()));
             map.put("state", false);
             map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             return map;
@@ -243,6 +244,9 @@ public class PersonalInfoController {
             }
         }
 
+        if(sysUserVo.getResult()==null){
+            sysUserVo.setResult(new SysUser());
+        }
         sysUserVo.getResult().setId(SessionManager.getUserId());
         userPlayerVo.setIsNormal(true);
 
@@ -484,7 +488,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/updateEmail")
     @ResponseBody
     public Map updateEmail(SysUserVo sysUserVo, UserPlayerVo userPlayerVo) {
-        Map map = new HashMap(2,1f);
+        Map map = new HashMap(2, 1f);
 
         String emailCode = userPlayerVo.getVerificationCode();
         String email = userPlayerVo.getEmail().getContactValue();
@@ -583,11 +587,11 @@ public class PersonalInfoController {
         if (validCountDown(PHONE)) {
             return map;
         }
-        SessionManager.setLastSendTime(SessionManager.getDate().getNow(),PHONE);
+        SessionManager.setLastSendTime(SessionManager.getDate().getNow(), PHONE);
 
         //保存手机和验证码匹配成对
         String verificationCode = RandomStringTool.randomNumeric(6);
-        LOG.info("手机{0}-验证码：{1}",phone,verificationCode);
+
         SmsInterface smsInterface = getSiteSmsInterface();
         SmsMessageVo smsMessageVo = new SmsMessageVo();
         smsMessageVo.setUserIp(ServletTool.getIpAddr(request));
@@ -598,7 +602,8 @@ public class PersonalInfoController {
         smsMessageVo.setPhoneNum(phone);
         smsMessageVo.setType(SmsTypeEnum.YZM.getCode());
         String siteName = SessionManagerCommon.getSiteName(request);
-        smsMessageVo.setContent("验证码："+verificationCode+" 【"+siteName+"】");
+        smsMessageVo.setContent("验证码：" + verificationCode + " 【" + siteName + "】");
+        LOG.info("个人资料验证：手机号：{0}-验证码：{1}-签名：{2}",phone,verificationCode,siteName);
         try {
             ServiceTool.messageService().sendSmsMessage(smsMessageVo);
         } catch (Exception ex) {
@@ -636,7 +641,7 @@ public class PersonalInfoController {
     @RequestMapping(value = "/updatePhone")
     @ResponseBody
     public Map updatePhone(SysUserVo sysUserVo, UserPlayerVo userPlayerVo) {
-        Map map = new HashMap(2,1f);
+        Map map = new HashMap(2, 1f);
 
         String phoneCode = userPlayerVo.getPhoneVerificationCode();
         String phone = userPlayerVo.getPhone().getContactValue();
@@ -819,7 +824,7 @@ public class PersonalInfoController {
      */
     @RequestMapping(value = "/verifyPhoneVerificationCode")
     @ResponseBody
-    public String verifyPhoneVerificationCode(@RequestParam("phone.phoneVerificationCode") String phoneVerificationCode) {
+    public String verifyPhoneVerificationCode(@RequestParam("phoneVerificationCode") String phoneVerificationCode) {
         boolean flag = false;
         boolean isExpired = false;
         boolean isError = false;
@@ -829,6 +834,18 @@ public class PersonalInfoController {
             flag = !isExpired && isError;
         }
         return flag ? "true" : "false";
+    }
+
+    /**
+     * 手机验证码远程验证
+     *
+     * @param phoneVerificationCode
+     * @return
+     */
+    @RequestMapping(value = "/verifyPhonePhoneVerificationCode")
+    @ResponseBody
+    public String verifyPhonePhoneVerificationCode(@RequestParam("phone.phoneVerificationCode") String phoneVerificationCode) {
+       return verifyPhoneVerificationCode(phoneVerificationCode);
     }
 
     /**
@@ -909,8 +926,8 @@ public class PersonalInfoController {
      */
     @RequestMapping(value = "/checkRealNameExist")
     @ResponseBody
-    public String checkRealNameExist(@RequestParam("result.realName") String realName, @RequestParam("realName") String name){
-        if (!ParamTool.isOnlyFiled("realName") || !"undefined".equals(name)){
+    public String checkRealNameExist(@RequestParam("result.realName") String realName, @RequestParam("realName") String name) {
+        if (!ParamTool.isOnlyFiled("realName") || !"undefined".equals(name)) {
             return "true";
         }
         SysUserVo sysUserVo = new SysUserVo();

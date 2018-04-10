@@ -132,7 +132,7 @@ public class PersonInfoForm implements IForm {
         this.phoneVerificationCode = phoneVerificationCode;
     }
 
-//    @Depends(property ={"result_constellation"}, operator = {Operator.NE,Operator.IS_NOT_NULL}, value = {"",""}, message = "请选择生日")
+//    @Depends(property ={"result_birthday"}, operator = {Operator.NE,Operator.IS_NOT_NULL}, value = {"",""}, message = "请选择生日")
     @Comment("生日")
     public Date getResult_birthday() {
         return result_birthday;
@@ -142,7 +142,7 @@ public class PersonInfoForm implements IForm {
         this.result_birthday = result_birthday;
     }
 
-    @Depends(property ={"result_birthday"}, operator = {Operator.NE,Operator.IS_NOT_NULL}, value = {"",""}, message = "passport.edit.info.select.constellation")
+//    @Depends(property ={"result_constellation"}, operator = {Operator.NE,Operator.IS_NOT_NULL}, value = {"",""}, message = "passport.edit.info.select.constellation")
     @Comment("星座")
     public String getResult_constellation() {
         return result_constellation;

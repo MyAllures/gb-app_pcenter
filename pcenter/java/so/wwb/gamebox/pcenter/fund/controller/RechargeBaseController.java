@@ -573,7 +573,7 @@ public abstract class RechargeBaseController {
             //组装跳转第三方链接地址
             String payUrl = getOnlinePayUrl(payAccount, playerRechargeVo.getResult(), request);
             resultMap.put("payUrl", payUrl);
-           /* //添加支付网址
+          /*  //添加支付网址
             playerRechargeVo.getResult().setPayUrl(payUrl);
             playerRechargeVo.setProperties(PlayerRecharge.PROP_PAY_URL);
             playerRechargeService().updateOnly(playerRechargeVo);*/
@@ -601,7 +601,7 @@ public abstract class RechargeBaseController {
                     || RechargeStatusEnum.OVER_TIME.getCode().equals(playerRecharge.getRechargeStatus()))) {
                 String uri = "/onlinePay/abcefg.html?search.transactionNo=" + playerRecharge.getTransactionNo() + "&origin=" + TerminalEnum.PC.getCode();
                 domain = getDomain(domain, payAccount);
-                 url = domain + uri;
+                url = domain + uri;
             }
         } catch (Exception e) {
             LOG.error(e);

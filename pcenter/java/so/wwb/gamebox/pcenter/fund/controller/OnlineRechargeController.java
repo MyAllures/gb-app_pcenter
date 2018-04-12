@@ -3,6 +3,7 @@ package so.wwb.gamebox.pcenter.fund.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.string.StringTool;
+import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.model.CacheBase;
+import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.TerminalEnum;
+import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
@@ -34,16 +37,14 @@ import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
 import so.wwb.gamebox.model.master.operation.po.VActivityMessage;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.fund.form.OnlinePayForm;
+import so.wwb.gamebox.pcenter.fund.form.ScanElectronicRechargeForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.common.token.Token;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by cherry on 16-9-11.
@@ -169,6 +170,32 @@ public class OnlineRechargeController extends RechargeBaseController {
     }
 
     /**
+     * 统计连续失败次数
+     * @param playerRechargeVo
+     * @param form
+     * @param result
+     * @return
+     */
+    @RequestMapping("/sumFailureCount")
+    @ResponseBody
+    public Map<String, Object> sumFailureCount(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlinePayForm form, BindingResult result) {
+        boolean flag = rechargePre(result, form.get$code());
+        if (!flag) {
+            return getResultMsg(false, null, null);
+        }
+        PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
+        if(payAccount == null){
+            return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
+        }
+        PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
+        playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
+        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count, SessionManager.getUserId());
+        Map<String,Object> map = new HashMap<>();
+        map.put("failureCount", failureCount);
+        return map;
+    }
+
+    /**
      * 线上支付公共提交方法
      *
      * @param playerRechargeVo
@@ -182,16 +209,13 @@ public class OnlineRechargeController extends RechargeBaseController {
         if (!flag) {
             return getResultMsg(false, null, null);
         }
-        PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
+        if(payAccount == null){
+            return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
+        }
+        PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         playerRecharge.setRechargeType(rechargeType);
-//        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
-        PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
-        playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
-        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count, SessionManager.getUserId());
-        Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount, request);
-        map.put("failureCount", failureCount);
-        return map;
+        return commonOnlineSubmit(playerRechargeVo, payAccount, request);
     }
 
     /**

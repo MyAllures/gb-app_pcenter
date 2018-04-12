@@ -248,7 +248,7 @@
         <div class=" control-group">
             <label class="control-label"></label>
             <input type="hidden" name="result.rechargeType" value="${firstPayAccount.type eq '1'?companyType:onlineType}"/>
-            <soul:button target="submit" precall="validateForm" text="立即存款" opType="function" cssClass="btn-blue btn large-big" tag="button"/>
+            <soul:button target="sumFailureCount" precall="validateForm" text="立即存款" opType="function" cssClass="btn-blue btn large-big" tag="button"/>
         </div>
         <div class="applysale">
             <%--扫码--%>

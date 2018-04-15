@@ -30,7 +30,6 @@
 <div class="account-list account-info-warp">
     <div class="left-ico-message">
         <span class="account-info-title">${views.personInfo_auto['账户安全']}<img src="${resRoot}/images/safety-b.png"></span>
-
         <c:if test="${ fn:substring(personal_information.paramValue,4,5)==1}">
             <c:choose>
                 <c:when test="${empty noticeContactWayMap['110'].contactValue && noticeContactWayMap['110'].status ne 22}">
@@ -232,37 +231,43 @@
     <%--个人信息--%>
     <div class="left-ico-message">
         <span class="account-info-title">${views.personInfo_auto['个人信息']}<img src="${resRoot}/images/info-b.png"></span>
+        <c:choose>
+            <c:when test="${fn:substring(personal_information.paramValue,0,1)==1}">
+                <div class="control-group">
+                    <label class="control-label">${views.account['AccountSetting.personal.realName']}：</label>
+                    <div class="controls">
+                        <c:choose>
+                            <c:when test="${empty sysUserVo.result.realName}">
+                                <input type="text" class="input field-input" value="${sysUserVo.result.realName}" name="result.realName"
+                                       maxlength="30">
+                                <span class="orange line-hi30"><i
+                                        class="mark plaintsmall"></i>${views.account['AccountSetting.personal.message']}</span>
+                                <%--<input type="hidden" id="realNameStatus" value="0" name="realNameStatus"/>--%>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="">${soulFn:overlayName(sysUserVo.result.realName)}</span>
+                                <input type="hidden" name="result.realName" value="${sysUserVo.result.realName}"/>
+                                <input type="hidden" name="realName" value="${sysUserVo.result.realName}">
+                                <%--<input type="hidden" id="realNameStatus" value="1" name="realNameStatus"/>--%>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" name="result.realName" value="${sysUserVo.result.realName}"/>
+                <input type="hidden" name="realName" value="${sysUserVo.result.realName}">
+            </c:otherwise>
+        </c:choose>
 
-        <c:if test="${fn:substring(personal_information.paramValue,0,1)==1}">
-        <div class="control-group">
-            <label class="control-label">${views.account['AccountSetting.personal.realName']}：</label>
-            <div class="controls">
-                <c:choose>
-                    <c:when test="${empty sysUserVo.result.realName}">
-                        <input type="text" class="input field-input" value="${sysUserVo.result.realName}" name="result.realName"
-                               maxlength="30">
-                            <span class="orange line-hi30"><i
-                                    class="mark plaintsmall"></i>${views.account['AccountSetting.personal.message']}</span>
-                        <%--<input type="hidden" id="realNameStatus" value="0" name="realNameStatus"/>--%>
-                    </c:when>
-                    <c:otherwise>
-                        <span class="">${soulFn:overlayName(sysUserVo.result.realName)}</span>
-                        <input type="hidden" name="result.realName" value="${sysUserVo.result.realName}"/>
-                        <input type="hidden" name="realName" value="${sysUserVo.result.realName}">
-                        <%--<input type="hidden" id="realNameStatus" value="1" name="realNameStatus"/>--%>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>
-        </c:if>
+        <c:choose>
+            <c:when test="${fn:substring(personal_information.paramValue,1,2)==1}">
+                <div class="control-group clearfix">
+                    <label class="control-label">${views.account['AccountSetting.personal.language']}：</label>
+                    <div class="controls">
 
-        <c:if test="${fn:substring(personal_information.paramValue,1,2)==1}">
-        <div class="control-group clearfix">
-            <label class="control-label">${views.account['AccountSetting.personal.language']}：</label>
-            <div class="controls">
-
-                <c:choose>
-                    <c:when test="${empty sysUserVo.result.defaultLocale}">
+                        <c:choose>
+                            <c:when test="${empty sysUserVo.result.defaultLocale}">
                     <span class="input-group pull-left">
                     <gb:selectPure name="result.defaultLocale"
                                    prompt="${views.account['AccountSetting.personal.pleaseSelect']}"
@@ -270,150 +275,75 @@
                                    ajaxListPath="${root}/selectCommonController/getDefaultLocale.html" listKey="language"
                                    listValue="tran" cssClass="field-input"/>
                     </span>
-                        <span class="orange line-hi30"><i class="mark plaintsmall"></i>${views.personInfo_auto['一旦设置，不可修改']}</span>
-                    </c:when>
-                    <c:otherwise>
-                        <span class="">${dicts.common.local[sysUserVo.result.defaultLocale]}</span>
-                        <input type="hidden" class="input" name="result.defaultLocale" value="${sysUserVo.result.defaultLocale}">
-                    </c:otherwise>
-                </c:choose>
+                                <span class="orange line-hi30"><i class="mark plaintsmall"></i>${views.personInfo_auto['一旦设置，不可修改']}</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="">${dicts.common.local[sysUserVo.result.defaultLocale]}</span>
+                                <input type="hidden" class="input" name="result.defaultLocale" value="${sysUserVo.result.defaultLocale}">
+                            </c:otherwise>
+                        </c:choose>
 
-            </div>
-        </div>
-        </c:if>
+                    </div>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" class="input" name="result.defaultLocale" value="${sysUserVo.result.defaultLocale}">
+            </c:otherwise>
+        </c:choose>
 
-        <%--<div class="control-group clearfix">
-            <label class="control-label">${views.account['AccountSetting.personal.country']}：</label>
-            <div class="controls">
-                <c:choose>
-                    <c:when test="${empty sysUserVo.result.country || empty sysUserVo.result.region}">
-                        <span class="input-group pull-left">
-                        <gb:selectPure name="result.country"
-                                   prompt="${views.account['AccountSetting.personal.pleaseSelect']}"
-                                   value="${sysUserVo.result.country}"
-                                   listValue="remark"
-                                   listKey="dictCode"
-                                   relSelect="result.region"
-                                   ajaxListPath="${root}/regions/site.html" cssClass="field-input"/>
-                        </span>
-                        <span class="input-group pull-left">
-                            <gb:selectPure name="result.region"
-                                           prompt="${views.account['AccountSetting.personal.pleaseSelect']}"
-                                           value="${sysUserVo.result.region}"
-                                           listValue="remark"
-                                           listKey="dictCode"
-                                           relSelect="result.city"
-                                           relSelectPath="${root}/regions/states/#result.country#.html" cssClass="field-input"/>
-                        </span>
-                        <span class="input-group pull-left">
-                            <gb:selectPure name="result.city"
-                                           prompt="${views.account['AccountSetting.personal.pleaseSelect']}"
-                                           value="${sysUserVo.result.city}"
-                                           listValue="remark" listKey="dictCode"
-                                           relSelectPath="${root}/regions/cities/#result.country#-#result.region#.html" cssClass="field-input"/>
-                        </span>
-                    </c:when>
-                    <c:otherwise>
-                        <span class="">${dicts.region.region[sysUserVo.result.country]}-${dicts.state[sysUserVo.result.country][sysUserVo.result.region]}
-                        <c:if test="${not empty sysUserVo.result.city}">-${dicts.city[(sysUserVo.result.country).concat("_").concat(sysUserVo.result.region)][sysUserVo.result.city]}</c:if></span>
-                        <input type="hidden" class="input" name="result.country" value="${sysUserVo.result.country}">
-                        <input type="hidden" class="input" name="result.region" value="${sysUserVo.result.region}">
-                        <input type="hidden" class="input" name="result.city" value="${sysUserVo.result.city}">
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>--%>
-
-        <%--<div class="control-group">
-            <label class="control-label">${views.account['AccountSetting.personal.nickName']}：</label>
-            <div class="controls">
-                <c:choose>
-                    <c:when test="${empty sysUserVo.result.nickname}">
-                        <input type="text" class="input field-input" maxlength="15"
-                               value="${sysUserVo.result.nickname}" name="result.nickname">
-                    </c:when>
-                    <c:otherwise>
-                        <span class="">${sysUserVo.result.nickname}</span>
-                        <input type="hidden" class="input" name="result.nickname" value="${sysUserVo.result.nickname}">
-                    </c:otherwise>
-                </c:choose>
-
-            </div>
-        </div>--%>
-        <c:if test="${fn:substring(personal_information.paramValue,2,3 )==1}">
-        <c:if test="${siteId!=119}">
-        <div class="control-group">
-            <label class="control-label">${views.account['AccountSetting.personal.sex']}：</label>
-            <div class="controls">
-                <c:choose>
-                    <c:when test="${empty sysUserVo.result.sex}">
+        <c:choose>
+            <c:when test="${fn:substring(personal_information.paramValue,2,3 )==1}">
+                <div class="control-group">
+                    <label class="control-label">${views.account['AccountSetting.personal.sex']}：</label>
+                    <div class="controls">
+                        <c:choose>
+                            <c:when test="${empty sysUserVo.result.sex}">
                         <span class="radio"><input name="result.sex" value="male" class="field-input"
                                                    type="radio" ${sysUserVo.result.sex eq 'male'?'checked':''}></span>${views.account['AccountSetting.personal.sex.male']}
-                    <span class="radio m-l"><input name="result.sex" value="female" class="field-input"
-                                                   type="radio" ${sysUserVo.result.sex eq 'female'?'checked':''}></span>${views.account['AccountSetting.personal.sex.female']}
-                    <span class="radio m-l"><input name="result.sex" value="secret" class="field-input"
-                                                   type="radio" ${sysUserVo.result.sex eq 'secret'?'checked':''}></span>${views.account['AccountSetting.personal.sex.any']}
-                    </c:when>
-                    <c:otherwise>
-                        <span class="">${dicts.common.sex[sysUserVo.result.sex]}</span>
-                        <input type="hidden" name="result.sex" value="${sysUserVo.result.sex}"/>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>
-        </c:if>
-        </c:if>
+                                <span class="radio m-l"><input name="result.sex" value="female" class="field-input"
+                                                               type="radio" ${sysUserVo.result.sex eq 'female'?'checked':''}></span>${views.account['AccountSetting.personal.sex.female']}
+                                <span class="radio m-l"><input name="result.sex" value="secret" class="field-input"
+                                                               type="radio" ${sysUserVo.result.sex eq 'secret'?'checked':''}></span>${views.account['AccountSetting.personal.sex.any']}
+                            </c:when>
+                            <c:otherwise>
+                                <span class="">${dicts.common.sex[sysUserVo.result.sex]}</span>
+                                <input type="hidden" name="result.sex" value="${sysUserVo.result.sex}"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" name="result.sex" value="${sysUserVo.result.sex}"/>
+            </c:otherwise>
+        </c:choose>
 
+        <c:choose>
+            <c:when test="${fn:substring(personal_information.paramValue,3,4)==1}">
+                <div class="control-group">
+                    <label class="control-label">${views.account['AccountSetting.personal.birthday']}：</label>
+                    <div class="controls">
+                        <c:choose>
+                            <c:when test="${empty sysUserVo.result.birthday}">
+                                <gb:dateRange format="${DateFormat.DAY}" style="width:100px;" inputStyle="width:80px"  id="birthday" showDropdowns="true"
+                                              name="result.birthday" value="${sysUserVo.result.birthday}" maxDate="${dateQPicker.today}"
+                                              callback="chooseConstellation"></gb:dateRange>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="">${soulFn:formatDateTz(sysUserVo.result.birthday,DateFormat.DAY,timeZone)}</span>
+                                <input type="hidden" name="result.birthday" value="${soulFn:formatDateTz(sysUserVo.result.birthday,DateFormat.DAY,timeZone)}"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" name="result.birthday" value="${soulFn:formatDateTz(sysUserVo.result.birthday,DateFormat.DAY,timeZone)}"/>
+            </c:otherwise>
+        </c:choose>
 
-
-        <c:if test="${fn:substring(personal_information.paramValue,3,4)==1}">
-        <div class="control-group">
-            <label class="control-label">${views.account['AccountSetting.personal.birthday']}：</label>
-            <div class="controls">
-                <c:choose>
-                    <c:when test="${empty sysUserVo.result.birthday}">
-                        <gb:dateRange format="${DateFormat.DAY}" style="width:100px;" inputStyle="width:80px"  id="birthday" showDropdowns="true"
-                                      name="result.birthday" value="${sysUserVo.result.birthday}" maxDate="${dateQPicker.today}"
-                                      callback="chooseConstellation"></gb:dateRange>
-                    </c:when>
-                    <c:otherwise>
-                        <span class="">${soulFn:formatDateTz(sysUserVo.result.birthday,DateFormat.DAY,timeZone)}</span>
-                        <input type="hidden" name="result.birthday" value="${soulFn:formatDateTz(sysUserVo.result.birthday,DateFormat.DAY,timeZone)}"/>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>
-        <c:if test="${siteId==119}">
-                <input type="hidden" name="result.birthday" value="${empty sysUserVo.result.birthday?null:soulFn:formatDateTz(sysUserVo.result.birthday,DateFormat.DAY,timeZone)}"/>
-        </c:if>
-        </c:if>
-
-
-
-
-        <%--<div class="control-group">
-            <label class="control-label">${views.account['AccountSetting.personal.constellation']}：</label>
-            <div class="controls">
-                    <c:choose>
-                        <c:when test="${empty sysUserVo.result.constellation}">
-                            <span class="input-group pull-left" id="constellation">
-                                <gb:selectPure name="result.constellation"
-                                               prompt="${views.account['AccountSetting.personal.pleaseSelect']}"
-                                               value="${sysUserVo.result.constellation}"
-                                               ajaxListPath="${root}/selectCommonController/getConstellations.html" listKey="dictCode"
-                                               listValue="remark" cssClass="field-input"/>
-                            </span>
-                        </c:when>
-                        <c:otherwise>
-                            <span class="">${dicts.common.constellation[sysUserVo.result.constellation]}</span>
-                            <input type="hidden" name="result.constellation" value="${sysUserVo.result.constellation}"/>
-                        </c:otherwise>
-                </c:choose>
-            </div>
-        </div>--%>
-        <c:if test="${fn:substring(personal_information.paramValue,6,7)==1}">
-        <c:if test="${siteId!=185}">
-           <%-- <c:if test="${not empty regFieldSortsMap['304']}">--%>
+        <c:choose>
+            <c:when test="${fn:substring(personal_information.paramValue,6,7)==1}">
                 <div class="control-group">
                     <label class="control-label">${views.personInfo_auto['微信']}：</label>
                     <div class="controls">
@@ -444,14 +374,16 @@
                         </c:choose>
                     </div>
                 </div>
-            <%--</c:if>--%>
-            </c:if>
-        </c:if>
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" name="weixin.contactValue"
+                       value="${noticeContactWays gt 0?noticeContactWayMap["304"].contactValue:''}">
+                <input type="hidden" value="${noticeContactWayMap["304"].id}" name="weixin.id">
+            </c:otherwise>
+        </c:choose>
 
-
-
-            <c:if test="${fn:substring(personal_information.paramValue,7,8)==1}">
-          <%--  <c:if test="${not empty regFieldSortsMap['301']}">--%>
+        <c:choose>
+            <c:when test="${fn:substring(personal_information.paramValue,7,8)==1}">
                 <div class="control-group">
                     <label class="control-label">QQ：</label>
                     <div class="controls">
@@ -481,8 +413,13 @@
                         </c:choose>
                     </div>
                 </div>
-           <%-- </c:if>--%>
-        </c:if>
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" name="qq.contactValue"
+                       value="${noticeContactWays gt 0?noticeContactWayMap["301"].contactValue:''}">
+                <input type="hidden" value="${noticeContactWayMap["301"].id}" name="qq.id">
+            </c:otherwise>
+        </c:choose>
 
 
         <c:if test="${showTips}">

@@ -602,8 +602,8 @@ public class PersonalInfoController {
         smsMessageVo.setPhoneNum(phone);
         smsMessageVo.setType(SmsTypeEnum.YZM.getCode());
         String siteName = SessionManagerCommon.getSiteName(request);
-        smsMessageVo.setContent("验证码：" + verificationCode + " 【" + siteName + "】");
-        LOG.info("个人资料验证：手机号：{0}-验证码：{1}-签名：{2}",phone,verificationCode,siteName);
+        smsMessageVo.setContent("验证码：" + verificationCode + " 【"+smsInterface.getSignature()!=null?smsInterface.getSignature():siteName+"】");
+        LOG.info("个人资料验证：手机号：{0}-验证码：{1}-签名：{2}",phone,verificationCode,smsInterface.getSignature()!=null?smsInterface.getSignature():siteName);
         try {
             ServiceTool.messageService().sendSmsMessage(smsMessageVo);
         } catch (Exception ex) {

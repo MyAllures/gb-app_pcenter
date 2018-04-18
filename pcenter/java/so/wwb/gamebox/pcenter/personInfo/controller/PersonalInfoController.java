@@ -601,9 +601,14 @@ public class PersonalInfoController {
         smsMessageVo.setProviderKey(smsInterface.getDataKey());
         smsMessageVo.setPhoneNum(phone);
         smsMessageVo.setType(SmsTypeEnum.YZM.getCode());
-        String siteName = SessionManagerCommon.getSiteName(request);
-        smsMessageVo.setContent("验证码：" + verificationCode + " 【"+smsInterface.getSignature()!=null?smsInterface.getSignature():siteName+"】");
-        LOG.info("个人资料验证：手机号：{0}-验证码：{1}-签名：{2}",phone,verificationCode,smsInterface.getSignature()!=null?smsInterface.getSignature():siteName);
+        String signature = null;
+        if(StringTool.isNotEmpty(smsInterface.getSignature())){
+            signature = smsInterface.getSignature();
+        }else{
+            signature = SessionManagerCommon.getSiteName(request);
+        }
+        smsMessageVo.setContent("验证码：" + verificationCode + " 【"+signature+"】");//【】为固定格式
+        LOG.info("个人资料验证：手机号：{0}-验证码：{1}-签名：{2}",phone,verificationCode,signature);
         try {
             ServiceTool.messageService().sendSmsMessage(smsMessageVo);
         } catch (Exception ex) {

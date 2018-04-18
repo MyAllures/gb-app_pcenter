@@ -29,10 +29,7 @@ import so.wwb.gamebox.common.dubbo.ServiceActivityTool;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.iservice.master.fund.IPlayerRechargeService;
-import so.wwb.gamebox.model.Module;
-import so.wwb.gamebox.model.ParamTool;
-import so.wwb.gamebox.model.SiteI18nEnum;
-import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.*;
 import so.wwb.gamebox.model.common.Const;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.common.notice.enums.CometSubscribeType;
@@ -347,6 +344,7 @@ public abstract class RechargeBaseController {
         vActivityMessageVo.setDepositAmount(rechargeAmount);
         vActivityMessageVo.setRankId(userPlayer.getRankId());
         vActivityMessageVo.setLocal(SessionManager.getLocale().toString());
+        vActivityMessageVo.getSearch().setActivityTerminalType(TerminalEnum.PC.getCode());
         vActivityMessageVo = ServiceActivityTool.vActivityMessageService().searchDepositPromotions(vActivityMessageVo);
         LinkedHashSet<VActivityMessage> vActivityMessages = vActivityMessageVo.getvActivityMessageList();
         if (CollectionTool.isEmpty(vActivityMessages)) {

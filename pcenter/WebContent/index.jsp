@@ -110,6 +110,9 @@
                     <c:when test="${at.apiTypeId == 3}">
                         <c:set var="game_page" value="/sports.html"></c:set>
                     </c:when>
+                    <c:when test="${at.apiTypeId == 5}">
+                        <c:set var="game_page" value="/commonPage/gamePage/loading.html?apiId=34&apiTypeId=5"></c:set>
+                    </c:when>
                     <c:otherwise>
                         <c:set var="game_page" value="/lottery.html"></c:set>
                     </c:otherwise>

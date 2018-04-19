@@ -34,8 +34,10 @@ import so.wwb.gamebox.pcenter.fund.form.ScanElectronicRechargeForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.common.token.Token;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -214,7 +216,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("rechargeDecimals", rechargeDecimals.intValue());
         model.addAttribute("onlineType", onlineType);
         model.addAttribute("companyType", companyType);
-        model.addAttribute("currency",SessionManager.getUser().getDefaultCurrency());
+        model.addAttribute("currency", SessionManager.getUser().getDefaultCurrency());
     }
 
     private Map<String, PayAccount> getScanAccount(PlayerRank rank, String accountType, String[] accountTypes) {
@@ -336,10 +338,35 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         return (amount + fee) > 0;
     }
 
+    /**
+     * 统计连续失败次数
+     * @param playerRechargeVo
+     * @param form
+     * @param result
+     * @return
+     */
+    @RequestMapping("/sumFailureCount")
+    @ResponseBody
+    public Map<String, Object> sumFailureCount(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result) {
+        if (result.hasErrors()) {
+            return getResultMsg(false, LocaleTool.tranView(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PARAMS_DATA_ERROR), null);
+        }
+        PayAccount payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
+        if (payAccount == null) {
+            return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
+        }
+        PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
+        playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
+        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count, SessionManager.getUserId());
+        Map<String,Object> map = new HashMap<>();
+        map.put("failureCount", failureCount);
+        return map;
+    }
+
     @RequestMapping("/submit")
     @ResponseBody
     @Token(valid = true)
-    public Map<String, Object> submit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result, Model model) {
+    public Map<String, Object> submit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return getResultMsg(false, LocaleTool.tranView(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PARAMS_DATA_ERROR), null);
         }
@@ -348,9 +375,6 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
             return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
         }
         //公司入款展示确认弹窗：存款金额、实际到账、手续费
-        PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
-        playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
-//        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
         if (PayAccountType.COMMPANY_ACCOUNT_CODE.equals(payAccount.getType())) {
             return companyRechargeConfirmInfo(playerRechargeVo);
         } else { //线上支付保存存款订单
@@ -380,10 +404,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
                 rechargeType = RechargeTypeEnum.EASY_PAY.getCode();
             }
             playerRecharge.setRechargeType(rechargeType);
-            Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count,SessionManager.getUserId());
-            Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount);
-            map.put("failureCount",failureCount);
-            return map;
+            return commonOnlineSubmit(playerRechargeVo, payAccount, request);
         }
     }
 

@@ -92,7 +92,7 @@
                     <div class=" control-group">
                         <label class="control-label"></label>
                         <input type="hidden" value="${firstAccount}" name="account"/>
-                        <soul:button target="submit" precall="validateForm" url="${root}/fund/recharge/online/onlineSubmit.html" backUrl="${root}/fund/recharge/online/onlinePay.html?realNameDialog=true" text="${views.fund_auto['立即存款']}" callback="back" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
+                        <soul:button target="sumFailureCount" precall="validateForm" url="${root}/fund/recharge/online/onlineSubmit.html" backUrl="${root}/fund/recharge/online/onlinePay.html?realNameDialog=true" text="${views.fund_auto['立即存款']}" callback="back" opType="function" cssClass="btn-blue btn large-big disabled _submit"/>
                     </div>
                     <div class="applysale">
                         <ul class="transfer-tips">
@@ -126,7 +126,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="button" id="onlineContinueDeposit" value="${views.fund_auto['仍要继续']}" class="btn btn-outline btn-filter"/>
+                    <input type="button" id="onlineContinueDeposit" url="${root}/fund/recharge/online/onlineSubmit.html" value="${views.fund_auto['仍要继续']}" class="btn btn-outline btn-filter"/>
                     <%--<soul:button target="onlineContinueDeposit" text="${views.fund_auto['仍要继续']}" cssClass="btn btn-outline btn-filter" opType="function"/>--%>
                     <input type="button" id="againDeposit" value="${views.fund_auto['重新存款']}" class="btn btn-filter" />
                    <%-- <% double num = Math.random();%>

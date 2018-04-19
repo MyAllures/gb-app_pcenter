@@ -71,9 +71,9 @@
                     <label class="bank ${index == 0?'select':''}">
                         <span class="radio"><input name="account" bankCode="${bankCode}" depositType="scan" showSuccMsg="false" isThird="false" rechargeType="${onlineType}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" type="radio" isAuthCode="${authCode}" randomAmount="${account.randomAmount}" ${index == 0?'checked':''} value="${command.getSearchId(account.id)}"></span>
                         <span class="radio-bank" title="${name}">
-                            <i class="pay-third sm ${bankCode}"></i><font class="diy-pay-title">${name}</font>
+                            <i class="pay-third sm ${bankCode}"></i><font class="diy-pay-title"><c:out value="${name}"/></font>
                         </span>
-                        <span class="bank-logo-name">${name}</span>
+                        <span class="bank-logo-name"><c:out value="${name}"/></span>
                     </label>
                     <c:set var="index" value="${index+1}"/>
                 </c:forEach>
@@ -103,7 +103,7 @@
                             <font class="diy-pay-title">${name}</font>
                         </span>
                         <span class="bank-logo-name">${name}</span>
-                        <font style="display: none" class="remark${account.id}">${account.remark}</font>
+                        <font style="display: none" class="remark${account.id}"><c:out value="${account.remark}"/></font>
                     </label>
                     <c:set var="index" value="${index+1}"/>
                 </c:forEach>
@@ -123,7 +123,7 @@
                     <ul>
                         <li>
                             <div class="bankinfo bankinfo-m">
-                                <h1><i class="pay-third ${thirdBankCode}"></i><i id="customBankName">${firstPayAccount.customBankName}</i></h1>
+                                <h1><i class="pay-third ${thirdBankCode}"></i><i id="customBankName"> <c:out value="${firstPayAccount.customBankName}"/></i></h1>
                                 <c:choose>
                                     <c:when test="${isHide}">
                                        <span class="orange select">
@@ -151,7 +151,7 @@
                 </div>
                 <div class="control-group">
                     <div class="m-l" id="accountRemark">
-                        ${firstPayAccount.remark}
+                        <c:out value="${firstPayAccount.remark}"/>
                     </div>
                     <%--<c:if test="${!empty firstPayAccount.remark}">
                         <div id="">
@@ -163,15 +163,15 @@
                     </c:if>
                 </div>
             </div>
-            <%--<c:if test="${!isHide}">--%>
+            <c:if test="${!isHide}">
                 <div id="qrCodeUrl" class="pull-left" style="${!empty firstPayAccount.qrCodeUrl?'':'display:none'}">
-                <span class="two-dimension">
-                    <img src="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}" style="width: 176px;height: 176px;"/>
-                    <em><img src="${resRoot}/images/two-dimension-ico.png" class="pull-left"/>${thirdBankName}${views.fund_auto['扫一扫付款']}</em>
-                </span>
+                    <span class="two-dimension">
+                        <img src="${soulFn:getThumbPath(domain,firstPayAccount.qrCodeUrl,176,176)}" style="width: 176px;height: 176px;"/>
+                        <em><img src="${resRoot}/images/two-dimension-ico.png" class="pull-left"/>${thirdBankName}${views.fund_auto['扫一扫付款']}</em>
+                    </span>
                     <span><img src="${resRoot}/images/two-dimension123.png"></span>
                 </div>
-            <%--</c:if>--%>
+            </c:if>
         </div>
     </div>
 </c:if>
@@ -248,7 +248,7 @@
         <div class=" control-group">
             <label class="control-label"></label>
             <input type="hidden" name="result.rechargeType" value="${firstPayAccount.type eq '1'?companyType:onlineType}"/>
-            <soul:button target="submit" precall="validateForm" text="立即存款" opType="function" cssClass="btn-blue btn large-big" tag="button"/>
+            <soul:button target="sumFailureCount" precall="validateForm" text="立即存款" opType="function" cssClass="btn-blue btn large-big" tag="button"/>
         </div>
         <div class="applysale">
             <%--扫码--%>

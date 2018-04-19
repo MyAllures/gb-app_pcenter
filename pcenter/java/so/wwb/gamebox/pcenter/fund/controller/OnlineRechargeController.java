@@ -3,14 +3,13 @@ package so.wwb.gamebox.pcenter.fund.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.string.StringTool;
+import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
 import org.soul.commons.net.ServletTool;
 import org.soul.commons.security.CryptoTool;
 import org.soul.model.pay.enums.CommonFieldsConst;
-import org.soul.model.pay.enums.PayApiTypeConst;
-import org.soul.model.pay.vo.OnlinePayVo;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
@@ -20,15 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
-import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.CacheBase;
+import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.TerminalEnum;
+import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.company.po.Bank;
-import so.wwb.gamebox.model.company.sys.po.VSysSiteDomain;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.content.vo.PayAccountListVo;
-import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
 import so.wwb.gamebox.model.master.enums.DepositWayEnum;
 import so.wwb.gamebox.model.master.enums.PayAccountAccountType;
 import so.wwb.gamebox.model.master.enums.PayAccountType;
@@ -39,18 +37,14 @@ import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
 import so.wwb.gamebox.model.master.operation.po.VActivityMessage;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.fund.form.OnlinePayForm;
-import so.wwb.gamebox.pcenter.fund.form.ScanCodeForm;
+import so.wwb.gamebox.pcenter.fund.form.ScanElectronicRechargeForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
-import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.token.Token;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by cherry on 16-9-11.
@@ -60,8 +54,6 @@ import java.util.Map;
 public class OnlineRechargeController extends RechargeBaseController {
     //线上支付页面
     private static final String ONLINE_PAY = "/fund/recharge/OnlinePay";
-    //扫码支付
-    private static final String SCAN_CODE = "/fund/recharge/ScanCode";
     //线上支付（含微信支付、支付宝支付）等待支付页面
     private static final String ONLINE_PENDING_PAY = "/fund/recharge/OnlinePendingPay";
     //线上支付（含微信支付、支付宝支付）存款失败页面
@@ -70,8 +62,6 @@ public class OnlineRechargeController extends RechargeBaseController {
     private static final String ONLINE_SUCCESS = "/fund/recharge/OnlineSuccess";
     //线上支付（含微信支付、支付宝支付）存款超时页面
     private static final String ONLINE_OVERTIME = "/fund/recharge/OnlineOvertime";
-    //易收付支付页面
-    private static final String YSF_PAY = "/fund/recharge/Ysfpay";
     private static Log LOG = LogFactory.getLog(OnlineRechargeController.class);
 
     /**
@@ -130,33 +120,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         }
     }
 
-    /**
-     * 扫码支付
-     *
-     * @param model
-     * @return
-     */
-    @RequestMapping("/scanCode")
-    @Token(generate = true)
-    public String scanCode(Model model, String realNameDialog) {
-        PlayerRank rank = getRank();
-        String[] accountTypes = new String[]{PayAccountAccountType.WECHAT.getCode(), PayAccountAccountType.ALIPAY.getCode(), PayAccountAccountType.QQWALLET.getCode(), PayAccountAccountType.JD_PAY.getCode(), PayAccountAccountType.BAIFU_PAY.getCode(), PayAccountAccountType.UNION_PAY.getCode(), PayAccountAccountType.WECHAT_MICROPAY.getCode(), PayAccountAccountType.QQ_MICROPAY.getCode(), PayAccountAccountType.ALIPAY_MICROPAY.getCode()};
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), null, TerminalEnum.PC.getCode(), null, accountTypes);
-        PayAccountListVo payAccountListVo = new PayAccountListVo();
-        payAccountListVo.setResult(payAccounts);
-        payAccountListVo.setPlayerRank(rank);
-        payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
-        model.addAttribute("payAccountMap", ServiceSiteTool.payAccountService().getScanAccount(payAccountListVo));
-        model.addAttribute("currency", getCurrencySign());
-        model.addAttribute("username", SessionManager.getUserName());
-        //验证规则
-        model.addAttribute("validateRule", JsRuleCreator.create(ScanCodeForm.class));
-        model.addAttribute("isRealName", isRealName());
-        model.addAttribute("realNameDialog", realNameDialog);
-        model.addAttribute("rank", rank);
-        model.addAttribute("command", payAccountListVo);
-        return SCAN_CODE;
-    }
 
     /**
      * 更改扫码支付方式,相应的优惠要变更
@@ -202,8 +165,34 @@ public class OnlineRechargeController extends RechargeBaseController {
     @RequestMapping("/onlineSubmit")
     @Token(valid = true)
     @ResponseBody
-    public Map<String, Object> onlineSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlinePayForm form, BindingResult result) {
-        return onlineSubmit(playerRechargeVo, form.get$code(), result, RechargeTypeEnum.ONLINE_DEPOSIT.getCode());
+    public Map<String, Object> onlineSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlinePayForm form, BindingResult result, HttpServletRequest request) {
+        return onlineSubmit(playerRechargeVo, form.get$code(), result, RechargeTypeEnum.ONLINE_DEPOSIT.getCode(), request);
+    }
+
+    /**
+     * 统计连续失败次数
+     * @param playerRechargeVo
+     * @param form
+     * @param result
+     * @return
+     */
+    @RequestMapping("/sumFailureCount")
+    @ResponseBody
+    public Map<String, Object> sumFailureCount(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlinePayForm form, BindingResult result) {
+        boolean flag = rechargePre(result, form.get$code());
+        if (!flag) {
+            return getResultMsg(false, null, null);
+        }
+        PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
+        if(payAccount == null){
+            return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
+        }
+        PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
+        playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
+        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count, SessionManager.getUserId());
+        Map<String,Object> map = new HashMap<>();
+        map.put("failureCount", failureCount);
+        return map;
     }
 
     /**
@@ -215,37 +204,18 @@ public class OnlineRechargeController extends RechargeBaseController {
      * @param rechargeType
      * @return
      */
-    private Map<String, Object> onlineSubmit(PlayerRechargeVo playerRechargeVo, String code, BindingResult result, String rechargeType) {
+    private Map<String, Object> onlineSubmit(PlayerRechargeVo playerRechargeVo, String code, BindingResult result, String rechargeType, HttpServletRequest request) {
         boolean flag = rechargePre(result, code);
         if (!flag) {
             return getResultMsg(false, null, null);
         }
-        PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
-        playerRecharge.setRechargeType(rechargeType);
-//        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
-        PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
-        playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
-        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count,SessionManager.getUserId());
-        Map<String, Object> map = commonOnlineSubmit(playerRechargeVo, payAccount);
-        map.put("failureCount",failureCount);
-        return map;
-    }
-
-    @RequestMapping("/scanCodeSubmit")
-    @ResponseBody
-    @Token(valid = true)
-    public Map<String, Object> ScanCodeSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanCodeForm form, BindingResult result) {
-        boolean flag = rechargePre(result, form.get$code());
-        if (!flag) {
-            return getResultMsg(false, null, null);
+        if(payAccount == null){
+            return getResultMsg(false, LocaleTool.tranMessage(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PAY_ACCOUNT_LOST), null);
         }
-
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
-        PayAccount payAccount = getOnlinePayAccount(playerRechargeVo.getAccount());
-        //如果账号支持随机金额 重新设置存款金额
-        playerRecharge.setRechargeAmount(getRechargeAmount(payAccount, playerRecharge));
-        return commonOnlineSubmit(playerRechargeVo, payAccount);
+        playerRecharge.setRechargeType(rechargeType);
+        return commonOnlineSubmit(playerRechargeVo, payAccount, request);
     }
 
     /**
@@ -291,33 +261,6 @@ public class OnlineRechargeController extends RechargeBaseController {
         }
     }
 
-    public String getDomain(String domain, PayAccount payAccount) {
-        domain = domain.replace("http://", "");
-        VSysSiteDomain siteDomain = Cache.getSiteDomain(domain);
-        Boolean sslEnabled = false;
-        if (siteDomain != null && siteDomain.getSslEnabled() != null && siteDomain.getSslEnabled()) {
-            sslEnabled = true;
-        }
-        String sslDomain = "https://" + domain;
-        String notSslDomain = "http://" + domain;
-        ;
-        if (!sslEnabled) {
-            return notSslDomain;
-        }
-        try {
-            OnlinePayVo onlinePayVo = new OnlinePayVo();
-            onlinePayVo.setChannelCode(payAccount.getBankCode());
-            onlinePayVo.setApiType(PayApiTypeConst.PAY_SSL_ENABLE);
-            sslEnabled = ServiceTool.onlinePayService().getSslEnabled(onlinePayVo);
-            LOG.info("支付{0}是否支持ssl:{1}", payAccount.getBankCode(), sslEnabled);
-        } catch (Exception e) {
-            LOG.error(e);
-        }
-        if (sslEnabled) {
-            return sslDomain;
-        }
-        return notSslDomain;
-    }
 
     @RequestMapping("/onlinePending")
     public String onlinePending(Model model, Boolean state, String msg) {

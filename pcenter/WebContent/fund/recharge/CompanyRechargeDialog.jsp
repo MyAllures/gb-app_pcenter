@@ -119,8 +119,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <soul:button tag="button" target="scanElectronicContinueDeposit" text="${views.fund_auto['仍要继续']}" cssClass="btn btn-outline btn-filter" opType="function"/>
-                <soul:button tag="button" target="back" text="${views.fund_auto['重新存款']}" opType="function" cssClass="btn btn-filter"/>
+                <soul:button tag="button" target="submit" precall="validateForm" text="${views.fund_auto['仍要继续']}" cssClass="btn btn-outline btn-filter" opType="function"/>
+                <soul:button tag="button" target="closingFailurePrompt" text="${views.fund_auto['重新存款']}" opType="function" cssClass="btn btn-filter"/>
             </div>
         </div>
     </div>

@@ -35,6 +35,9 @@
                     </td>
                     <td>
                         <c:choose>
+                            <c:when test="${p.checkState eq '4'}">
+                                ${views.preferential_auto['未达到条件']}
+                            </c:when>
                             <c:when test="${p.checkState eq 'success'||p.checkState eq '2' || p.checkState eq '4'}">
                                 ${views.preferential_auto['已到账']}
                             </c:when>

@@ -144,6 +144,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         playerRecharge.setRechargeType(RechargeTypeEnum.BITCOIN_FAST.getCode());
         playerRecharge.setPlayerId(SessionManager.getUserId());
         playerRechargeVo.setResult(playerRecharge);
+        model.addAttribute("sales", searchSales(playerRecharge.getRechargeType()));
         //上一次填写的账号/昵称
         model.addAttribute("payerBankcard", playerRechargeService().searchLastPayerBankcard(playerRechargeVo));
         model.addAttribute("customerService",getCustomerService());

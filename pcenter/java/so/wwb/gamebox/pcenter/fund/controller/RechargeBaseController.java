@@ -334,6 +334,8 @@ public abstract class RechargeBaseController {
         }
         VActivityMessageListVo listVo = new VActivityMessageListVo();
         listVo.getSearch().setDepositWay(type);
+        listVo.getSearch().setActivityVersion(SessionManager.getLocale().toString());
+        listVo.getSearch().setActivityTerminalType(TerminalEnum.PC.getCode());
         listVo = playerRechargeService().searchSale(listVo, SessionManager.getUserId());
         return setClassifyKeyName(listVo.getResult());
     }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
+import so.wwb.gamebox.model.TerminalEnum;
 import so.wwb.gamebox.model.master.operation.vo.VPreferentialRecodeListVo;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
@@ -32,6 +33,7 @@ public class PreferentialController {
         vPreferentialRecodeListVo.getSearch().setActivityVersion(SessionManager.getLocale().toString());
         vPreferentialRecodeListVo.getSearch().setUserId(SessionManager.getUserId());
         vPreferentialRecodeListVo.getSearch().setCurrentDate(SessionManager.getDate().getNow());
+        vPreferentialRecodeListVo.getSearch().setActivityTerminalType(TerminalEnum.PC.getCode());
         vPreferentialRecodeListVo  = ServiceSiteTool.vPreferentialRecodeService().search(vPreferentialRecodeListVo);
         model.addAttribute("command",vPreferentialRecodeListVo);
         return ServletTool.isAjaxSoulRequest(request)? "/preferential/IndexPartial" : "/preferential/Index";

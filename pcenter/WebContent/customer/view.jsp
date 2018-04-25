@@ -37,7 +37,7 @@
                             </div> <!----></div>
                     </div> <!----></div>
                 <div class="ivu-col ivu-col-span-4">
-                    <button type="button" class="ivu-btn ivu-btn-primary ivu-btn-large" id="submitMessageBtn"><span>发送</span>
+                    <button type="button" class="ivu-btn ivu-btn-primary ivu-btn-large" id="submitMessageBtn" disabled="disabled"><span>发送</span>
                     </button>
                 </div>
             </div>

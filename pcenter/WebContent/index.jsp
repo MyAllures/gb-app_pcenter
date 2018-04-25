@@ -142,7 +142,7 @@
 </div>
 <%@include file="IndexContent.jsp"%>
 <div style="text-align: center;">
-    <button type="button" class="customer-affix" onclick="window.top.topPage.showCustomerWin()" ><i class="ivu-icon ivu-icon-chatbubbles" style="font-size: 20px;"></i><span class="customer-button-text">联系客服</span></button>
+    <button type="button" class="customer-affix customer-button" onclick="window.top.topPage.showCustomerWin()" ><i class="ivu-icon ivu-icon-chatbubbles" style="font-size: 20px;"></i><span class="customer-button-text">联系客服</span></button>
 </div>
 </body>
 

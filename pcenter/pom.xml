@@ -185,6 +185,10 @@
                             <targetPath>/passport</targetPath>
                         </resource>
                         <resource>
+                            <directory>${basedir}/../../base/webcommon/WebContent/customer</directory>
+                            <targetPath>/customer</targetPath>
+                        </resource>
+                        <resource>
                             <directory>${basedir}/../../base/webcommon/WebContent/report</directory>
                             <targetPath>/report</targetPath>
                         </resource>

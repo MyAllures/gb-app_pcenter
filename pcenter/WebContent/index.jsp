@@ -43,6 +43,57 @@
              </li>
          {{/for}}
      </script>--%>
+    <style>
+        .min{
+            width: 250px;
+            height: 35px;
+            overflow: hidden !important;
+            padding: 0px !important;
+            margin: 0px;
+
+            float: left;
+            position: static !important;
+        }
+
+        .min .modal-dialog, .min .modal-content{
+            height: 100%;
+            width: 100%;
+            margin: 0px !important;
+            padding: 0px !important;
+        }
+
+        .min .modal-header{
+            height: 100%;
+            width: 100%;
+            margin: 0px !important;
+            padding: 3px 5px !important;
+        }
+
+        .display-none{display: none;}
+
+        button .fa{
+            font-size: 16px;
+            margin-left: 10px;
+            color : black;
+        }
+
+        .min .fa{
+            font-size: 14px;
+        }
+
+        .min .menuTab{display: none;}
+
+        button:focus { outline: none; }
+
+        .minmaxCon{
+            height: 35px;
+            bottom: 1px;
+            left: 1px;
+            position: fixed;
+            right: 1px;
+            z-index: 9999;
+        }
+    </style>
 </head>
 <body>
 <%
@@ -141,9 +192,19 @@
     <%--<div class="right"></div>--%>
 </div>
 <%@include file="IndexContent.jsp"%>
+<!-- 客服界面开始 -->
 <div style="text-align: center;">
-    <button type="button" class="customer-affix customer-button" onclick="window.top.topPage.showCustomerWin()" ><i class="ivu-icon ivu-icon-chatbubbles" style="font-size: 20px;"></i><span class="customer-button-text">联系客服</span></button>
+    <button type="button" class="customer-affix customer-button" onclick="window.top.topPage.showCustomerGroupWin(null,true)" ><i class="ivu-icon ivu-icon-chatbubbles" style="font-size: 20px;"></i><span class="customer-button-text">联系客服</span></button>
 </div>
+<!--<a class="btn btn-primary customer-affix" style="right : 0;" data-toggle="modal" data-backdrop="false" data-keyboard="false"  href="${root}/customer/groupView.html" data-target="#customerGroupModal">通讯列表</a>-->
+<!-- Modal -->
+<div class="modal fade mymodal" id="customerGroupModal" trole="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<div class="minmaxCon"></div>
+<!-- 客服界面结束 -->
 </body>
 
 </html>

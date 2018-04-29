@@ -43,57 +43,6 @@
              </li>
          {{/for}}
      </script>--%>
-    <style>
-        .min{
-            width: 250px;
-            height: 35px;
-            overflow: hidden !important;
-            padding: 0px !important;
-            margin: 0px;
-
-            float: left;
-            position: static !important;
-        }
-
-        .min .modal-dialog, .min .modal-content{
-            height: 100%;
-            width: 100%;
-            margin: 0px !important;
-            padding: 0px !important;
-        }
-
-        .min .modal-header{
-            height: 100%;
-            width: 100%;
-            margin: 0px !important;
-            padding: 3px 5px !important;
-        }
-
-        .display-none{display: none;}
-
-        button .fa{
-            font-size: 16px;
-            margin-left: 10px;
-            color : black;
-        }
-
-        .min .fa{
-            font-size: 14px;
-        }
-
-        .min .menuTab{display: none;}
-
-        button:focus { outline: none; }
-
-        .minmaxCon{
-            height: 35px;
-            bottom: 1px;
-            left: 1px;
-            position: fixed;
-            right: 1px;
-            z-index: 9999;
-        }
-    </style>
 </head>
 <body>
 <%

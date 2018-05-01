@@ -20,7 +20,11 @@
                     <td>${soulFn:formatDateTz(p.applyTime,DateFormat.DAY_SECOND,timeZone)}</td>
                     <td>${p.transactionNo}</td>
                     <td class="save-title" data-toggle="tooltip" data-placement="left" >
-                        <div class="elli" style="height: 14px" title="${empty p.activityName? views.preferential_auto['系统优惠']:p.activityName}">${empty p.activityName? views.preferential_auto['系统优惠']:p.activityName}</div>
+                        <div class="elli" style="height: 14px" title="${empty p.activityName? views.preferential_auto['系统优惠']:p.activityName}">${empty p.activityName? views.preferential_auto['系统优惠']:p.activityName}
+                            <c:if test="${not empty p.rechargeTransactionNo}">
+                                (${p.rechargeTransactionNo})<%--需求增加存款订单号--%>
+                            </c:if>
+                        </div>
                     </td>
                     <td>
                         <c:choose>

@@ -34,7 +34,9 @@ import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.site.po.SiteApiTypeI18n;
+import so.wwb.gamebox.model.company.site.po.SiteApiTypeRelation;
 import so.wwb.gamebox.model.enums.UserTypeEnum;
+import so.wwb.gamebox.model.gameapi.enums.ApiTypeEnum;
 import so.wwb.gamebox.model.master.enums.CreateChannelEnum;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
 import so.wwb.gamebox.model.master.player.vo.PlayerApiListVo;
@@ -100,6 +102,11 @@ public class IndexController extends BasePhoneApiController {
         model.addAttribute("isLottery",sysParam);
         List<SiteApiTypeI18n> apiTypeI18ns = Cache.fetchSiteApiTypeI18ns(SessionManager.getSiteId());
         model.addAttribute("apiTypeI18ns",apiTypeI18ns);
+        Map<String, List<SiteApiTypeRelation>> siteApiTypeRelationMap = Cache.getSiteApiTypeRelation(SessionManager.getSiteId());
+        SiteApiTypeRelation casino = siteApiTypeRelationMap.get(String.valueOf(ApiTypeEnum.CASINO.getCode())).get(0);
+        model.addAttribute("casino",casino);
+        SiteApiTypeRelation sports = siteApiTypeRelationMap.get(String.valueOf(ApiTypeEnum.SPORTS_BOOK.getCode())).get(0);
+        model.addAttribute("sports",sports);
     }
 
     @RequestMapping(value = "dialogIndex")

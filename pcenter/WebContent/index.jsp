@@ -105,10 +105,10 @@
                         <c:set var="game_page" value="/live.html"></c:set>
                     </c:when>
                     <c:when test="${at.apiTypeId == 2}">
-                        <c:set var="game_page" value="/casino.html"></c:set>
+                        <c:set var="game_page" value="/casino.html?apiType=2&apiId=${casino.apiId}"></c:set>
                     </c:when>
                     <c:when test="${at.apiTypeId == 3}">
-                        <c:set var="game_page" value="/sports.html"></c:set>
+                        <c:set var="game_page" value="/sports.html?apiId=${sports.apiId}"></c:set>
                     </c:when>
                     <c:when test="${at.apiTypeId == 5}">
                         <c:set var="game_page" value="/commonPage/gamePage/loading.html?apiId=34&apiTypeId=5"></c:set>

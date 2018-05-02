@@ -285,7 +285,12 @@ public class OnlineRechargeController extends RechargeBaseController {
     public String onlineOverTime(Model model, PlayerRechargeVo playerRechargeVo) {
         playerRechargeVo.setIp(SessionManager.getIpDb().getIp());
         playerRechargeVo.setOperatorName(SessionManager.getUserName());
-        playerRechargeVo = playerRechargeService().handleOnlineRechargeResult(playerRechargeVo, null);
+        try {
+            playerRechargeVo = playerRechargeService().handleOnlineRechargeResult(playerRechargeVo, null);
+        } catch (Exception e) {
+            playerRechargeVo.setSuccess(false);
+            LOG.error(e);
+        }
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         if (playerRecharge == null || RechargeStatusEnum.OVER_TIME.getCode().equals(playerRecharge.getRechargeStatus()) || RechargeStatusEnum.PENDING_PAY.getCode().equals(playerRecharge.getRechargeStatus())) {
             model.addAttribute("customerService", getCustomerService());

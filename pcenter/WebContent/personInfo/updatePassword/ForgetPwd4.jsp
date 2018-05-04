@@ -33,7 +33,7 @@
             <h3 class="popalign"><i class="tipbig success"></i></h3>
             <div class="tip-text">
                 <span class="tip-text-title">恭喜，操作成功</span>
-                <span>亲爱的，您的新密码已经设置成功，请牢记。</span>
+                <span>亲爱的，您的安全密码已经设置成功，请牢记。</span>
             </div>
             <div class="change-btn">
                 <a href="/pcenter/passport/logout.html" class="btn-blue btn large-big">马上登陆试试</a>

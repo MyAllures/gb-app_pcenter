@@ -6,6 +6,9 @@ import org.soul.commons.locale.DateQuickPicker;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.validation.form.PasswordRule;
 import org.soul.model.log.audit.enums.OpMode;
+import org.soul.model.msg.notice.po.NoticeContactWay;
+import org.soul.model.msg.notice.vo.NoticeContactWayListVo;
+import org.soul.model.msg.notice.vo.NoticeContactWayVo;
 import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.vo.SysUserVo;
 import org.soul.model.session.SessionKey;
@@ -20,18 +23,22 @@ import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.common.security.AuthTool;
 import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.common.PrivilegeStatusEnum;
+import so.wwb.gamebox.model.common.notice.enums.ContactWayType;
+import so.wwb.gamebox.model.master.enums.ContactWayStatusEnum;
 import so.wwb.gamebox.model.master.player.vo.UpdatePasswordVo;
+import so.wwb.gamebox.pcenter.personInfo.form.BindPhoneForm;
+import so.wwb.gamebox.pcenter.personInfo.form.SecurityPasswordForm;
 import so.wwb.gamebox.pcenter.personInfo.form.UpdatePasswordForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.SessionManagerCommon;
+import so.wwb.gamebox.web.common.SiteCustomerServiceHelper;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
+import so.wwb.gamebox.web.privilege.form.ForgetPasswordForm;
 import so.wwb.gamebox.web.shiro.common.filter.KickoutFilter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by bruce on 16-7-14.
@@ -41,9 +48,102 @@ import java.util.Map;
 public class UpdatePasswordController {
 
     private static final String PERSON_INFO_UPDATE_PASSWORD = "personInfo/UpdatePassword";
+    private static final String PERSON_INFO_INDEX = "personInfo/updatePassword/Index";
+    private static final String PERSON_INFO_FORGETPWD = "personInfo/updatePassword/ForgetPwd";
+    private static final String PERSON_INFO_FORGETPWD2 = "personInfo/updatePassword/ForgetPwd2";
+    private static final String PERSON_INFO_FORGETPWD3 = "personInfo/updatePassword/ForgetPwd3";
 
     /*默认5次机会*/
     private static final int ERROR_TIMES = 5;
+
+    @RequestMapping("/index")
+    public String index(Model model) {
+        model.addAttribute("validateRule", JsRuleCreator.create(UpdatePasswordForm.class));
+        model.addAttribute("remainTimes", remainTimes());
+        return PERSON_INFO_INDEX;
+    }
+
+    /**
+     * 忘记安全密码
+     * @param model
+     * @return
+     */
+    @RequestMapping("/forgetPwd")
+    public String forgetPwd(Model model) {
+        model.addAttribute("validateRule", JsRuleCreator.create(ForgetPasswordForm.class));
+        String customerService = SiteCustomerServiceHelper.getPCCustomerServiceUrl();
+        model.addAttribute("customerService",customerService);
+
+        NoticeContactWayVo noticeContactWayVo = getContactWayByType(SessionManager.getUserId(), ContactWayType.CELLPHONE.getCode());
+        if(noticeContactWayVo.getResult()!=null && ContactWayStatusEnum.CONTENT_STATUS_USING.getCode().equals(noticeContactWayVo.getResult().getStatus())){
+            model.addAttribute("phone",true);
+        }else{
+            model.addAttribute("phone",false);
+        }
+        return PERSON_INFO_FORGETPWD;
+    }
+
+    /**
+     * 手机验证
+     * @param model
+     * @return
+     */
+    @RequestMapping("/forgetPwd2")
+    public String forgetPwd2(Model model){
+        model.addAttribute("validateRule", JsRuleCreator.create(BindPhoneForm.class));
+        NoticeContactWayVo noticeContactWayVo = getContactWayByType(SessionManager.getUserId(), ContactWayType.CELLPHONE.getCode());
+        model.addAttribute("noticeContactWay", noticeContactWayVo.getResult());
+        return PERSON_INFO_FORGETPWD2;
+    }
+
+    @RequestMapping("/forgetPwd3")
+    public String forgetPwd3(String code,Model model){
+        Boolean bool = verifyPhoneVerificationCode(code);
+        if(bool){
+            model.addAttribute("validateRule", JsRuleCreator.create(SecurityPasswordForm.class));
+            NoticeContactWayVo noticeContactWayVo = getContactWayByType(SessionManager.getUserId(), ContactWayType.CELLPHONE.getCode());
+            model.addAttribute("noticeContactWay", noticeContactWayVo.getResult());
+            return PERSON_INFO_FORGETPWD3;
+        }else{
+            model.addAttribute("validateRule", JsRuleCreator.create(BindPhoneForm.class));
+            NoticeContactWayVo noticeContactWayVo = getContactWayByType(SessionManager.getUserId(), ContactWayType.CELLPHONE.getCode());
+            model.addAttribute("noticeContactWay", noticeContactWayVo.getResult());
+            return PERSON_INFO_FORGETPWD2;
+        }
+    }
+
+    public boolean verifyPhoneVerificationCode(String phoneVerificationCode) {
+        boolean flag = false;
+        boolean isExpired = false;
+        boolean isError = false;
+        if (SessionManager.getEmailOrPhoneCode("phone") != null) {
+            isExpired = DateTool.minutesBetween(SessionManager.getDate().getNow(), (Date) SessionManager.getEmailOrPhoneCode("phone").get(1)) > 30;
+            isError = phoneVerificationCode.equals(SessionManager.getEmailOrPhoneCode("phone").get(0));
+            flag = !isExpired && isError;
+        }
+        return flag;
+    }
+
+    /**
+     * 根据类型查询联系方式
+     *
+     * @param userId
+     * @param contactWayType 联系方式类型
+     * @return
+     */
+    private NoticeContactWayVo getContactWayByType(Integer userId, String contactWayType) {
+        NoticeContactWayListVo noticeContactWayListVo = new NoticeContactWayListVo();
+        noticeContactWayListVo.getSearch().setUserIds(Arrays.asList(userId));
+        noticeContactWayListVo.getSearch().setContactType(contactWayType);
+
+        List<NoticeContactWay> noticeContactWayList = ServiceTool.noticeContactWayService().fetchContactWaysByUserIdsAndType(noticeContactWayListVo);
+        NoticeContactWayVo noticeContactWayVo = new NoticeContactWayVo();
+        if (noticeContactWayList != null && noticeContactWayList.size() > 0) {
+            noticeContactWayVo.setResult(noticeContactWayList.get(0));
+        }
+        return noticeContactWayVo;
+    }
+
 
     /**
      * 跳转到修改密码页面

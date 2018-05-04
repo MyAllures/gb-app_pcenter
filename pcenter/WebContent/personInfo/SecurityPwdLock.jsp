@@ -27,6 +27,6 @@
     </div>
 </form>
 </body>
-<%@ include file="/include/include.js.jsp" %>
+<%--<%@ include file="/include/include.js.jsp" %>--%>
 <soul:import type="edit"/>
 </html>

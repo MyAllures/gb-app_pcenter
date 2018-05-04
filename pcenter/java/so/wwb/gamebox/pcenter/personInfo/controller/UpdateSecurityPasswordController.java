@@ -53,8 +53,9 @@ public class UpdateSecurityPasswordController {
     private static final Log LOG = LogFactory.getLog(UpdateSecurityPasswordController.class);
 
     private static final String PERSON_INFO_SECURITY_PASSWORD = "personInfo/SecurityPassword";
-    private static final String PERSON_INFO_UPDATE_SECURITY_PASSWORD = "personInfo/UpdateSecurityPassword";
+    private static final String PERSON_INFO_UPDATE_SECURITY_PASSWORD = "personInfo/updatePassword/IndexSecurityPassword";
     private static final String PERSON_INFO_SECURITY_PWD_LOCK = "personInfo/SecurityPwdLock";
+    private static final String PERSON_INFO_UPDATE_SECURITY_PWD = "personInfo/updatePassword/ForgetPwd4";
 
     private final static int TRY_TIMES = PrivilegeController.TRY_TIMES;
 
@@ -126,6 +127,47 @@ public class UpdateSecurityPasswordController {
             }
         }
         return false;
+    }
+
+    @RequestMapping("/updatePrivilegePwd")
+    @ResponseBody
+    public Map updatePrivilegePwd(UpdatePasswordVo updatePasswordVo) {
+        Map<String,Object> map = new HashMap<>(3,1f);
+        if(StringTool.isEmpty(updatePasswordVo.getPrivilegePwd()) || StringTool.isEmpty(updatePasswordVo.getPrivilegeRePwd())){
+            map.put("state", false);
+            return null;
+        }
+        //密码相同验证新安全密码不能和旧安全密码一样
+        String newPrivilegePwd = AuthTool.md5SysUserPermission(updatePasswordVo.getPrivilegePwd(),
+                SessionManager.getUserName());
+
+        SysUserVo sysUserVo = new SysUserVo();
+        SysUser sysUser = new SysUser();
+        sysUser.setId(SessionManager.getUserId());
+        sysUser.setPermissionPwd(newPrivilegePwd);
+        sysUser.setSecpwdErrorTimes(null);
+        sysUser.setSecpwdFreezeEndTime(new Date());
+        sysUserVo.setResult(sysUser);
+        sysUserVo.setProperties(SysUser.PROP_PERMISSION_PWD, SysUser.PROP_SECPWD_ERROR_TIMES,
+                SysUser.PROP_SECPWD_FREEZE_END_TIME);
+        boolean success = ServiceTool.sysUserService().updateOnly(sysUserVo).isSuccess();
+        map.put("state", success);
+        if (success) {
+            SessionManager.refreshUser();
+            map.put("msg", LocaleTool.tranMessage(Module.PRIVILEGE, "security.update.success"));
+            map.put("stateCode", PrivilegeStatusEnum.CODE_100.getCode());
+            SessionManager.clearPrivilegeStatus();
+            resetSecPwdFreezen(sysUser);
+            resetBalanceFreeze(sysUser);
+        } else {
+            map.put("msg", LocaleTool.tranMessage(Module.PRIVILEGE, "security.update.failed"));
+        }
+        return map;
+    }
+
+    @RequestMapping("goSuccess")
+    public String goSuccess(){
+        return PERSON_INFO_UPDATE_SECURITY_PWD;
     }
 
     /**

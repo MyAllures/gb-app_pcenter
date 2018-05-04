@@ -79,7 +79,7 @@
                          callback="saveCallbak">${views.account['AccountSetting.update']}</soul:button>
         </div>
         <div class="change-btn">
-            <soul:button text="" target="${root}/personInfo/password/forgetPwd.html" opType="ajax" cssClass="large-big btn btn-link">忘记安全密码？</soul:button>
+            <a href="/personInfo/password/forgetPwd.html" class="large-big btn btn-link" nav-target="mainFrame">忘记安全密码？</a>
         </div>
 
     </form>

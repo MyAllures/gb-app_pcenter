@@ -88,7 +88,8 @@
 <!--banner-->
 <div class="banner" <c:if test="${isLotterySite}">style="background-image: url(../ftl/${siteDomain.templateCode}/images/bannerbg.jpg);"</c:if> >
     <a href="/">
-        <div class="logo" style="background-image:url(${soulFn:getThumbPath(domain, logo,220,90)});width:220px;height: 90px;"></div>
+        <%--<div class="logo" style="background-image:url(${soulFn:getThumbPath(domain, logo,220,90)});width:220px;height: 90px;"></div>--%>
+        <div class="logo"><img src="${soulFn:getThumbPath(domain, logo,220,90)}"></div>
     </a>
     <div class="right">
         <c:if test="${isLottery.paramValue=='false'}">

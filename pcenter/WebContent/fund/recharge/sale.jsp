@@ -1,7 +1,9 @@
-<%--@elvariable id="sales" type="java.util.List<so.wwb.gamebox.model.master.operation.po.VActivityMessage>"--%>
+<%@ page import="so.wwb.gamebox.model.SiteParamEnum" %><%--@elvariable id="sales" type="java.util.List<so.wwb.gamebox.model.master.operation.po.VActivityMessage>"--%>
 <%--@elvariable id="playerRechargeVo" type="so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
+<c:set var="activityHallSwitch" value="<%=ParamTool.getSysParam(SiteParamEnum.ACTIVITY_HALL_SWITCH)%>"></c:set>
+<c:if test="${!activityHallSwitch.paramValue}">
 <div id="applysale" class="applysale">
 <c:if test="${fn:length(sales)>0}">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -81,3 +83,22 @@
     </table>
 {{/if}}
 </script>
+</c:if>
+<c:if test="${activityHallSwitch.paramValue}">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tbody>
+        <tr>
+            <td width="72" class="al-right" style="width: 202px">
+            <span class="ci-count">
+                ${views.fund_auto['温馨推荐']}
+            </span>
+            </td>
+            <td width="500">
+                <span class="">
+                &nbsp;&nbsp;${views.fund_auto['完成存款后，可以前往活动大厅申请活动优惠']}
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</c:if>

@@ -33,7 +33,6 @@
             comet = new Comet();
             index = new Index();
             backgroundBlur = new BackgroundBlur();
-
         });
     </script>
     <%-- <script id="topMenuTmpl" type="text/x-jsrender">

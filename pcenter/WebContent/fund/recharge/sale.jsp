@@ -2,6 +2,7 @@
 <%--@elvariable id="playerRechargeVo" type="so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
+<input type="hidden" name="isOpenActivityHall" value="${isOpenActivityHall}"/>
 <c:if test="${!isOpenActivityHall}">
 <div id="applysale" class="applysale">
 <c:if test="${fn:length(sales)>0}">

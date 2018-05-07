@@ -293,7 +293,6 @@ public class CompanyRechargeController extends RechargeBaseController {
         }
         model.addAttribute("rank", rank);
         model.addAttribute("currency", getCurrencySign());
-        model.addAttribute("sales", searchSales(DepositWayEnum.COMPANY_DEPOSIT.getCode()));
         model.addAttribute("displayAccounts", display);
         //验证规则
         model.addAttribute("validateRule", JsRuleCreator.create(AtmCounterForm.class));
@@ -302,6 +301,11 @@ public class CompanyRechargeController extends RechargeBaseController {
         model.addAttribute("customerService", getCustomerService());
         model.addAttribute("userName", SessionManager.getUserName());
         model.addAttribute("payAccountVo", new PayAccountVo());
+        boolean isOpenActivityHall = ParamTool.isOpenActivityHall();
+        model.addAttribute("isOpenActivityHall",isOpenActivityHall);
+        if(!isOpenActivityHall) {
+            model.addAttribute("sales", searchSales(DepositWayEnum.COMPANY_DEPOSIT.getCode()));
+        }
         return ATM_COUNTER_FIRST;
     }
 

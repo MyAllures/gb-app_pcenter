@@ -1,7 +1,6 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
 import org.soul.commons.collections.CollectionTool;
-import org.soul.commons.currency.CurrencyTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.model.DictEnum;
+import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
@@ -100,7 +100,11 @@ public class CompanyRechargeController extends RechargeBaseController {
             model.addAttribute("accounts", getCompanyPayAccounts(payAccounts));
         }
         model.addAttribute("rank", rank);
-        model.addAttribute("sales", searchSales(ActivityDepositWay.COMPANY));
+        boolean isOpenActivityHall = ParamTool.isOpenActivityHall();
+        model.addAttribute("isOpenActivityHall", isOpenActivityHall);
+        if (!isOpenActivityHall) {
+            model.addAttribute("sales", searchSales(ActivityDepositWay.COMPANY));
+        }
         model.addAttribute("currency", getCurrencySign());
         //验证规则
         model.addAttribute("validateRule", JsRuleCreator.create(OnlineBankForm.class));
@@ -147,7 +151,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         model.addAttribute("sales", searchSales(playerRecharge.getRechargeType()));
         //上一次填写的账号/昵称
         model.addAttribute("payerBankcard", playerRechargeService().searchLastPayerBankcard(playerRechargeVo));
-        model.addAttribute("customerService",getCustomerService());
+        model.addAttribute("customerService", getCustomerService());
         return BIT_COIN_FIRST;
     }
 
@@ -361,7 +365,8 @@ public class CompanyRechargeController extends RechargeBaseController {
         return companyRechargeConfirmInfo(playerRechargeVo);
     }
 
-    /**签证
+    /**
+     * 签证
      * 网银存款提交
      *
      * @param playerRechargeVo

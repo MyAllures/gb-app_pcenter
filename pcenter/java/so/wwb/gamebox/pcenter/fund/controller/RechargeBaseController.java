@@ -116,7 +116,11 @@ public abstract class RechargeBaseController {
         Map<String, Object> map = new HashMap<>();
         map.put("counterFee", getCurrencySign() + CurrencyTool.formatCurrency(Math.abs(fee)));
         map.put("fee", fee);
-        map.put("sales", searchSaleByAmount(amount, type));
+        boolean isOpenActivityHall = ParamTool.isOpenActivityHall();
+        if (!isOpenActivityHall) {
+            map.put("sales", searchSaleByAmount(amount, type));
+        }
+        map.put("isOpenActivityHall", isOpenActivityHall);
         return map;
     }
 

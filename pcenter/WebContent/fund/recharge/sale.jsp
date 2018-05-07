@@ -1,9 +1,8 @@
-<%@ page import="so.wwb.gamebox.model.SiteParamEnum" %><%--@elvariable id="sales" type="java.util.List<so.wwb.gamebox.model.master.operation.po.VActivityMessage>"--%>
+<%--@elvariable id="sales" type="java.util.List<so.wwb.gamebox.model.master.operation.po.VActivityMessage>"--%>
 <%--@elvariable id="playerRechargeVo" type="so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
-<c:set var="activityHallSwitch" value="<%=ParamTool.getSysParam(SiteParamEnum.ACTIVITY_HALL_SWITCH)%>"></c:set>
-<c:if test="${!activityHallSwitch.paramValue}">
+<c:if test="${!isOpenActivityHall}">
 <div id="applysale" class="applysale">
 <c:if test="${fn:length(sales)>0}">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -84,7 +83,7 @@
 {{/if}}
 </script>
 </c:if>
-<c:if test="${activityHallSwitch.paramValue}">
+<c:if test="${isOpenActivityHall}">
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tbody>
         <tr>

@@ -1,13 +1,16 @@
-<%--@elvariable id="command" type="so.wwb.gamebox.model.master.operation.vo.VPreferentialRecodeListVo"--%>
+<%@ page import="so.wwb.gamebox.model.SiteParamEnum" %><%--@elvariable id="command" type="so.wwb.gamebox.model.master.operation.vo.VPreferentialRecodeListVo"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ include file="/include/include.inc.jsp" %>
 <!--//region your codes １-->
+<c:set var="activityHallSwitch" value="<%=ParamTool.getSysParam(SiteParamEnum.ACTIVITY_HALL_SWITCH)%>"></c:set><!-- 活动大厅开关 -->
 <div class="chart-table info-notice">
     <table border="0" cellpadding="0" cellspacing="0" class="table dataTable">
         <thead>
             <tr>
                 <th>${views.preferential_auto['申请时间']}</th>
-                <th>${views.preferential_auto['申请单号']}</th>
+                <c:if test="${activityHallSwitch.paramValue eq 'true'}">
+                    <th>${views.preferential_auto['申请单号']}</th>
+                </c:if>
                 <th style="width: 400px">${views.preferential_auto['活动名称']}</th>
                 <th>${views.preferential_auto['申请金额']}</th>
                 <th>${views.preferential_auto['优惠金状态']}</th>
@@ -18,10 +21,12 @@
             <c:forEach items="${command.result}" var="p">
                 <tr>
                     <td>${soulFn:formatDateTz(p.applyTime,DateFormat.DAY_SECOND,timeZone)}</td>
-                    <td>${p.transactionNo}</td>
+                    <c:if test="${activityHallSwitch.paramValue eq 'true'}">
+                        <td>${p.transactionNo}</td>
+                    </c:if>
                     <td class="save-title" data-toggle="tooltip" data-placement="left" >
                         <div class="elli" style="height: 14px" title="${empty p.activityName? views.preferential_auto['系统优惠']:p.activityName}">${empty p.activityName? views.preferential_auto['系统优惠']:p.activityName}
-                            <c:if test="${not empty p.rechargeTransactionNo}">
+                            <c:if test="${activityHallSwitch.paramValue eq 'true'}">
                                 (${p.rechargeTransactionNo})<%--需求增加存款订单号--%>
                             </c:if>
                         </div>

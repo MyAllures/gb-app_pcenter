@@ -20,7 +20,7 @@
                 <td width="100px" class="popalignr" style="padding: 15px">${views.share['privilege.password']}：</td>
                 <td id="privilegePWD">
                     <input id="privilegeCode" class="form-control" name="code"
-                           style="width: 150px;border:1px solid #ccc"
+                           style="width: 150px;border:1px solid #ccc" maxlength="6"
                            type="password" placeholder="${views.share['privilege.password.please']}"
                            autocomplete="off" showSuccMsg="false"/>
                 </td>

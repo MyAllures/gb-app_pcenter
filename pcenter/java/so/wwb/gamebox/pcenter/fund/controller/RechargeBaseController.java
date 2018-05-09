@@ -116,7 +116,11 @@ public abstract class RechargeBaseController {
         Map<String, Object> map = new HashMap<>();
         map.put("counterFee", getCurrencySign() + CurrencyTool.formatCurrency(Math.abs(fee)));
         map.put("fee", fee);
-        map.put("sales", searchSaleByAmount(amount, type));
+        boolean isOpenActivityHall = ParamTool.isOpenActivityHall();
+        if (!isOpenActivityHall) {
+            map.put("sales", searchSaleByAmount(amount, type));
+        }
+        map.put("isOpenActivityHall", isOpenActivityHall);
         return map;
     }
 
@@ -605,6 +609,12 @@ public abstract class RechargeBaseController {
                 String uri = "/onlinePay/abcefg.html?search.transactionNo=" + playerRecharge.getTransactionNo() + "&origin=" + TerminalEnum.PC.getCode();
                 domain = getDomain(domain, payAccount);
                 url = domain + uri;
+                //保存订单支付网址
+                playerRecharge.setPayUrl(domain);
+                PlayerRechargeVo playerRechargeVo = new PlayerRechargeVo();
+                playerRechargeVo.setResult(playerRecharge);
+                playerRechargeVo.setProperties(PlayerRecharge.PROP_PAY_URL);
+                ServiceSiteTool.playerRechargeService().updateOnly(playerRechargeVo);
             }
         } catch (Exception e) {
             LOG.error(e);

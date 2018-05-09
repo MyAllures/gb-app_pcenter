@@ -88,7 +88,8 @@
 <!--banner-->
 <div class="banner" <c:if test="${isLotterySite}">style="background-image: url(../ftl/${siteDomain.templateCode}/images/bannerbg.jpg);"</c:if> >
     <a href="/">
-        <div class="logo" style="background-image:url(${soulFn:getThumbPath(domain, logo,220,90)});width:220px;height: 90px;"></div>
+        <%--<div class="logo" style="background-image:url(${soulFn:getThumbPath(domain, logo,220,90)});width:220px;height: 90px;"></div>--%>
+        <div class="logo"><img src="${soulFn:getThumbPath(domain, logo,220,90)}"></div>
     </a>
     <div class="right">
         <c:if test="${isLottery.paramValue=='false'}">
@@ -105,10 +106,10 @@
                         <c:set var="game_page" value="/live.html"></c:set>
                     </c:when>
                     <c:when test="${at.apiTypeId == 2}">
-                        <c:set var="game_page" value="/casino.html"></c:set>
+                        <c:set var="game_page" value="/casino.html?apiType=2&apiId=${casino.apiId}"></c:set>
                     </c:when>
                     <c:when test="${at.apiTypeId == 3}">
-                        <c:set var="game_page" value="/sports.html"></c:set>
+                        <c:set var="game_page" value="/sports.html?apiId=${sports.apiId}"></c:set>
                     </c:when>
                     <c:when test="${at.apiTypeId == 5}">
                         <c:set var="game_page" value="/commonPage/gamePage/loading.html?apiId=34&apiTypeId=5"></c:set>

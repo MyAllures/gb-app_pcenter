@@ -12,6 +12,7 @@ import org.soul.model.msg.notice.vo.NoticeContactWayVo;
 import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.vo.SysUserVo;
 import org.soul.model.session.SessionKey;
+import org.soul.model.sys.po.SysParam;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.common.security.AuthTool;
 import so.wwb.gamebox.model.Module;
+import so.wwb.gamebox.model.ParamTool;
+import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.PrivilegeStatusEnum;
 import so.wwb.gamebox.model.common.notice.enums.ContactWayType;
 import so.wwb.gamebox.model.master.enums.ContactWayStatusEnum;
@@ -74,8 +77,9 @@ public class UpdatePasswordController {
         String customerService = SiteCustomerServiceHelper.getPCCustomerServiceUrl();
         model.addAttribute("customerService",customerService);
 
+        SysParam smsSwitch = ParamTool.getSysParam(SiteParamEnum.SETTING_REG_SETTING_SMS_SWITCH);
         NoticeContactWayVo noticeContactWayVo = getContactWayByType(SessionManager.getUserId(), ContactWayType.CELLPHONE.getCode());
-        if(noticeContactWayVo.getResult()!=null && ContactWayStatusEnum.CONTENT_STATUS_USING.getCode().equals(noticeContactWayVo.getResult().getStatus())){
+        if(smsSwitch!=null && smsSwitch.getActive() && noticeContactWayVo.getResult()!=null && ContactWayStatusEnum.CONTENT_STATUS_USING.getCode().equals(noticeContactWayVo.getResult().getStatus())){
             model.addAttribute("phone",true);
         }else{
             model.addAttribute("phone",false);

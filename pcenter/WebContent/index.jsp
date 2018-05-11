@@ -100,30 +100,32 @@
                 </a>
             </li>
             <c:set var="game_page" value=""></c:set>
-            <c:forEach var="at" items="${apiTypeI18ns}" varStatus="vs">
-                <c:choose>
-                    <c:when test="${at.apiTypeId == 1}">
-                        <c:set var="game_page" value="/live.html"></c:set>
-                    </c:when>
-                    <c:when test="${at.apiTypeId == 2}">
-                        <c:set var="game_page" value="/casino.html?apiType=2&apiId=${casino.apiId}"></c:set>
-                    </c:when>
-                    <c:when test="${at.apiTypeId == 3}">
-                        <c:set var="game_page" value="/sports.html?apiId=${sports.apiId}"></c:set>
-                    </c:when>
-                    <c:when test="${at.apiTypeId == 5}">
-                        <c:set var="game_page" value="/commonPage/gamePage/loading.html?apiId=34&apiTypeId=5"></c:set>
-                    </c:when>
-                    <c:otherwise>
-                        <c:set var="game_page" value="/lottery.html"></c:set>
-                    </c:otherwise>
-                </c:choose>
-                <li>
-                    <a class="nav-menu-ico aip-type-${at.apiTypeId}-ico" href="${game_page}">
-                        <span>${at.name}</span>
-                    </a>
-                </li>
-            </c:forEach>
+            <c:if test="${isLotterySite==false}">
+                <c:forEach var="at" items="${apiTypeI18ns}" varStatus="vs">
+                    <c:choose>
+                        <c:when test="${at.apiTypeId == 1}">
+                            <c:set var="game_page" value="/live.html"></c:set>
+                        </c:when>
+                        <c:when test="${at.apiTypeId == 2}">
+                            <c:set var="game_page" value="/casino.html?apiType=2&apiId=${casino.apiId}"></c:set>
+                        </c:when>
+                        <c:when test="${at.apiTypeId == 3}">
+                            <c:set var="game_page" value="/sports.html?apiId=${sports.apiId}"></c:set>
+                        </c:when>
+                        <c:when test="${at.apiTypeId == 5}">
+                            <c:set var="game_page" value="/commonPage/gamePage/loading.html?apiId=34&apiTypeId=5"></c:set>
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="game_page" value="/lottery.html"></c:set>
+                        </c:otherwise>
+                    </c:choose>
+                    <li>
+                        <a class="nav-menu-ico aip-type-${at.apiTypeId}-ico" href="${game_page}">
+                            <span>${at.name}</span>
+                        </a>
+                    </li>
+                </c:forEach>
+            </c:if>
             <li>
                 <a class="nav-menu-ico aip-type-promo-ico" href="/promo.html">
                     <span>优惠活动</span>

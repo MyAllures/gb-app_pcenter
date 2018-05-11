@@ -1,9 +1,12 @@
 package so.wwb.gamebox.pcenter.controller;
 
 import org.json.JSONObject;
+import org.soul.commons.collections.CollectionTool;
+import org.soul.commons.collections.ListTool;
 import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.dict.DictTool;
 import org.soul.commons.init.context.CommonContext;
+import org.soul.commons.lang.BooleanTool;
 import org.soul.commons.lang.SystemTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
@@ -102,11 +105,20 @@ public class IndexController extends BasePhoneApiController {
         model.addAttribute("isLottery",sysParam);
         List<SiteApiTypeI18n> apiTypeI18ns = Cache.fetchSiteApiTypeI18ns(SessionManager.getSiteId());
         model.addAttribute("apiTypeI18ns",apiTypeI18ns);
-        Map<String, List<SiteApiTypeRelation>> siteApiTypeRelationMap = Cache.getSiteApiTypeRelation(SessionManager.getSiteId());
-        SiteApiTypeRelation casino = siteApiTypeRelationMap.get(String.valueOf(ApiTypeEnum.CASINO.getCode())).get(0);
-        model.addAttribute("casino",casino);
-        SiteApiTypeRelation sports = siteApiTypeRelationMap.get(String.valueOf(ApiTypeEnum.SPORTS_BOOK.getCode())).get(0);
-        model.addAttribute("sports",sports);
+        //判断是否是纯彩票站 | 纯casino站
+        if(BooleanTool.isFalse(ParamTool.isLotterySite())){
+            Map<String, List<SiteApiTypeRelation>> siteApiTypeRelationMap = Cache.getSiteApiTypeRelation(SessionManager.getSiteId());
+            List<SiteApiTypeRelation> casinos = siteApiTypeRelationMap.get(ApiTypeEnum.CASINO.getCode());
+            if (CollectionTool.isNotEmpty(casinos)) {
+                SiteApiTypeRelation casino = casinos.get(0);
+                model.addAttribute("casino",casino);
+            }
+            List<SiteApiTypeRelation> sportss = siteApiTypeRelationMap.get(ApiTypeEnum.SPORTS_BOOK.getCode());
+            if (CollectionTool.isNotEmpty(sportss)) {
+                SiteApiTypeRelation sports = sportss.get(0);
+                model.addAttribute("sports",sports);
+            }
+        }
     }
 
     @RequestMapping(value = "dialogIndex")

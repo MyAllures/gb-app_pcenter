@@ -18,14 +18,14 @@
                    class="col-xs-3 al-right">${views.account['AccountSetting.setting.password.newSecPwd']}：</label>
             <div class="col-xs-7 p-x"><input type="password" class="input form-control" name="result.permissionPwd"
                                              placeholder="${views.account['AccountSetting.setting.password.setSecPwd']}"
-                                             autocomplete="off"></div>
+                                             autocomplete="off" maxlength="6"></div>
         </div>
         <div class="form-group clearfix line-hi34" style="padding-top: 15px">
             <label for="confirmPermissionPwd"
                    class="col-xs-3 al-right">${views.account['AccountSetting.setting.password.conSecPwd']}：</label>
             <div class="col-xs-7 p-x"><input type="password" class="input form-control" name="confirmPermissionPwd"
                                              placeholder="${views.account['AccountSetting.setting.password.conSecPwd']}"
-                                             autocomplete="off"></div>
+                                             autocomplete="off" maxlength="6"></div>
         </div>
             <%--<div class="form-group clearfix line-hi34" style="padding-top: 15px">
                 <label for="result.password" class="col-xs-3 al-right">${messages.privilege['loginPwd']}：</label>

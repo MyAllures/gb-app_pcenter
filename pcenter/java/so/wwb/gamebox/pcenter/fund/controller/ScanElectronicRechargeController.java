@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
-import so.wwb.gamebox.model.DictEnum;
-import so.wwb.gamebox.model.Module;
-import so.wwb.gamebox.model.SiteParamEnum;
-import so.wwb.gamebox.model.TerminalEnum;
+import so.wwb.gamebox.model.*;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
@@ -65,7 +62,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.FAST_WECHAT.getCode(), RechargeTypeEnum.WECHATPAY_FAST.getCode()));
         commonPage(model, rank, RechargeTypeEnum.WECHATPAY_SCAN.getCode(), RechargeTypeEnum.WECHATPAY_FAST.getCode());
         model.addAttribute("bankCode", BankCodeEnum.FAST_WECHAT.getCode());
-        return "/fund/recharge/ScanElectronic";
+        return SCAN_ELECTRONIC_URI;
     }
 
     /**
@@ -217,6 +214,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("onlineType", onlineType);
         model.addAttribute("companyType", companyType);
         model.addAttribute("currency", SessionManager.getUser().getDefaultCurrency());
+        model.addAttribute("isOpenActivityHall", ParamTool.isOpenActivityHall());
     }
 
     private Map<String, PayAccount> getScanAccount(PlayerRank rank, String accountType, String[] accountTypes) {
@@ -340,6 +338,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
 
     /**
      * 统计连续失败次数
+     *
      * @param playerRechargeVo
      * @param form
      * @param result
@@ -358,7 +357,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         PlayerRechargeVo playerRechargeVo4Count = new PlayerRechargeVo();
         playerRechargeVo4Count.getSearch().setPayAccountId(payAccount.getId());
         Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo4Count, SessionManager.getUserId());
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("failureCount", failureCount);
         return map;
     }

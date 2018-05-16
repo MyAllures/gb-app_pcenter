@@ -1,9 +1,12 @@
 package so.wwb.gamebox.pcenter.controller;
 
 import org.json.JSONObject;
+import org.soul.commons.collections.CollectionTool;
+import org.soul.commons.collections.ListTool;
 import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.dict.DictTool;
 import org.soul.commons.init.context.CommonContext;
+import org.soul.commons.lang.BooleanTool;
 import org.soul.commons.lang.SystemTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
@@ -34,7 +37,9 @@ import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.site.po.SiteApiTypeI18n;
+import so.wwb.gamebox.model.company.site.po.SiteApiTypeRelation;
 import so.wwb.gamebox.model.enums.UserTypeEnum;
+import so.wwb.gamebox.model.gameapi.enums.ApiTypeEnum;
 import so.wwb.gamebox.model.master.enums.CreateChannelEnum;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
 import so.wwb.gamebox.model.master.player.vo.PlayerApiListVo;
@@ -100,6 +105,20 @@ public class IndexController extends BasePhoneApiController {
         model.addAttribute("isLottery",sysParam);
         List<SiteApiTypeI18n> apiTypeI18ns = Cache.fetchSiteApiTypeI18ns(SessionManager.getSiteId());
         model.addAttribute("apiTypeI18ns",apiTypeI18ns);
+        //判断是否是纯彩票站 | 纯casino站
+        if(BooleanTool.isFalse(ParamTool.isLotterySite())){
+            Map<String, List<SiteApiTypeRelation>> siteApiTypeRelationMap = Cache.getSiteApiTypeRelation(SessionManager.getSiteId());
+            List<SiteApiTypeRelation> casinos = siteApiTypeRelationMap.get(ApiTypeEnum.CASINO.getCode());
+            if (CollectionTool.isNotEmpty(casinos)) {
+                SiteApiTypeRelation casino = casinos.get(0);
+                model.addAttribute("casino",casino);
+            }
+            List<SiteApiTypeRelation> sportss = siteApiTypeRelationMap.get(ApiTypeEnum.SPORTS_BOOK.getCode());
+            if (CollectionTool.isNotEmpty(sportss)) {
+                SiteApiTypeRelation sports = sportss.get(0);
+                model.addAttribute("sports",sports);
+            }
+        }
     }
 
     @RequestMapping(value = "dialogIndex")

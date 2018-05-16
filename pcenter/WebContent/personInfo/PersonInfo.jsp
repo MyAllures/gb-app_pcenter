@@ -42,10 +42,10 @@
               </span>
                     </p>
                 </div>
-                <div class="user-btn-right">
+                <%--<div class="user-btn-right">
                     <soul:button target="${root}/personInfo/password/editPassword.html" text="${views.personInfo_auto['修改登录密码']}" opType="dialog"
                                  cssClass="btn btn-outline btn-filter editPassword" tag="button"/>
-                        <%--<c:choose>
+                        &lt;%&ndash;<c:choose>
                             <c:when test="${empty sysUser.permissionPwd}">
                                 <soul:button target="${root}/personInfo/password/toSecurityPassword.html" text="${views.personInfo_auto['设置安全密码']}"
                                              opType="dialog"
@@ -56,12 +56,12 @@
                                              opType="dialog"
                                              cssClass="btn btn-outline btn-filter" tag="button"/>
                             </c:otherwise>
-                        </c:choose>--%>
+                        </c:choose>&ndash;%&gt;
 
                     <soul:button target="${root}/personInfo/password/toUpdateSecurityPassword.html" text="${views.personInfo_auto['修改安全密码']}"
                                  opType="dialog"
                                  cssClass="btn btn-outline btn-filter" tag="button"/>
-                </div>
+                </div>--%>
             </div>
 
             <%@include file="AccountInfo.jsp"%>

@@ -141,23 +141,28 @@ public class PlayerTransferController {
         return transableApis;
     }
 
+    //判断： 自主彩票是否状态正常
     private List<Api> searchTransferApiByMock() {
-        List<Api> transableApis = new ArrayList<>();
-        Map<String, Api> apis = Cache.getApi();
-        Map<String, SiteApi> siteApis = Cache.getSiteApi();
-        Api api;
-        SiteApi siteApi;
-        for (String id : siteApis.keySet()) {
-            if (ApiProviderEnum.PL.getCode().equals(id) || ApiProviderEnum.DWT.getCode().equals(id)) {
-                api = apis.get(id);
-                siteApi = siteApis.get(id);
-                if (api != null && siteApi != null && !GameStatusEnum.DISABLE.getCode().equals(api.getSystemStatus()) && !GameStatusEnum.DISABLE.getCode().equals(siteApi.getStatus())) {
-                    transableApis.add(api);
-                }
-            }
-
+        List<Api> apis = new ArrayList<>(1);
+        Map<String, Api> apiMap = Cache.getApi();
+        Map<String, SiteApi> siteApiMap = Cache.getSiteApi();
+        Api api = isEnable(apiMap,siteApiMap,ApiProviderEnum.PL.getCode());
+        if (api != null ) {
+            apis.add(api);
         }
-        return transableApis;
+        return apis;
+    }
+
+    private Api isEnable(Map<String, Api> apis, Map<String, SiteApi> siteApis, String code) {
+        Api api = apis.get(ApiProviderEnum.PL.getCode());
+        SiteApi siteApi = siteApis.get(ApiProviderEnum.PL.getCode());
+        if (api != null
+                && siteApi != null
+                && !GameStatusEnum.DISABLE.getCode().equals(api.getSystemStatus())
+                && !GameStatusEnum.DISABLE.getCode().equals(siteApi.getStatus())) {
+            return api;
+        }
+        return null;
     }
 
     /**
@@ -194,7 +199,7 @@ public class PlayerTransferController {
         List<PlayerApi> resList = new ArrayList<>();
         for (PlayerApi playerApi : listVo.getResult()) {
             Integer apiId = playerApi.getApiId();
-            if (ApiProviderEnum.PL.getCode().equals(apiId.toString()) || ApiProviderEnum.DWT.getCode().equals(apiId.toString())) {
+            if (ApiProviderEnum.PL.getCode().equals(apiId.toString())) {
                 resList.add(playerApi);
             }
         }

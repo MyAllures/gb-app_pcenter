@@ -716,6 +716,7 @@ public abstract class RechargeBaseController {
         sysUserDataRightListVo.getSearch().setUserId(SessionManager.getUserId());
         sysUserDataRightListVo.getSearch().setModuleType(DataRightModuleType.COMPANYDEPOSIT.getCode());
         List<Integer> userIdByUrl = ServiceSiteTool.sysUserDataRightService().searchPlayerDataRightEntityId(sysUserDataRightListVo);
+
         userIdByUrl.add(Const.MASTER_BUILT_IN_ID);
 
         //判断账号是否可以查看该层级的记录 add by Bruce.QQ

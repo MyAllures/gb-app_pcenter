@@ -580,10 +580,6 @@ public abstract class RechargeBaseController {
             //组装跳转第三方链接地址
             String payUrl = getOnlinePayUrl(payAccount, playerRechargeVo.getResult(), request);
             resultMap.put("payUrl", payUrl);
-          /*  //添加支付网址
-            playerRechargeVo.getResult().setPayUrl(payUrl);
-            playerRechargeVo.setProperties(PlayerRecharge.PROP_PAY_URL);
-            playerRechargeService().updateOnly(playerRechargeVo);*/
             return resultMap;
         } else {
             return getResultMsg(false, playerRechargeVo.getErrMsg(), null);

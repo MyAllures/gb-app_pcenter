@@ -21,8 +21,8 @@ public class AutoTransferController extends so.wwb.gamebox.web.fund.controller.A
     }
 
     @Override
-    public Map doRecovery(PlayerApiVo playerApiVo) {
+    public Map doRecovery(PlayerApiVo playerApiVo, HttpServletRequest request) {
         playerApiVo.setOrigin(TransactionOriginEnum.PC.getCode());
-        return super.doRecovery(playerApiVo);
+        return super.doRecovery(playerApiVo, request);
     }
 }

@@ -2,7 +2,7 @@ package so.wwb.gamebox.pcenter.fund.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
+import so.wwb.gamebox.model.TerminalEnum;
 import so.wwb.gamebox.model.master.player.vo.PlayerApiAccountVo;
 import so.wwb.gamebox.model.master.player.vo.PlayerApiVo;
 
@@ -22,7 +22,7 @@ public class AutoTransferController extends so.wwb.gamebox.web.fund.controller.A
 
     @Override
     public Map doRecovery(PlayerApiVo playerApiVo, HttpServletRequest request) {
-        playerApiVo.setOrigin(TransactionOriginEnum.PC.getCode());
+        playerApiVo.setOrigin(TerminalEnum.PC.getCode());
         return super.doRecovery(playerApiVo, request);
     }
 }

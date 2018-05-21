@@ -9,6 +9,7 @@
     <gb:token/>
     <div id="validateRule" style="display: none">${validateRule}</div>
     <input type="hidden" name="isRealName" value="${isRealName}"/>
+    <input type="hidden" name="result.rechargeRemark" value=""/>
     <input type="hidden" name="realNameDialog" value="${realNameDialog}">
     <input type="hidden" name="displayFee" value="${rank.isFee || rank.isReturnFee}"/>
     <a href="javascript:;" name="realNameDialog" style="display: none"></a>
@@ -49,7 +50,7 @@
                             </c:if>
                             <c:if test="${vs.index==16}"><div name="hideBank" style="display: none"></c:if>
                             <label class="bank ${vs.index==0?'select':''}">
-                                <span class="radio"><input showSuccMsg="false"  name="result.payerBank" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" randomAmount="${i.value.randomAmount}" account="${account}" value="${i.key}" type="radio" ${vs.index==0?'checked':''}></span>
+                                <span class="radio"><input showSuccMsg="false" name="result.payerBank" payUrl="${i.value.payUrl}" amountLimit="${accountLimit}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" randomAmount="${i.value.randomAmount}" account="${account}" value="${i.key}" type="radio" ${vs.index==0?'checked':''}></span>
                                 <span class="radio-bank" title="${dicts.common.bankname[i.key]}"><i class="pay-bank ${i.key}"></i></span>
                                 <span class="bank-logo-name">${dicts.common.bankname[i.key]}</span>
                             </label>

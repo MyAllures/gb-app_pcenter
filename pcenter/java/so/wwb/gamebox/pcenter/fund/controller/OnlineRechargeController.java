@@ -85,6 +85,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         payAccountListVo.setPlayerRank(rank);
         payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
         payAccountListVo.setBanks(banks);
+
         model.addAttribute("payAccountMap", ServiceSiteTool.payAccountService().getOnlineAccount(payAccountListVo));
         model.addAttribute("username", SessionManager.getUserName());
         model.addAttribute("currency", getCurrencySign());

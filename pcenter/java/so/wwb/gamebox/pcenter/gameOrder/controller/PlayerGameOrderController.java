@@ -34,6 +34,8 @@ import so.wwb.gamebox.model.company.site.po.SiteApiTypeI18n;
 import so.wwb.gamebox.model.company.site.po.SiteGame;
 import so.wwb.gamebox.model.company.site.po.SiteGameI18n;
 import so.wwb.gamebox.model.company.site.vo.SiteGameVo;
+import so.wwb.gamebox.model.gameapi.enums.ApiProviderEnum;
+import so.wwb.gamebox.model.gameapi.enums.ApiTypeEnum;
 import so.wwb.gamebox.model.master.player.po.PlayerGameOrder;
 import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderDetailVo;
 import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderListVo;
@@ -193,7 +195,8 @@ public class PlayerGameOrderController {
         Map<Integer, String> apiTypes = new HashMap<>(siteApiTypeI18nMap.size(), 1f);
         for (SiteApiTypeI18n siteApiTypeI18n : siteApiTypeI18nMap.values()) {
             if (SessionManager.isMockAccountModel()) {
-                if (siteApiTypeI18n.getApiTypeId() == 3 || siteApiTypeI18n.getApiTypeId() == 4) {
+                if (siteApiTypeI18n.getApiTypeId() == ApiTypeEnum.SPORTS_BOOK.getCode()
+                        || siteApiTypeI18n.getApiTypeId() == ApiTypeEnum.LOTTERY.getCode()) {
                     apiTypes.put(siteApiTypeI18n.getApiTypeId(), siteApiTypeI18n.getName());
                 }
             } else {
@@ -219,7 +222,7 @@ public class PlayerGameOrderController {
         for (SiteGame siteGame : siteGames) {
             apiId = siteGame.getApiId();
             if (SessionManager.isMockAccountModel()) {
-                if (apiId == 21 || apiId == 22) {
+                if (apiId == Integer.valueOf(ApiProviderEnum.PL.getCode())) {
                     if (gameTypes.get(apiId) == null) {
                         gameTypes.put(apiId, new HashMap<String, Integer>());
                     }

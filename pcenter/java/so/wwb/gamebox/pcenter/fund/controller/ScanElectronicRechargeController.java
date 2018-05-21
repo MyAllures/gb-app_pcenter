@@ -60,6 +60,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         model.addAttribute("scan", getScanAccount(rank, null, new String[]{PayAccountAccountType.WECHAT.getCode(), PayAccountAccountType.WECHAT_MICROPAY.getCode()}));
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.FAST_WECHAT.getCode(), RechargeTypeEnum.WECHATPAY_FAST.getCode()));
+
         commonPage(model, rank, RechargeTypeEnum.WECHATPAY_SCAN.getCode(), RechargeTypeEnum.WECHATPAY_FAST.getCode());
         model.addAttribute("bankCode", BankCodeEnum.FAST_WECHAT.getCode());
         return SCAN_ELECTRONIC_URI;
@@ -217,6 +218,14 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("isOpenActivityHall", ParamTool.isOpenActivityHall());
     }
 
+    /**
+     * 获取扫码支付对应收款帐号
+     *
+     * @param rank
+     * @param accountType
+     * @param accountTypes
+     * @return
+     */
     private Map<String, PayAccount> getScanAccount(PlayerRank rank, String accountType, String[] accountTypes) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), accountType, TerminalEnum.PC.getCode(), null, accountTypes);
         PayAccountListVo payAccountListVo = new PayAccountListVo();

@@ -185,7 +185,7 @@
             <div class="controls">${username}</div>
         </div>
         <c:if test="${thirdBankCode eq 'alipay'}">
-            <div class="control-group" name="electronicElement">
+            <div class="control-group" name="electronicElement" style="${firstPayAccount.type eq '1'?'':'display:none'}">
                 <label class="control-label" for="result.payerName">您的支付户名：</label>
                 <div class="controls">
                     <input style="width: 200px" type="text" class="input" id="result.payerName" name="result.payerName" placeholder="请填写存款时使用的真实姓名">

@@ -53,7 +53,6 @@ import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightListVo;
 import so.wwb.gamebox.model.master.enums.ActivityTypeEnum;
 import so.wwb.gamebox.model.master.enums.PayAccountType;
 import so.wwb.gamebox.model.master.enums.RankFeeType;
-import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeParentEnum;
@@ -252,7 +251,7 @@ public abstract class RechargeBaseController {
         //设置存款其他数据
         setRechargeOtherData(playerRechargeVo, rank, payAccount, rechargeTypeParent, rechargeType);
         playerRechargeVo.setSysUser(SessionManager.getUser());
-        playerRechargeVo.setOrigin(TransactionOriginEnum.PC.getCode());
+        playerRechargeVo.setOrigin(TerminalEnum.PC.getCode());
         playerRechargeVo.setRankId(rank.getId());
         //存款总额（存款金额+手续费）>0才能继续执行(比特币支付例外)
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
@@ -580,10 +579,6 @@ public abstract class RechargeBaseController {
             //组装跳转第三方链接地址
             String payUrl = getOnlinePayUrl(payAccount, playerRechargeVo.getResult(), request);
             resultMap.put("payUrl", payUrl);
-          /*  //添加支付网址
-            playerRechargeVo.getResult().setPayUrl(payUrl);
-            playerRechargeVo.setProperties(PlayerRecharge.PROP_PAY_URL);
-            playerRechargeService().updateOnly(playerRechargeVo);*/
             return resultMap;
         } else {
             return getResultMsg(false, playerRechargeVo.getErrMsg(), null);

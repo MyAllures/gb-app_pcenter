@@ -462,8 +462,8 @@ public class CompanyRechargeController extends RechargeBaseController {
     public boolean checkAmount(@RequestParam("result.rechargeAmount") String rechargeAmount) {
         PlayerRank rank = getRank();
         double amount = NumberTool.toDouble(rechargeAmount);
-        Integer max = rank.getOnlinePayMax();
-        Integer min = rank.getOnlinePayMin();
+        Long max = rank.getOnlinePayMax();
+        Long min = rank.getOnlinePayMin();
         if ((max != null && max < amount) || (min != null && min > amount)) {
             return false;
         }

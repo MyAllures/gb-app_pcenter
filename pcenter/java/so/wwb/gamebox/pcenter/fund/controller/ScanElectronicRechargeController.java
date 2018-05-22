@@ -325,8 +325,8 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         if (payAccount == null) {
             return false;
         }
-        Integer max;
-        Integer min;
+        Long max;
+        Long min;
         PlayerRank rank = getRank();
         if (PayAccountType.COMMPANY_ACCOUNT_CODE.equals(payAccount.getType())) {
             //公司入款使用层级设置的存款上下限

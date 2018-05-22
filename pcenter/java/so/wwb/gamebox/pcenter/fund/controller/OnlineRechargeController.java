@@ -372,8 +372,8 @@ public class OnlineRechargeController extends RechargeBaseController {
             return false;
         }
         double amount = NumberTool.toDouble(rechargeAmount);
-        Integer max = payAccount.getSingleDepositMax();
-        Integer min = payAccount.getSingleDepositMin();
+        Long max = payAccount.getSingleDepositMax();
+        Long min = payAccount.getSingleDepositMin();
         if ((max != null && max < amount) || (min != null && min > amount)) {
             return false;
         }

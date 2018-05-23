@@ -306,6 +306,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         if(!isOpenActivityHall) {
             model.addAttribute("sales", searchSales(DepositWayEnum.COMPANY_DEPOSIT.getCode()));
         }
+        isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_ATM_COUNTER);
         return ATM_COUNTER_FIRST;
     }
 

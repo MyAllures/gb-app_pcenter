@@ -240,8 +240,10 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         } else {
             //默认只展示一个
             PayAccount payAccount = payAccounts.get(0);
-            Map<String, String> i18n = I18nTool.getDictMapByEnum(SessionManager.getLocale(), DictEnum.FUND_RECHARGE_TYPE);
-            payAccount.setAliasName(i18n.get(rechargeType));
+            if(StringTool.isBlank(payAccount.getAliasName())) {
+                Map<String, String> i18n = I18nTool.getDictMapByEnum(SessionManager.getLocale(), DictEnum.FUND_RECHARGE_TYPE);
+                payAccount.setAliasName(i18n.get(rechargeType));
+            }
             payAccountList = new ArrayList<>(1);
             payAccountList.add(payAccount);
         }

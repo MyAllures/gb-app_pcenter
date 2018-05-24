@@ -9,7 +9,7 @@
         System.out.printf(MessageFormat.format(BaseConfigManager.getConfigration().getResComRoot(),request.getServerName()));
     %>
     <%@ include file="/include/include.head.jsp" %>
-    <link rel="icon" type="image/png" href="../ftl/${siteDomain.templateCode}/images/favicon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="${cdnUrl}/ftl/${siteDomain.templateCode}/images/favicon.png" sizes="32x32">
     <script type="text/javascript" src="${root}/message_<%=SessionManagerCommon.getLocale().toString()%>.js?v=${rcVersion}"></script>
     <script type="text/javascript">
         var language = '${language.replace('_','-')}';
@@ -85,7 +85,7 @@
     </div>
 </div>
 <!--banner-->
-<div class="banner" <c:if test="${isLotterySite}">style="background-image: url(../ftl/${siteDomain.templateCode}/images/bannerbg.jpg);"</c:if> >
+<div class="banner" <c:if test="${isLotterySite}">style="background-image: url(${cdnUrl}/ftl/${siteDomain.templateCode}/images/bannerbg.jpg);"</c:if> >
     <a href="/">
         <%--<div class="logo" style="background-image:url(${soulFn:getThumbPath(domain, logo,220,90)});width:220px;height: 90px;"></div>--%>
         <div class="logo"><img src="${soulFn:getThumbPath(domain, logo,220,90)}"></div>
@@ -136,7 +136,7 @@
     <c:if test="${!isLotterySite}">
         <div class="banner-bg-t"></div>
         <div class="banner-bg">
-            <img src="../ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
+            <img src="${cdnUrl}/ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
         </div>
     </c:if>
 

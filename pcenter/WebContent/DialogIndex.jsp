@@ -9,7 +9,7 @@
         System.out.printf(MessageFormat.format(BaseConfigManager.getConfigration().getResComRoot(),request.getServerName()));
     %>
     <%@ include file="/include/include.head.jsp" %>
-    <link rel="icon" type="image/png" href="../ftl/${siteDomain.templateCode}/images/favicon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="${cdnUrl}/ftl/${siteDomain.templateCode}/images/favicon.png" sizes="32x32">
     <script type="text/javascript" src="${root}/message_<%=SessionManagerCommon.getLocale().toString()%>.js?v=${rcVersion}"></script>
     <script type="text/javascript">
         var language = '${language.replace('_','-')}';

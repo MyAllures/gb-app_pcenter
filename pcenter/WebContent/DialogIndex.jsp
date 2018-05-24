@@ -86,7 +86,7 @@
     </div>
 </div>
 <!--banner-->
-<div class="banner" style="background-image: url(../ftl/${siteDomain.templateCode}/images/bannerbg.jpg);" >
+<div class="banner" style="background-image: url(${cdnUrl}/ftl/${siteDomain.templateCode}/images/bannerbg.jpg);" >
     <a href="/">
         <div class="logo" style="background-image:url(${soulFn:getThumbPath(domain, logo,220,90)});width:220px;height: 90px;"></div>
     </a>
@@ -95,7 +95,7 @@
     </div>
     <div class="banner-bg-t"></div>
     <div class="banner-bg">
-        <img src="../ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
+        <img src="${cdnUrl}/ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
     </div>
 
     <%--<div class="right"></div>--%>

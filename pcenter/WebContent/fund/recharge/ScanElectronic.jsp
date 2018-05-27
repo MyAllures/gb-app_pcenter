@@ -267,10 +267,11 @@
             <%--电子支付--%>
             <ul id="electronicDocument" class="transfer-tips" style="display: none">
                 <li>温馨提示：</li>
-                <li>请先搜索账号或扫描二维码添加好友。</li>
+                <li>请先查看入款账号信息或扫描二维码。</li>
                 <li>单笔储值最低<span style="color:red">${siteCurrency}${onlinePayMin}</span>，最高为<span style="color:red">${siteCurrency}${onlinePayMax}</span>，如存款高于上限请分多笔支付。</li>
                 <li>存款金额请加以小数点或尾数，以便区别。如充值200元，请输入201元或200.1之类小数。</li>
                 <li>支付成功后，请等待几秒钟，提示<span style="color:red">「支付成功」</span>按确认键后再关闭支付窗口。</li>
+                <li>为了系统快速完成转账，请输入订单号后5位，以加快系统入款速度。</li>
                 <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
                 <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。
                     <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
@@ -281,6 +282,7 @@
                 <li >温馨提示：</li>
                 <li >五码合一，使用网银，支付宝，微信，QQ钱包，京东钱包均可扫描二维码进行转账存款。</li>
                 <li >支付成功后，请等待几秒钟，提示<span style="color:red">「支付成功」</span>按确认键后再关闭支付窗口。</li>
+                <li >为了系统快速完成转账，请输入订单号后5位，以加快系统入款速度。</li>
                 <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。
                     <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
                 </li>

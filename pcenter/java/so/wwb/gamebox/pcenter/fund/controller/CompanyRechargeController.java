@@ -1,6 +1,7 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
 import org.soul.commons.collections.CollectionTool;
+import org.soul.commons.lang.SystemTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
@@ -306,6 +307,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         if(!isOpenActivityHall) {
             model.addAttribute("sales", searchSales(DepositWayEnum.COMPANY_DEPOSIT.getCode()));
         }
+        isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_ATM_COUNTER);
         return ATM_COUNTER_FIRST;
     }
 
@@ -620,6 +622,22 @@ public class CompanyRechargeController extends RechargeBaseController {
                 }
             }
         }
+    }
+
+    /**
+     * 模拟存款后播放声音
+     * @param playerRechargeVo
+     * @return
+     */
+    @RequestMapping("/testDepositVoice")
+    @ResponseBody
+    public Map<String, Object> testDepositVoice(PlayerRechargeVo playerRechargeVo) {
+        if(SystemTool.isDebug()){
+            playerRechargeVo.getSearch().setId(1009306);
+            playerRechargeVo = ServiceSiteTool.playerRechargeService().get(playerRechargeVo);
+            tellerReminder(playerRechargeVo);
+        }
+        return null;
     }
 
 }

@@ -99,7 +99,6 @@
                         <ul class="transfer-tips">
                             <li>温馨提示：</li>
                             <li>单笔储值最低<span style="color:red">${siteCurrency}${onlinePayMin}</span>，最高为<span style="color:red">${siteCurrency}${onlinePayMax}</span>，并须视各家银行转款上限而定。</li>
-                            <li>请尽可能选择同行办理转账，可快速到账。</li>
                             <li>请保留好转账单据作为核对证明。</li>
                             <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
                             <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。

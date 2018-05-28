@@ -145,6 +145,7 @@
                     <ul class="transfer-tips \AMG">
                         <li>温馨提示：</li>
                         <li>为了方便系统快速完成转账，请输入正确的<span style="color:red">txId</span>、<span style="color:red">交易时间</span>，以加快系统入款速度。</li>
+                        <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
                         <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。
                             <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
                         </li>

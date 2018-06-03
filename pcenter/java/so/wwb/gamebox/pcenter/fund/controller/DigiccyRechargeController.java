@@ -10,10 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
+import so.wwb.gamebox.model.TerminalEnum;
 import so.wwb.gamebox.model.master.digiccy.po.UserDigiccy;
 import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyListVo;
 import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyVo;
-import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
 import so.wwb.gamebox.model.master.fund.po.PlayerRecharge;
@@ -95,7 +95,7 @@ public class DigiccyRechargeController extends RechargeBaseController {
         PlayerRechargeVo playerRechargeVo = new PlayerRechargeVo();
         playerRechargeVo.getSearch().setBitAmount(bitAmount);
         try {
-            playerRechargeVo.setOrigin(TransactionOriginEnum.PC.getCode());
+            playerRechargeVo.setOrigin(TerminalEnum.PC.getCode());
             playerRechargeVo = ServiceSiteTool.playerRechargeService().digiccyExchange(playerRechargeVo, userDigiccyVo);
         } catch (Exception e) {
             LOG.error(e);

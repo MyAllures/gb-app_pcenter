@@ -9,7 +9,7 @@
         System.out.printf(MessageFormat.format(BaseConfigManager.getConfigration().getResComRoot(),request.getServerName()));
     %>
     <%@ include file="/include/include.head.jsp" %>
-    <link rel="icon" type="image/png" href="../ftl/${siteDomain.templateCode}/images/favicon.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="${cdnUrl}/ftl/${siteDomain.templateCode}/images/favicon.png" sizes="32x32">
     <script type="text/javascript" src="${root}/message_<%=SessionManagerCommon.getLocale().toString()%>.js?v=${rcVersion}"></script>
     <script type="text/javascript">
         var language = '${language.replace('_','-')}';
@@ -86,7 +86,7 @@
     </div>
 </div>
 <!--banner-->
-<div class="banner" <c:if test="${isLotterySite}">style="background-image: url(../ftl/${siteDomain.templateCode}/images/bannerbg.jpg);"</c:if> >
+<div class="banner" <c:if test="${isLotterySite}">style="background-image: url(${cdnUrl}/ftl/${siteDomain.templateCode}/images/bannerbg.jpg);"</c:if> >
     <a href="/">
         <%--<div class="logo" style="background-image:url(${soulFn:getThumbPath(domain, logo,220,90)});width:220px;height: 90px;"></div>--%>
         <div class="logo"><img src="${soulFn:getThumbPath(domain, logo,220,90)}"></div>
@@ -104,7 +104,15 @@
                 <c:forEach var="at" items="${apiTypeI18ns}" varStatus="vs">
                     <c:choose>
                         <c:when test="${at.apiTypeId == 1}">
-                            <c:set var="game_page" value="/live.html"></c:set>
+                            <c:choose>
+                                <c:when test="${siteId==577}">
+                                    <c:set var="game_page" value="/index.html#live"></c:set>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:set var="game_page" value="/live.html"></c:set>
+                                </c:otherwise>
+                            </c:choose>
+
                         </c:when>
                         <c:when test="${at.apiTypeId == 2}">
                             <c:set var="game_page" value="/casino.html?apiType=2&apiId=${casino.apiId}"></c:set>
@@ -112,11 +120,21 @@
                         <c:when test="${at.apiTypeId == 3}">
                             <c:set var="game_page" value="/sports.html?apiId=${sports.apiId}"></c:set>
                         </c:when>
+                        <c:when test="${at.apiTypeId == 4}">
+                            <c:choose>
+                                <c:when test="${siteId==577}">
+                                    <c:set var="game_page" value="/index.html#lottery"></c:set>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:set var="game_page" value="/lottery.html"></c:set>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:when>
                         <c:when test="${at.apiTypeId == 5}">
                             <c:set var="game_page" value="/commonPage/gamePage/loading.html?apiId=34&apiTypeId=5"></c:set>
                         </c:when>
                         <c:otherwise>
-                            <c:set var="game_page" value="/lottery.html"></c:set>
+                            <c:set var="game_page" value="/"></c:set>
                         </c:otherwise>
                     </c:choose>
                     <li>
@@ -137,7 +155,7 @@
     <c:if test="${!isLotterySite}">
         <div class="banner-bg-t"></div>
         <div class="banner-bg">
-            <img src="../ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
+            <img src="${cdnUrl}/ftl/${siteDomain.templateCode}/images/bannerbg.jpg">
         </div>
     </c:if>
 

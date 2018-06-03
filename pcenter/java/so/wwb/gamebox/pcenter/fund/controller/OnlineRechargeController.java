@@ -85,6 +85,7 @@ public class OnlineRechargeController extends RechargeBaseController {
         payAccountListVo.setPlayerRank(rank);
         payAccountListVo.setCurrency(SessionManager.getUser().getDefaultCurrency());
         payAccountListVo.setBanks(banks);
+
         model.addAttribute("payAccountMap", ServiceSiteTool.payAccountService().getOnlineAccount(payAccountListVo));
         model.addAttribute("username", SessionManager.getUserName());
         model.addAttribute("currency", getCurrencySign());
@@ -371,8 +372,8 @@ public class OnlineRechargeController extends RechargeBaseController {
             return false;
         }
         double amount = NumberTool.toDouble(rechargeAmount);
-        Integer max = payAccount.getSingleDepositMax();
-        Integer min = payAccount.getSingleDepositMin();
+        Long max = payAccount.getSingleDepositMax();
+        Long min = payAccount.getSingleDepositMin();
         if ((max != null && max < amount) || (min != null && min > amount)) {
             return false;
         }

@@ -97,7 +97,7 @@
                     </c:if>
                     <label class="bank ${index == 0?'select':''}">
                         <c:set var="name" value="${account.aliasName}"/><%--accountRemark="${account.remark}"--%>
-                        <span class="radio"><input name="account" depositType="electronic" accountInformation="${account.accountInformation}" accountPrompt="${account.accountPrompt}" type="radio" qrCodeUrl="${empty account.qrCodeUrl?'':soulFn:getThumbPath(domain,account.qrCodeUrl,176,176)}" showSuccMsg="false" ${index == 0?'checked':''} bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" customBankName="${account.customBankName}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" accountId="${account.id}" value="${command.getSearchId(account.id)}"/></span>
+                        <span class="radio"><input name="account" depositType="electronic" accountInformation="${account.accountInformation}" accountPrompt="${account.accountPrompt}" type="radio" qrCodeUrl="${empty account.qrCodeUrl?'':soulFn:getThumbPath(domain,account.qrCodeUrl,176,176)}" showSuccMsg="false" ${index == 0?'checked':''} bankCode="${bankCode}" bankName="${thirdBankCode eq 'onecodepay'?'':account.fullName}" accountCode="${account.code}" bankNum="${account.account}" isThird="true" rechargeType="${companyType}" amountLimit="${accountLimit}" customBankName="${account.customBankName}" payMin="${onlinePayMin}" payMax="${onlinePayMax}" accountId="${account.id}" value="${command.getSearchId(account.id)}"/></span>
                         <span class="radio-bank" title="${name}">
                             <i class="pay-third sm ${account.bankCode}"></i>
                             <font class="diy-pay-title">${name}</font>
@@ -185,7 +185,7 @@
             <div class="controls">${username}</div>
         </div>
         <c:if test="${thirdBankCode eq 'alipay'}">
-            <div class="control-group" name="electronicElement">
+            <div class="control-group" name="electronicElement" style="${firstPayAccount.type eq '1'?'':'display:none'}">
                 <label class="control-label" for="result.payerName">您的支付户名：</label>
                 <div class="controls">
                     <input style="width: 200px" type="text" class="input" id="result.payerName" name="result.payerName" placeholder="请填写存款时使用的真实姓名">
@@ -267,19 +267,33 @@
             <%--电子支付--%>
             <ul id="electronicDocument" class="transfer-tips" style="display: none">
                 <li>温馨提示：</li>
-                <li>请先搜索账号或扫描二维码添加好友。</li>
+                <li>请先查看入款账号信息或扫描二维码。</li>
                 <li>单笔储值最低<span style="color:red">${siteCurrency}${onlinePayMin}</span>，最高为<span style="color:red">${siteCurrency}${onlinePayMax}</span>，如存款高于上限请分多笔支付。</li>
                 <li>存款金额请加以小数点或尾数，以便区别。如充值200元，请输入201元或200.1之类小数。</li>
                 <li>支付成功后，请等待几秒钟，提示<span style="color:red">「支付成功」</span>按确认键后再关闭支付窗口。</li>
+                <li>为了系统快速完成转账，请输入订单号后5位，以加快系统入款速度。</li>
                 <li>建议您使用Internet Explorer 9以上、360浏览器、Firefox或Google Chrome等浏览器浏览。</li>
+                <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。
+                    <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
+                </li>
+            </ul>
+            <%--一码付--%>
+            <ul id="oneCodePayDocument" class="transfer-tips" style="display: none">
+                <li >温馨提示：</li>
+                <li >五码合一，使用网银，支付宝，微信，QQ钱包，京东钱包均可扫描二维码进行转账存款。</li>
+                <li >支付成功后，请等待几秒钟，提示<span style="color:red">「支付成功」</span>按确认键后再关闭支付窗口。</li>
+                <li >为了系统快速完成转账，请输入订单号后5位，以加快系统入款速度。</li>
                 <li>如出现充值失败或充值后未到账等情况，请联系在线客服获取帮助。
                     <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
                 </li>
             </ul>
             <%--易收付--%>
             <ul id="easyPayDocument" class="transfer-tips" style="display: none">
-                <li style="color:red;font-size: large">温馨提示：</li>
-                <li style="color:red;font-size: large">当前支付额度必须精确到小数点，请严格核对您的转账金额精确到分，如：100.51，否则无法提高对账速度及成功率，谢谢您的配合。</li>
+                <li>温馨提示：</li>
+                <li>当前支付额度必须精确到小数点，请严格核对您的转账金额精确到分，如：100.51，否则无法提高对账速度及成功率，谢谢您的配合。</li>
+                <li>如有任何疑问，请联系在线客服获取帮助。
+                    <soul:button target="customerService" text="点击联系在线客服" url="${customerService}" opType="function"/>
+                </li>
             </ul>
         </div>
         <div name="authCode" class="fansao-wrap" style="${isAuthCode?'':'display:none'}">

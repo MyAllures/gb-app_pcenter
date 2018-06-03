@@ -60,6 +60,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         PlayerRank rank = getRank();
         model.addAttribute("scan", getScanAccount(rank, null, new String[]{PayAccountAccountType.WECHAT.getCode(), PayAccountAccountType.WECHAT_MICROPAY.getCode()}));
         model.addAttribute("electronic", getElectronicAccount(rank, BankCodeEnum.FAST_WECHAT.getCode(), RechargeTypeEnum.WECHATPAY_FAST.getCode()));
+
         commonPage(model, rank, RechargeTypeEnum.WECHATPAY_SCAN.getCode(), RechargeTypeEnum.WECHATPAY_FAST.getCode());
         model.addAttribute("bankCode", BankCodeEnum.FAST_WECHAT.getCode());
         return SCAN_ELECTRONIC_URI;
@@ -217,6 +218,14 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         model.addAttribute("isOpenActivityHall", ParamTool.isOpenActivityHall());
     }
 
+    /**
+     * 获取扫码支付对应收款帐号
+     *
+     * @param rank
+     * @param accountType
+     * @param accountTypes
+     * @return
+     */
     private Map<String, PayAccount> getScanAccount(PlayerRank rank, String accountType, String[] accountTypes) {
         List<PayAccount> payAccounts = searchPayAccount(PayAccountType.ONLINE_ACCOUNT.getCode(), accountType, TerminalEnum.PC.getCode(), null, accountTypes);
         PayAccountListVo payAccountListVo = new PayAccountListVo();
@@ -240,8 +249,10 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         } else {
             //默认只展示一个
             PayAccount payAccount = payAccounts.get(0);
-            Map<String, String> i18n = I18nTool.getDictMapByEnum(SessionManager.getLocale(), DictEnum.FUND_RECHARGE_TYPE);
-            payAccount.setAliasName(i18n.get(rechargeType));
+            if(StringTool.isBlank(payAccount.getAliasName())) {
+                Map<String, String> i18n = I18nTool.getDictMapByEnum(SessionManager.getLocale(), DictEnum.FUND_RECHARGE_TYPE);
+                payAccount.setAliasName(i18n.get(rechargeType));
+            }
             payAccountList = new ArrayList<>(1);
             payAccountList.add(payAccount);
         }
@@ -316,8 +327,8 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         if (payAccount == null) {
             return false;
         }
-        Integer max;
-        Integer min;
+        Long max;
+        Long min;
         PlayerRank rank = getRank();
         if (PayAccountType.COMMPANY_ACCOUNT_CODE.equals(payAccount.getType())) {
             //公司入款使用层级设置的存款上下限

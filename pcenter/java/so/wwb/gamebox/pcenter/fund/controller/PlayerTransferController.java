@@ -29,16 +29,15 @@ import so.wwb.gamebox.iservice.master.player.IPlayerApiService;
 import so.wwb.gamebox.model.CacheBase;
 import so.wwb.gamebox.model.Module;
 import so.wwb.gamebox.model.ParamTool;
+import so.wwb.gamebox.model.TerminalEnum;
 import so.wwb.gamebox.model.company.enums.GameStatusEnum;
 import so.wwb.gamebox.model.company.setting.po.Api;
 import so.wwb.gamebox.model.company.site.po.SiteApi;
 import so.wwb.gamebox.model.enums.DemoModelEnum;
 import so.wwb.gamebox.model.gameapi.enums.ApiProviderEnum;
-import so.wwb.gamebox.model.master.enums.TransactionOriginEnum;
 import so.wwb.gamebox.model.master.fund.enums.FundTypeEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransferResultStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.TransferSourceEnum;
-import so.wwb.gamebox.model.master.fund.po.PlayerTransfer;
 import so.wwb.gamebox.model.master.fund.vo.PlayerTransferVo;
 import so.wwb.gamebox.model.master.fund.vo.PlayerWithdrawVo;
 import so.wwb.gamebox.model.master.player.po.PlayerApi;
@@ -326,7 +325,7 @@ public class PlayerTransferController {
             playerTransferVo.getResult().setApiId(NumberTool.toInt(playerTransferVo.getTransferInto()));
         }
         playerTransferVo.setSysUser(SessionManager.getUser());
-        playerTransferVo.setOrigin(TransactionOriginEnum.PC.getCode());
+        playerTransferVo.setOrigin(TerminalEnum.PC.getCode());
         playerTransferVo.getResult().setUserId(SessionManager.getUserId());
         playerTransferVo.getResult().setUserName(SessionManager.getUserName());
         playerTransferVo.getResult().setIp(SessionManager.getIpDb().getIp());

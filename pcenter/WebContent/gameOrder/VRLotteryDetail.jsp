@@ -33,7 +33,7 @@
                     ${views.gameOrder_auto['下注内容']}
             </td>
             <td class="al-left">
-                    ${array['betTypeName']}&nbsp;&nbsp;&nbsp;[<span class="co-blue">${array['number']}</span>]
+                    ${array['betTypeName']}&nbsp;&nbsp;&nbsp;[<span class="blue">${array['number']}</span>]
             </td>
         </tr>
         <tr>
@@ -41,7 +41,7 @@
                     ${views.gameOrder_auto['开奖号码']}
             </td>
             <td class="al-left">
-                <span class="co-red">${array['winningNumber']}</span>
+                <span class="red">${array['winningNumber']}</span>
             </td>
         </tr>
     </c:forEach>

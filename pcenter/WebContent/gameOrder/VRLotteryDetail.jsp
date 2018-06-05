@@ -5,7 +5,7 @@
 <table class="table table-bordered">
     <c:forEach items="${resultArray}" var="array">
         <tr>
-            <td class="bg-gray al-right" width="33%">
+            <td class="bg-gray al-right" width="30%">
                     ${views.gameOrder_auto['彩种']}
             </td>
             <td class="al-left">
@@ -13,7 +13,7 @@
             </td>
         </tr>
         <tr>
-            <td class="bg-gray al-right" width="33%">
+            <td class="bg-gray al-right" width="30%">
                     ${views.gameOrder_auto['期号']}
             </td>
             <td class="al-left">
@@ -21,7 +21,7 @@
             </td>
         </tr>
         <tr>
-            <td class="bg-gray al-right" width="33%">
+            <td class="bg-gray al-right" width="30%">
                     ${views.gameOrder_auto['赔率']}
             </td>
             <td class="al-left">
@@ -29,7 +29,7 @@
             </td>
         </tr>
         <tr>
-            <td class="bg-gray al-right" width="33%">
+            <td class="bg-gray al-right" width="30%">
                     ${views.gameOrder_auto['下注内容']}
             </td>
             <td class="al-left">
@@ -37,7 +37,7 @@
             </td>
         </tr>
         <tr>
-            <td class="bg-gray al-right" width="33%">
+            <td class="bg-gray al-right" width="30%">
                     ${views.gameOrder_auto['开奖号码']}
             </td>
             <td class="al-left">

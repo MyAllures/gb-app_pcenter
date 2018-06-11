@@ -9,6 +9,7 @@ import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.locale.DateQuickPicker;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
+import org.soul.commons.math.NumberTool;
 import org.soul.commons.net.ServletTool;
 import org.soul.model.gameapi.param.ExtendParam;
 import org.soul.model.gameapi.result.GameApiResult;
@@ -222,7 +223,7 @@ public class PlayerGameOrderController {
         for (SiteGame siteGame : siteGames) {
             apiId = siteGame.getApiId();
             if (SessionManager.isMockAccountModel()) {
-                if (apiId == Integer.valueOf(ApiProviderEnum.PL.getCode())) {
+                if (apiId == Integer.valueOf(ApiProviderEnum.PL.getCode()) || apiId == NumberTool.toInt(ApiProviderEnum.DWT.getCode())) {
                     if (gameTypes.get(apiId) == null) {
                         gameTypes.put(apiId, new HashMap<String, Integer>());
                     }

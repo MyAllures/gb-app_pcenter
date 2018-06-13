@@ -142,19 +142,23 @@ public class PlayerTransferController {
 
     //判断： 自主彩票是否状态正常
     private List<Api> searchTransferApiByMock() {
-        List<Api> apis = new ArrayList<>(1);
-        Map<String, Api> apiMap = Cache.getApi();
-        Map<String, SiteApi> siteApiMap = Cache.getSiteApi();
-        Api api = isEnable(apiMap,siteApiMap,ApiProviderEnum.PL.getCode());
-        if (api != null ) {
-            apis.add(api);
+        List<Api> transableApis = new ArrayList<>();
+        Map<String, Api> apis = Cache.getApi();
+        Map<String, SiteApi> siteApis = Cache.getSiteApi();
+        Api plApi = isEnable(apis, siteApis, ApiProviderEnum.PL.getCode());
+        Api dwtApi = isEnable(apis, siteApis, ApiProviderEnum.DWT.getCode());
+        if (plApi != null) {
+            transableApis.add(plApi);
         }
-        return apis;
+        if (dwtApi != null) {
+            transableApis.add(dwtApi);
+        }
+        return transableApis;
     }
 
     private Api isEnable(Map<String, Api> apis, Map<String, SiteApi> siteApis, String code) {
-        Api api = apis.get(ApiProviderEnum.PL.getCode());
-        SiteApi siteApi = siteApis.get(ApiProviderEnum.PL.getCode());
+        Api api = apis.get(code);
+        SiteApi siteApi = siteApis.get(code);
         if (api != null
                 && siteApi != null
                 && !GameStatusEnum.DISABLE.getCode().equals(api.getSystemStatus())
@@ -198,9 +202,10 @@ public class PlayerTransferController {
         List<PlayerApi> resList = new ArrayList<>();
         for (PlayerApi playerApi : listVo.getResult()) {
             Integer apiId = playerApi.getApiId();
-            if (ApiProviderEnum.PL.getCode().equals(apiId.toString())) {
+            if (ApiProviderEnum.PL.getCode().equals(apiId.toString()) || ApiProviderEnum.DWT.getCode().equals(apiId.toString())) {
                 resList.add(playerApi);
             }
+
         }
         listVo.setResult(resList);
         return listVo;
@@ -410,7 +415,7 @@ public class PlayerTransferController {
             return getErrorMessage(TransferResultStatusEnum.TRANSFER_INTERFACE_BUSY.getCode(), playerTransferVo.getResult().getApiId());
         }
         boolean isSuccess = playerTransferVo.isSuccess();
-        if(!isSuccess && StringTool.isNotBlank(playerTransferVo.getErrMsg())) {
+        if (!isSuccess && StringTool.isNotBlank(playerTransferVo.getErrMsg())) {
             return getErrorMessage(playerTransferVo.getErrMsg(), playerTransferVo.getResult().getApiId());
         } else if (!isSuccess) {
             return getErrorMessage(TransferResultStatusEnum.TRANSFER_INTERFACE_BUSY.getCode(), playerTransferVo.getResult().getApiId());

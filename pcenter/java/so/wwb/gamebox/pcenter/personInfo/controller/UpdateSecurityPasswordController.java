@@ -9,6 +9,7 @@ import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.validation.form.PasswordRule;
+import org.soul.model.log.audit.enums.OpType;
 import org.soul.model.msg.notice.vo.NoticeVo;
 import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.vo.SysUserVo;
@@ -23,6 +24,8 @@ import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.common.security.AuthTool;
 import so.wwb.gamebox.model.Module;
+import so.wwb.gamebox.model.ModuleType;
+import so.wwb.gamebox.model.common.Audit;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.common.PrivilegeStatusEnum;
 import so.wwb.gamebox.model.common.notice.enums.AutoNoticeEvent;
@@ -37,6 +40,7 @@ import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
 import so.wwb.gamebox.pcenter.personInfo.form.SecurityPasswordForm;
 import so.wwb.gamebox.pcenter.personInfo.form.UpdateSecurityPasswordForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
+import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.common.SiteCustomerServiceHelper;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
@@ -178,6 +182,7 @@ public class UpdateSecurityPasswordController {
      */
     @RequestMapping(value = "/updatePrivilegePassword")
     @ResponseBody
+    @Audit(module = Module.PLAYER, moduleType = ModuleType.RESET_USER_PERMISSIONPWD, opType = OpType.UPDATE)
     public Map updatePrivilegePassword(UpdatePasswordVo updatePasswordVo,String code) {
 
         Map<String,Object> map = new HashMap<>(2,1f);
@@ -233,6 +238,7 @@ public class UpdateSecurityPasswordController {
             SessionManager.clearPrivilegeStatus();
             resetSecPwdFreezen(sysUser);
             resetBalanceFreeze(sysUser);
+            BussAuditLogTool.addLog("RESET_USER_PERMISSIONPWD",SessionManager.getUserName());
         } else {
             map.put("msg", LocaleTool.tranMessage(Module.PRIVILEGE, "security.update.failed"));
         }

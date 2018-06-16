@@ -15,6 +15,7 @@ import org.soul.commons.net.ServletTool;
 import org.soul.commons.query.Criterion;
 import org.soul.commons.query.enums.Operator;
 import org.soul.commons.query.sort.Order;
+import org.soul.model.log.audit.enums.OpType;
 import org.soul.model.msg.notice.po.NoticeContactWay;
 import org.soul.model.msg.notice.vo.EmailMsgVo;
 import org.soul.model.msg.notice.vo.NoticeContactWayListVo;
@@ -38,6 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.*;
+import so.wwb.gamebox.model.common.Audit;
 import so.wwb.gamebox.model.common.notice.enums.ContactWayType;
 import so.wwb.gamebox.model.company.enums.SiteOperateStatusEnum;
 import so.wwb.gamebox.model.company.site.po.SiteOperateArea;
@@ -48,6 +50,7 @@ import so.wwb.gamebox.model.master.setting.po.FieldSort;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.personInfo.form.*;
 import so.wwb.gamebox.pcenter.session.SessionManager;
+import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.bank.BankHelper;
 import so.wwb.gamebox.web.cache.Cache;
@@ -204,6 +207,7 @@ public class PersonalInfoController {
      */
     @RequestMapping("/updatePersonInfo")
     @ResponseBody
+    @Audit(module = Module.PLAYER, moduleType = ModuleType.PLAYER_PLAYE_SUCCESS, opType = OpType.UPDATE)
     public Map updatePersonInfo(SysUserVo sysUserVo, UserPlayerVo userPlayerVo,
                                 @FormModel @Valid PersonInfoForm form, BindingResult result) {
         Map map = new HashMap();
@@ -298,6 +302,8 @@ public class PersonalInfoController {
             SessionManager.clearPrivilegeStatus();
             SessionManager.removeEmailOrPhoneSession(EMAIL);
             SessionManager.removeEmailOrPhoneSession(PHONE);
+            //日志
+            BussAuditLogTool.addLog("player.playerDetail.success",SessionManager.getUserName());
         } else {
             map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());

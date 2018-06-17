@@ -108,6 +108,10 @@
                         <c:when test="${result.apiId==22}">
                             <%@include file="LotteryDetail.jsp"%>
                         </c:when>
+                        <%--VR真人彩票--%>
+                        <c:when test="${result.apiId==41}">
+                            <%@include file="VRLotteryDetail.jsp"%>
+                        </c:when>
                         <c:otherwise>
                             <c:forEach items="${resultArray}" var="array">
                                 <table width="90%" border="0" cellspacing="0" cellpadding="0">

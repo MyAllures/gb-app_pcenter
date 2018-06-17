@@ -6,6 +6,7 @@ import org.soul.commons.locale.DateQuickPicker;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.validation.form.PasswordRule;
 import org.soul.model.log.audit.enums.OpMode;
+import org.soul.model.log.audit.enums.OpType;
 import org.soul.model.msg.notice.po.NoticeContactWay;
 import org.soul.model.msg.notice.vo.NoticeContactWayListVo;
 import org.soul.model.msg.notice.vo.NoticeContactWayVo;
@@ -23,8 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.common.security.AuthTool;
 import so.wwb.gamebox.model.Module;
+import so.wwb.gamebox.model.ModuleType;
 import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.common.Audit;
 import so.wwb.gamebox.model.common.PrivilegeStatusEnum;
 import so.wwb.gamebox.model.common.notice.enums.ContactWayType;
 import so.wwb.gamebox.model.master.enums.ContactWayStatusEnum;
@@ -33,6 +36,7 @@ import so.wwb.gamebox.pcenter.personInfo.form.BindPhoneForm;
 import so.wwb.gamebox.pcenter.personInfo.form.SecurityPasswordForm;
 import so.wwb.gamebox.pcenter.personInfo.form.UpdatePasswordForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
+import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.common.SiteCustomerServiceHelper;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
@@ -171,6 +175,7 @@ public class UpdatePasswordController {
      */
     @RequestMapping(value = "/updatePassword")
     @ResponseBody
+    @Audit(module = Module.PLAYER, moduleType = ModuleType.RESET_USER_PASSWORD, opType = OpType.UPDATE)
     public Map updatePassword(UpdatePasswordVo updatePasswordVo, String code, @Valid UpdatePasswordForm form,
                               BindingResult result,HttpServletRequest request) {
         Map<String,Object> map = new HashMap<>(2,1f);
@@ -220,6 +225,7 @@ public class UpdatePasswordController {
             SessionManager.refreshUser();
             map.put("msg",  LocaleTool.tranMessage(Module.PRIVILEGE, "password.update.success"));
             map.put("stateCode", PrivilegeStatusEnum.CODE_100.getCode());
+            BussAuditLogTool.addLog("PLAYER_RESETPWD_AUTORESETPWD",SessionManager.getUserName());
         } else {
             map.put("msg",  LocaleTool.tranMessage(Module.PRIVILEGE, "password.update.failed"));
         }

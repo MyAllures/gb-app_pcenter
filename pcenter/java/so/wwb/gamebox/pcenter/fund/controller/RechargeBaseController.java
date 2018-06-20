@@ -78,12 +78,6 @@ import java.util.*;
  */
 public abstract class RechargeBaseController {
     private static Log LOG = LogFactory.getLog(RechargeBaseController.class);
-    /*支付宝*/
-    public static final String ALIPAY = "alipay";
-    /*微信支付*/
-    public static final String WECHATPAY = "wechatpay";
-    /*QQ钱包*/
-    public static final String QQWALLET = "qqwallet";
     /*比特币支付*/
     public static final String BITCOIN = "bitcoin";
     /*存款次数超3次，需输入验证码*/
@@ -540,25 +534,6 @@ public abstract class RechargeBaseController {
     }
 
     /**
-     * 收款账号支持随机金额，重新获取随机金额
-     *
-     * @param payAccount
-     * @param playerRecharge
-     * @return
-     */
-    public Double getRechargeAmount(PayAccount payAccount, PlayerRecharge playerRecharge) {
-        Double rechargeAmount = playerRecharge.getRechargeAmount();
-        if (payAccount != null && payAccount.getRandomAmount() != null && payAccount.getRandomAmount() && rechargeAmount.intValue() == rechargeAmount) {
-            double random = Double.parseDouble(RandomStringTool.random(2, 11, 99, false, true)) * 0.01;
-            if (random < 0.11) {
-                random += 0.11;
-            }
-            rechargeAmount += random;
-        }
-        return rechargeAmount;
-    }
-
-    /**
      * 线上支付（含扫码支付）提交公共方法
      *
      * @param playerRechargeVo
@@ -730,7 +705,6 @@ public abstract class RechargeBaseController {
         PlayerRank rank = getRank();
         Double rechargeAmount = playerRechargeVo.getResult().getRechargeAmount();
         double fee = calculateFee(rank, rechargeAmount);
-//        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo,SessionManager.getUserId());
         Map<String, Object> map = new HashMap<>(7, 1f);
         map.put("state", true);
         map.put("fee", fee);
@@ -739,7 +713,6 @@ public abstract class RechargeBaseController {
         map.put("rechargeTotal", CurrencyTool.formatCurrency(rechargeAmount + fee));
         map.put("isThird", true);
         map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
-//        map.put("failureCount",failureCount);
         return map;
     }
 

@@ -128,7 +128,7 @@ public class OnlineRechargeController extends RechargeBaseController {
 
     /**
      * 更改扫码支付方式,相应的优惠要变更
-     *
+     *  todo:by cherry this function will to del next version
      * @param amount
      * @param rechargeType
      * @return

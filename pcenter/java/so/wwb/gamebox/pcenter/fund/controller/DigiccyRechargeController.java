@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
+import so.wwb.gamebox.model.ParamTool;
 import so.wwb.gamebox.model.TerminalEnum;
 import so.wwb.gamebox.model.master.digiccy.po.UserDigiccy;
 import so.wwb.gamebox.model.master.digiccy.vo.UserDigiccyListVo;
@@ -145,7 +146,9 @@ public class DigiccyRechargeController extends RechargeBaseController {
         playerRechargeVo = ServiceSiteTool.playerRechargeService().searchPlayerRecharge(playerRechargeVo);
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         List<VActivityMessage> sales;
-        if (playerRecharge != null && RechargeStatusEnum.ONLINE_SUCCESS.getCode().equals(playerRecharge.getRechargeStatus())) {
+        if (ParamTool.isOpenActivityHall()) {
+            sales = new ArrayList<>(0);
+        } else if (playerRecharge != null && RechargeStatusEnum.ONLINE_SUCCESS.getCode().equals(playerRecharge.getRechargeStatus())) {
             sales = searchSaleByAmount(playerRecharge.getRechargeAmount(), RechargeTypeEnum.DIGICCY_SCAN.getCode());
         } else {
             sales = searchSales(RechargeTypeEnum.DIGICCY_SCAN.getCode());

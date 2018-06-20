@@ -21,6 +21,7 @@ import org.soul.model.msg.notice.vo.EmailMsgVo;
 import org.soul.model.msg.notice.vo.NoticeContactWayListVo;
 import org.soul.model.msg.notice.vo.NoticeContactWayVo;
 import org.soul.model.security.privilege.po.SysUser;
+import org.soul.model.security.privilege.po.SysUserProtection;
 import org.soul.model.security.privilege.vo.SysUserProtectionVo;
 import org.soul.model.security.privilege.vo.SysUserVo;
 import org.soul.model.sms.SmsMessageVo;
@@ -303,7 +304,23 @@ public class PersonalInfoController {
             SessionManager.removeEmailOrPhoneSession(EMAIL);
             SessionManager.removeEmailOrPhoneSession(PHONE);
             //日志
-            BussAuditLogTool.addLog("player.playerDetail.success",SessionManager.getUserName());
+            if(StringTool.isNotBlank(sysUserVo.getResult().getRealName())){
+                BussAuditLogTool.addBussLog(Module.PLAYER,  ModuleType.PLAYER_SET_REALNAME_SUCCESS,
+                        OpType.CREATE,"PLAYER_SET_REALNAME_SUCCESS");
+            }
+            if (userPlayerVo.getPhone() != null && StringTool.isNotBlank(userPlayerVo.getPhone().getContactValue())) {
+                BussAuditLogTool.addBussLog(Module.PLAYER,  ModuleType.PLAYER_SET_MOBILE_SUCCESS,
+                        OpType.CREATE,"PLAYER_SET_MOBILE_SUCCESS");
+            }
+            SysUserProtection sysUserProtection = userPlayerVo.getSysUserProtection();
+            if (sysUserProtection != null && StringTool.isNotEmpty(sysUserProtection.getAnswer1())){
+                BussAuditLogTool.addBussLog(Module.PLAYER,  ModuleType.PLAYER_SET_PROTECTION_SUCCESS,
+                        OpType.CREATE,"PLAYER_SET_PROTECTION_SUCCESS");
+            }
+            if (sysUserProtection != null && StringTool.isNotEmpty(sysUserProtection.getAnswer1())){
+                BussAuditLogTool.addBussLog(Module.PLAYER,  ModuleType.PLAYER_SET_PROTECTION_SUCCESS,
+                        OpType.CREATE,"PLAYER_SET_PROTECTION_SUCCESS");
+            }
         } else {
             map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());

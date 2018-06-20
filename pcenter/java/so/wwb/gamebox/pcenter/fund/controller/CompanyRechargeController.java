@@ -202,24 +202,6 @@ public class CompanyRechargeController extends RechargeBaseController {
         return companyRechargeConfirmInfo(playerRechargeVo);
     }
 
-    /**
-     * 公司入款确认存款页-确认提交存款
-     *
-     * @param model
-     * @param playerRechargeVo
-     * @return
-     */
-    @RequestMapping("/confirmRecharge")
-    @Token(generate = true)
-    public String confirmDeposit(Model model, PlayerRechargeVo playerRechargeVo) {
-        //手续费
-        if (!RechargeTypeEnum.BITCOIN_FAST.getCode().equals(playerRechargeVo.getResult().getRechargeType())) {
-            model.addAttribute("fee", calculateFee(getRank(), playerRechargeVo.getResult().getRechargeAmount()));
-        }
-        model.addAttribute("playerRechargeVo", playerRechargeVo);
-        return ONLINE_BANK_THIRD;
-    }
-
     @RequestMapping("/onlineBankConfirm")
     @ResponseBody
     @Token(valid = true)

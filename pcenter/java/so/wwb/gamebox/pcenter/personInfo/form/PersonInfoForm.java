@@ -58,10 +58,10 @@ public class PersonInfoForm implements IForm {
         this.result_nickname = result_nickname;
     }
 
-    @Length(min = 2,max = 30,message = "passport.edit.info.realName")
+    @Length(min = 2,max = 30,message = "passport.edit.info.format.realName.error")
 //    @Depends(property = "$flag",operator = Operator.EQ,value = {"0"},jsValueExp ="$(\"[name=\\'realNameStatus\\']\").val()",message = "请输入真实姓名")
     @Remote(message = "passport.realName.exist",checkMethod = "checkRealNameExist",checkClass = PersonalInfoController.class, additionalProperties = {"realName"})
-    @Pattern(regexp = FormValidRegExps.REALNAME,message = "passport.edit.info.format.error")
+    @Pattern(regexp = FormValidRegExps.REALNAME,message = "passport.edit.info.format.realName.error")
     @Comment("姓名")
     public String getResult_realName() {
         return result_realName;

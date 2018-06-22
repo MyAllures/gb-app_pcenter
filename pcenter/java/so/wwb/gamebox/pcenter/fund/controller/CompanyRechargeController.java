@@ -56,28 +56,12 @@ import java.util.*;
 public class CompanyRechargeController extends RechargeBaseController {
     //网银存款步奏1-选择收款账户
     private static final String ONLINE_BANK_FIRST = "/fund/recharge/OnlineBankFirst";
-    //网银存款步奏2-生成存款金额
-    private static final String ONLINE_BANK_SECOND = "/fund/recharge/OnlineBankSecond";
     //网银存款步奏3-确认提交存款
     private static final String ONLINE_BANK_THIRD = "/fund/recharge/OnlineBankThird";
-    //电子支付步奏1-选择收款账号
-    private static final String ELECTRONIC_PAY_FIRST = "/fund/recharge/ElectronicPayFirst";
-    //电子支付步奏2-填写回执信息
-    private static final String ELECTRONIC_PAY_SECOND = "/fund/recharge/ElectronicPaySecond";
     //柜员机/柜台存款步奏1-选择收款账号
     private static final String ATM_COUNTER_FIRST = "/fund/recharge/AtmCounterFirst";
-    //柜员机/柜台存款步奏2-生成存款金额
-    private static final String ATM_COUNTER_SECOND = "/fund/recharge/AtmCounterSecond";
-    //提交公司入款订单结果页面
-    private static final String SUBMIT_SUCCESS = "/fund/recharge/SubmitSuccess";
-    //存款失败页面
-    private static final String ONLINE_FAIL = "/fund/recharge/OnlineFail";
     //比特币支付步骤1
     private static final String BIT_COIN_FIRST = "/fund/recharge/BitCoinFirst";
-    //比特币支付步骤2
-    private static final String BIT_COIN_SECOND = "/fund/recharge/BitCoinSecond";
-    //存款验证未通过
-    private static final String RECHARGE_FAIL = "/fund/recharge/RechargeFail";
 
     private static Log LOG = LogFactory.getLog(CompanyRechargeController.class);
 
@@ -157,124 +141,6 @@ public class CompanyRechargeController extends RechargeBaseController {
     }
 
     /**
-     * 电子支付步奏1-选择收款账号
-     *
-     * @param model
-     * @return
-     */
-    @RequestMapping("/electronicPayFirst")
-    public String electronicPayFirst(Model model) {
-        List<PayAccount> payAccounts = searchPayAccount(PayAccountType.COMPANY_ACCOUNT.getCode(), PayAccountAccountType.THIRTY.getCode(), null);
-        //获取公司入款收款账号
-        PlayerRank rank = getRank();
-        boolean display = rank != null && rank.getDisplayCompanyAccount() != null && rank.getDisplayCompanyAccount();
-        List<PayAccount> payAccountList;
-        if (display) {
-            payAccountList = getCompanyPayAccounts(payAccounts);
-        } else {
-            //根据金流顺序直接展示电子支付(不根据原有的微信、支付宝顺序展示)
-            payAccountList = getCompanyPayAccount(payAccounts);
-        }
-        //确认存款类型
-        if (CollectionTool.isNotEmpty(payAccountList)) {
-            Iterator<PayAccount> payAccountIterator = payAccountList.iterator();
-            while (payAccountIterator.hasNext()) {
-                PayAccount payAccount = payAccountIterator.next();
-                if (BITCOIN.equals(payAccount.getBankCode())) {
-                    payAccountIterator.remove();
-                }
-                String bankCode = payAccount.getBankCode();
-                if (WECHATPAY.equals(bankCode)) {
-                    payAccount.setRechargeType(RechargeTypeEnum.WECHATPAY_FAST.getCode());
-                } else if (QQWALLET.equals(bankCode)) {
-                    payAccount.setRechargeType(RechargeTypeEnum.QQWALLET_FAST.getCode());
-                } else if (ALIPAY.equals(bankCode)) {
-                    payAccount.setRechargeType(RechargeTypeEnum.ALIPAY_FAST.getCode());
-                } else if (BankCodeEnum.JDWALLET.getCode().equals(bankCode)) {
-                    payAccount.setRechargeType(RechargeTypeEnum.JDWALLET_FAST.getCode());
-                } else if (BankCodeEnum.BDWALLET.getCode().equals(bankCode)) {
-                    payAccount.setRechargeType(RechargeTypeEnum.BDWALLET_FAST.getCode());
-                } else if (BankCodeEnum.ONECODEPAY.getCode().equals(bankCode)) {
-                    payAccount.setRechargeType(RechargeTypeEnum.ONECODEPAY_FAST.getCode());
-                } else {
-                    payAccount.setRechargeType(RechargeTypeEnum.OTHER_FAST.getCode());
-                }
-            }
-        }
-        model.addAttribute("payAccountList", payAccountList);
-        model.addAttribute("display", display);
-        model.addAttribute("rank", rank);
-        model.addAttribute("currency", getCurrencySign());
-        model.addAttribute("isRealName", isRealName());
-        model.addAttribute("validateRule", JsRuleCreator.create(ElectronicPayForm.class));
-        return ELECTRONIC_PAY_FIRST;
-    }
-
-    /**
-     * 电子支付步奏2-回执单
-     *
-     * @param model
-     * @param playerRechargeVo
-     * @return
-     */
-    @RequestMapping("/electronicPaySecond")
-    public String electronicPaySecond(Model model, PlayerRechargeVo playerRechargeVo, @FormModel @Valid ElectronicPaySecondForm form, BindingResult result) {
-        if (result.hasErrors()) {
-            LOG.info("电子支付验证未通过");
-            return RECHARGE_FAIL;
-        }
-        PayAccount payAccount = getPayAccount(playerRechargeVo.getResult().getPayAccountId());
-        String rechargeType = RechargeTypeEnum.OTHER_FAST.getCode();
-        String bankCode = payAccount.getBankCode();
-        if (WECHATPAY.equals(bankCode)) {
-            rechargeType = RechargeTypeEnum.WECHATPAY_FAST.getCode();
-        } else if (ALIPAY.equals(bankCode)) {
-            rechargeType = RechargeTypeEnum.ALIPAY_FAST.getCode();
-        } else if (BankCodeEnum.JDWALLET.getCode().equals(bankCode)) {
-            rechargeType = RechargeTypeEnum.JDWALLET_FAST.getCode();
-        } else if (BankCodeEnum.BDWALLET.getCode().equals(bankCode)) {
-            rechargeType = RechargeTypeEnum.BDWALLET_FAST.getCode();
-        } else if (BankCodeEnum.ONECODEPAY.getCode().equals(bankCode)) {
-            rechargeType = RechargeTypeEnum.ONECODEPAY_FAST.getCode();
-        } else if (BankCodeEnum.QQWALLET.getCode().equals(bankCode)) {
-            rechargeType = RechargeTypeEnum.QQWALLET_FAST.getCode();
-        }
-        playerRechargeVo.getResult().setRechargeType(rechargeType);
-        model.addAttribute("playerRechargeVo", playerRechargeVo);
-        //验证规则
-        model.addAttribute("validateRule", JsRuleCreator.create(ElectronicPaySecondForm.class));
-        model.addAttribute("payAccount", payAccount);
-        playerRechargeVo.getResult().setPlayerId(SessionManager.getUserId());
-        //是否隐藏收款账号
-        isHide(model, SiteParamEnum.PAY_ACCOUNT_HIDE_E_PAYMENT);
-        return ELECTRONIC_PAY_SECOND;
-    }
-
-
-    /**
-     * 比特币支付步奏2-回执单
-     *
-     * @param model
-     * @param playerRechargeVo
-     * @return
-     */
-    @RequestMapping("/bitCoinSecond")
-    public String bitCoinSecond(Model model, PlayerRechargeVo playerRechargeVo) {
-        PayAccount payAccount = getPayAccount(playerRechargeVo.getResult().getPayAccountId());
-        String rechargeType = RechargeTypeEnum.BITCOIN_FAST.getCode();
-        playerRechargeVo.getResult().setRechargeType(rechargeType);
-        model.addAttribute("playerRechargeVo", playerRechargeVo);
-        //验证规则
-        model.addAttribute("validateRule", JsRuleCreator.create(BitCoinPayForm.class));
-        model.addAttribute("payAccount", payAccount);
-        playerRechargeVo.getResult().setPlayerId(SessionManager.getUserId());
-        model.addAttribute("sales", searchSales(rechargeType));
-        //上一次填写的账号/昵称
-        model.addAttribute("payerBankcard", playerRechargeService().searchLastPayerBankcard(playerRechargeVo));
-        return BIT_COIN_SECOND;
-    }
-
-    /**
      * 柜员机/柜台存款步奏1-选择收款账号
      *
      * @param model
@@ -336,24 +202,6 @@ public class CompanyRechargeController extends RechargeBaseController {
         return companyRechargeConfirmInfo(playerRechargeVo);
     }
 
-    /**
-     * 公司入款确认存款页-确认提交存款
-     *
-     * @param model
-     * @param playerRechargeVo
-     * @return
-     */
-    @RequestMapping("/confirmRecharge")
-    @Token(generate = true)
-    public String confirmDeposit(Model model, PlayerRechargeVo playerRechargeVo) {
-        //手续费
-        if (!RechargeTypeEnum.BITCOIN_FAST.getCode().equals(playerRechargeVo.getResult().getRechargeType())) {
-            model.addAttribute("fee", calculateFee(getRank(), playerRechargeVo.getResult().getRechargeAmount()));
-        }
-        model.addAttribute("playerRechargeVo", playerRechargeVo);
-        return ONLINE_BANK_THIRD;
-    }
-
     @RequestMapping("/onlineBankConfirm")
     @ResponseBody
     @Token(valid = true)
@@ -372,7 +220,6 @@ public class CompanyRechargeController extends RechargeBaseController {
     }
 
     /**
-     * 签证
      * 网银存款提交
      *
      * @param playerRechargeVo
@@ -387,13 +234,13 @@ public class CompanyRechargeController extends RechargeBaseController {
         return commonCompanyRechargeSubmit(playerRechargeVo, result, RechargeTypeEnum.ONLINE_BANK.getCode());
     }
 
-
-    @RequestMapping("/electronicPaySubmit")
-    @Token(valid = true)
-    public String electronicPaySubmit(PlayerRechargeVo playerRechargeVo, HttpServletRequest request, @FormModel @Valid ElectronicPaySecondForm form, BindingResult result, Model model) {
-        return companySubmit(playerRechargeVo, playerRechargeVo.getResult().getRechargeType(), result);
-    }
-
+    /**
+     * 比特币确认
+     * @param playerRechargeVo
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping("/bitCoinConfirm")
     @ResponseBody
     @Token(valid = true)
@@ -406,17 +253,21 @@ public class CompanyRechargeController extends RechargeBaseController {
         if (payAccount == null) {
             return getResultMsg(false, null, null);
         }
-//        playerRechargeVo.getResult().setPayerBank(payAccount.getBankCode());
-//        Integer failureCount = ServiceSiteTool.playerRechargeService().statisticalFailureCount(playerRechargeVo,SessionManager.getUserId());
         Map<String, Object> map = new HashMap<>(7, 1f);
         map.put("state", true);
         DecimalFormat format = new DecimalFormat("#.########");
         map.put("bitAmount", format.format(playerRechargeVo.getResult().getBitAmount()));
         map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
-//        map.put("failureCount",failureCount);
         return map;
     }
 
+    /**
+     * 提交比特币
+     * @param playerRechargeVo
+     * @param form
+     * @param result
+     * @return
+     */
     @RequestMapping("/bitCoinSubmit")
     @ResponseBody
     @Token(valid = true)
@@ -473,52 +324,6 @@ public class CompanyRechargeController extends RechargeBaseController {
         return (amount + fee) > 0;
     }
 
-    private String companySubmit(PlayerRechargeVo playerRechargeVo, String rechargeType, BindingResult result) {
-        if (result.hasErrors()) {
-            return ONLINE_FAIL;
-        }
-        PlayerRecharge playerRecharge = playerRechargeVo.getResult();
-        PayAccount payAccount;
-        if (StringTool.isNotBlank(playerRechargeVo.getAccount())) {
-            payAccount = getPayAccountBySearchId(playerRechargeVo.getAccount());
-        } else {
-            payAccount = getPayAccount(playerRecharge.getPayAccountId());
-        }
-        if (payAccount == null) {
-            return ONLINE_FAIL;
-        }
-
-        playerRechargeVo = saveRecharge(playerRechargeVo, payAccount, RechargeTypeParentEnum.COMPANY_DEPOSIT.getCode(), rechargeType);
-        return depositAfter(playerRechargeVo);
-    }
-
-    /**
-     * 存款后操作
-     *
-     * @param playerRechargeVo
-     * @return
-     */
-    private String depositAfter(PlayerRechargeVo playerRechargeVo) {
-        if (playerRechargeVo.isSuccess()) {
-            tellerReminder(playerRechargeVo);
-            //设置session相关存款数据
-            setRechargeCount();
-            return SUBMIT_SUCCESS;
-        }
-        return ONLINE_FAIL;
-    }
-
-    private String depositAfter(PlayerRechargeVo playerRechargeVo, Model model) {
-        if (playerRechargeVo.isSuccess()) {
-            tellerReminder(playerRechargeVo);
-            //设置session相关存款数据
-            setRechargeCount();
-            return SUBMIT_SUCCESS;
-        }
-        model.addAttribute("customerService", getCustomerService());
-        return ONLINE_FAIL;
-    }
-
     /**
      * 获取公司入款收款账号（根据固定顺序获取收款账户）
      *
@@ -565,21 +370,6 @@ public class CompanyRechargeController extends RechargeBaseController {
     }
 
     /**
-     * 随机生成存款金额的小数点后两位
-     *
-     * @param rechargeAmount
-     * @return
-     */
-    private Double generalAmount(Double rechargeAmount) {
-       /* String decimal;
-        do {
-            decimal = RandomStringTool.random(2, false, true);
-        } while (NumberTool.toInt(decimal) == 0);
-        return rechargeAmount + NumberTool.toDouble(decimal) / 100;*/
-        return rechargeAmount;
-    }
-
-    /**
      * 验证txId是否已提交过
      *
      * @param txId
@@ -592,36 +382,6 @@ public class CompanyRechargeController extends RechargeBaseController {
         listVo.getSearch().setBankOrder(txId);
         listVo.getSearch().setRechargeStatus(RechargeStatusEnum.FAIL.getCode());
         return ServiceSiteTool.playerRechargeService().isExistsTxId(listVo);
-    }
-
-    private void filterUnavailableSubAccount(List<Integer> userIdByUrl) {
-        SysUserDataRightVo sysUserDataRightVo = new SysUserDataRightVo();
-        sysUserDataRightVo.getSearch().setModuleType(DataRightModuleType.COMPANYDEPOSIT.getCode());
-        Map<Integer, List<SysUserDataRight>> udrMap = ServiceSiteTool.sysUserDataRightService().searchDataRightsByModuleType(sysUserDataRightVo);
-
-        UserPlayerVo userPlayerVo = new UserPlayerVo();
-        userPlayerVo.getSearch().setId(SessionManager.getUserId());
-        userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
-        Integer rankId = userPlayerVo.getResult().getRankId();
-        for (Iterator<Integer> iterator = userIdByUrl.iterator(); iterator.hasNext(); ) {
-            Integer userId = iterator.next();
-            List<SysUserDataRight> dataRights = udrMap.get(userId);
-            if (dataRights == null || dataRights.size() == 0) {
-                continue;
-            }
-            if (rankId != null) {
-                boolean flag = true;
-                for (SysUserDataRight sysUserDataRight : dataRights) {
-                    if (rankId.equals(sysUserDataRight.getEntityId())) {
-                        flag = false;
-                        break;
-                    }
-                }
-                if (flag) {
-                    iterator.remove();
-                }
-            }
-        }
     }
 
     /**

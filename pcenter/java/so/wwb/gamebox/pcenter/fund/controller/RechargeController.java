@@ -25,10 +25,7 @@ import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
 import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by cherry on 16-9-12.
@@ -131,6 +128,9 @@ public class RechargeController extends RechargeBaseController {
     @RequestMapping("/sale")
     @ResponseBody
     public List<VActivityMessage> sale(Double amount, String rechargeType) {
+        if (ParamTool.isOpenActivityHall()) {
+            return new ArrayList<>(0);
+        }
         List<VActivityMessage> vActivityMessages;
         if (amount == null) {
             vActivityMessages = searchSales(rechargeType);

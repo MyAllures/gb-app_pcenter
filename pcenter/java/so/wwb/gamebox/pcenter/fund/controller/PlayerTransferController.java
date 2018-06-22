@@ -128,7 +128,7 @@ public class PlayerTransferController {
         Api api;
         SiteApi siteApi;
         for (String id : siteApis.keySet()) {
-            if (ApiProviderEnum.BSG.getCode().equals(id) || ApiProviderEnum.QLY.getCode().equals(id)) {
+            if (ApiProviderEnum.BSG.getCode().equals(id)) {
                 continue;
             }
             api = apis.get(id);

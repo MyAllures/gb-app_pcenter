@@ -128,7 +128,8 @@ public class OnlineRechargeController extends RechargeBaseController {
 
     /**
      * 更改扫码支付方式,相应的优惠要变更
-     *  todo:by cherry this function will to del next version
+     * todo:by cherry this function will to del next version
+     *
      * @param amount
      * @param rechargeType
      * @return
@@ -228,49 +229,13 @@ public class OnlineRechargeController extends RechargeBaseController {
     }
 
     /**
-     * 调用第三方接口
+     * 线上支付等待弹窗
      *
-     * @param playerRechargeVo
-     * @param response
-     * @param request
+     * @param model
+     * @param state
+     * @param msg
+     * @return
      */
-    @RequestMapping("/pay")
-    public void callOnline(PlayerRechargeVo playerRechargeVo, HttpServletResponse response, HttpServletRequest request) {
-        if (StringTool.isBlank(playerRechargeVo.getSearch().getTransactionNo())) {
-            return;
-        }
-        try {
-            playerRechargeVo = playerRechargeService().searchPlayerRecharge(playerRechargeVo);
-            PlayerRecharge playerRecharge = playerRechargeVo.getResult();
-            PayAccount payAccount = getPayAccount(playerRecharge.getPayAccountId());
-            List<Map<String, String>> accountJson = JsonTool.fromJson(payAccount.getChannelJson(), new TypeReference<ArrayList<Map<String, String>>>() {
-            });
-
-            String domain = ServletTool.getDomainPath(request);
-            for (Map<String, String> map : accountJson) {
-                if (map.get("column").equals(CommonFieldsConst.PAYDOMAIN)) {
-                    domain = map.get("value");
-                    break;
-                }
-            }
-
-            if (domain != null && (RechargeStatusEnum.PENDING_PAY.getCode().equals(playerRecharge.getRechargeStatus())
-                    || RechargeStatusEnum.OVER_TIME.getCode().equals(playerRecharge.getRechargeStatus()))) {
-                String uri = "/onlinePay/abcefg.html?search.transactionNo=" + playerRecharge.getTransactionNo() + "&origin=" + TerminalEnum.PC.getCode();
-                domain = getDomain(domain, payAccount);
-                String url = domain + uri;
-                //添加支付网址
-                playerRecharge.setPayUrl(domain);
-                playerRechargeVo.setProperties(PlayerRecharge.PROP_PAY_URL);
-                ServiceSiteTool.playerRechargeService().updateOnly(playerRechargeVo);
-                response.sendRedirect(url);
-            }
-        } catch (Exception e) {
-            LOG.error(e);
-        }
-    }
-
-
     @RequestMapping("/onlinePending")
     public String onlinePending(Model model, Boolean state, String msg) {
         model.addAttribute("customerService", getCustomerService());

@@ -323,12 +323,12 @@ public class PersonalInfoController {
             if (StringTool.isNotBlank(sysUserVo.getResult().getRealName())) {
                 BussAuditLogTool.addBussLog(Module.PLAYER, ModuleType.PLAYER_SET_REALNAME_SUCCESS,
                         OpType.CREATE, "PLAYER_SET_REALNAME_SUCCESS",
-                        "*"+sysUserVo.getResult().getRealName().substring(sysUserVo.getResult().getRealName().length()-1-1,sysUserVo.getResult().getRealName().length()-1));
+                        StringTool.overlayName(sysUserVo.getResult().getRealName()));
             }
             if (userPlayerVo.getPhone() != null && StringTool.isNotBlank(userPlayerVo.getPhone().getContactValue())) {
                 BussAuditLogTool.addBussLog(Module.PLAYER, ModuleType.PLAYER_SET_MOBILE_SUCCESS,
                         OpType.CREATE, "PLAYER_SET_MOBILE_SUCCESS",
-                        "***" + userPlayerVo.getPhone().getContactValue().substring(userPlayerVo.getPhone().getContactValue().length() - 1 - 4, userPlayerVo.getPhone().getContactValue().length() - 1));
+                        StringTool.overlayTel(userPlayerVo.getPhone().getContactValue()));
             }
             SysUserProtection sysUserProtection = userPlayerVo.getSysUserProtection();
             if (sysUserProtection != null && StringTool.isNotEmpty(sysUserProtection.getAnswer1())) {

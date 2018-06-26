@@ -112,6 +112,10 @@
                         <c:when test="${result.apiId==41}">
                             <%@include file="VRLotteryDetail.jsp"%>
                         </c:when>
+                        <%--棋牌投注--%>
+                        <c:when test="${!empty result.betDetail && result.apiTypeId==5}">
+                            <%@include file="ChessPokerDetail.jsp"%>
+                        </c:when>
                         <c:otherwise>
                             <c:forEach items="${resultArray}" var="array">
                                 <table width="90%" border="0" cellspacing="0" cellpadding="0">

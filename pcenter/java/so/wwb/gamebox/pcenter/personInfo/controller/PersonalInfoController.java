@@ -21,6 +21,7 @@ import org.soul.model.msg.notice.vo.EmailMsgVo;
 import org.soul.model.msg.notice.vo.NoticeContactWayListVo;
 import org.soul.model.msg.notice.vo.NoticeContactWayVo;
 import org.soul.model.security.privilege.po.SysUser;
+import org.soul.model.security.privilege.po.SysUserProtection;
 import org.soul.model.security.privilege.vo.SysUserProtectionVo;
 import org.soul.model.security.privilege.vo.SysUserVo;
 import org.soul.model.sms.SmsMessageVo;
@@ -303,12 +304,42 @@ public class PersonalInfoController {
             SessionManager.removeEmailOrPhoneSession(EMAIL);
             SessionManager.removeEmailOrPhoneSession(PHONE);
             //日志
-            BussAuditLogTool.addLog("player.playerDetail.success",SessionManager.getUserName());
+            addUpdatePersonInfoLog(sysUserVo, userPlayerVo);
+
         } else {
             map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.failed"));
             map.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
         }
         return map;
+    }
+
+    /**
+     * 更新资料日志
+     * @param sysUserVo
+     * @param userPlayerVo
+     */
+    private void addUpdatePersonInfoLog(SysUserVo sysUserVo, UserPlayerVo userPlayerVo) {
+        try {
+            if (StringTool.isNotBlank(sysUserVo.getResult().getRealName())) {
+                BussAuditLogTool.addBussLog(Module.PLAYER, ModuleType.PLAYER_SET_REALNAME_SUCCESS,
+                        OpType.CREATE, "PLAYER_SET_REALNAME_SUCCESS",
+                        StringTool.overlayName(sysUserVo.getResult().getRealName()));
+            }
+            if (userPlayerVo.getPhone() != null && StringTool.isNotBlank(userPlayerVo.getPhone().getContactValue())) {
+                BussAuditLogTool.addBussLog(Module.PLAYER, ModuleType.PLAYER_SET_MOBILE_SUCCESS,
+                        OpType.CREATE, "PLAYER_SET_MOBILE_SUCCESS",
+                        StringTool.overlayTel(userPlayerVo.getPhone().getContactValue()));
+            }
+            SysUserProtection sysUserProtection = userPlayerVo.getSysUserProtection();
+            if (sysUserProtection != null && StringTool.isNotEmpty(sysUserProtection.getAnswer1())) {
+                DictEnum dictEnum = DictEnum.SETTING_MASTER_QUESTIONS;
+                String question1 = I18nTool.getDictsMap(SessionManagerCommon.getLocale().toString()).get(dictEnum.getModule().getCode()).get(dictEnum.getType())
+                        .get(sysUserProtection.getQuestion1());
+                BussAuditLogTool.addBussLog(Module.PLAYER, ModuleType.PLAYER_SET_PROTECTION_SUCCESS,
+                        OpType.CREATE, "PLAYER_SET_PROTECTION_SUCCESS", question1);
+            }
+        } catch (Exception ex) {
+        }
     }
 
     /**

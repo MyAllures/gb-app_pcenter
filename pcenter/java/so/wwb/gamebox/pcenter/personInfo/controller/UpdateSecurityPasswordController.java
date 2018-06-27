@@ -135,6 +135,7 @@ public class UpdateSecurityPasswordController {
 
     @RequestMapping("/updatePrivilegePwd")
     @ResponseBody
+    @Audit(module = Module.PLAYER, moduleType = ModuleType.RESET_USER_PERMISSIONPWD, opType = OpType.UPDATE)
     public Map updatePrivilegePwd(UpdatePasswordVo updatePasswordVo) {
         Map<String,Object> map = new HashMap<>(3,1f);
         if(StringTool.isEmpty(updatePasswordVo.getPrivilegePwd()) || StringTool.isEmpty(updatePasswordVo.getPrivilegeRePwd())){
@@ -163,6 +164,7 @@ public class UpdateSecurityPasswordController {
             SessionManager.clearPrivilegeStatus();
             resetSecPwdFreezen(sysUser);
             resetBalanceFreeze(sysUser);
+            BussAuditLogTool.addLog("RESET_RESET_USER_PERMISSIONPWD");
         } else {
             map.put("msg", LocaleTool.tranMessage(Module.PRIVILEGE, "security.update.failed"));
         }

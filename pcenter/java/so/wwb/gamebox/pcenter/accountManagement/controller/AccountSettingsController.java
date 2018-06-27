@@ -13,6 +13,7 @@ import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.query.sort.Direction;
 import org.soul.commons.validation.form.PasswordRule;
+import org.soul.model.log.audit.enums.OpType;
 import org.soul.model.msg.notice.enums.NoticeContactWayStatus;
 import org.soul.model.msg.notice.enums.NoticePublishMethod;
 import org.soul.model.msg.notice.po.NoticeContactWay;
@@ -37,10 +38,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.common.security.AuthTool;
-import so.wwb.gamebox.model.DictEnum;
-import so.wwb.gamebox.model.Module;
-import so.wwb.gamebox.model.ParamTool;
-import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.*;
+import so.wwb.gamebox.model.common.Audit;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.common.notice.enums.*;
 import so.wwb.gamebox.model.company.enums.BankCardTypeEnum;
@@ -61,6 +60,7 @@ import so.wwb.gamebox.model.master.player.vo.*;
 import so.wwb.gamebox.pcenter.accountManagement.form.*;
 import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.session.SessionManager;
+import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.privilege.controller.PrivilegeController;
@@ -784,6 +784,7 @@ public class AccountSettingsController {
 	 */
 	@RequestMapping("/updateRealName")
 	@ResponseBody
+	@Audit(module = Module.PLAYER, moduleType = ModuleType.PLAYER_SET_REALNAME_SUCCESS, opType = OpType.CREATE)
 	public Map updateRealName(SysUserVo sysUserVo, Model model) {
 		Map map = new HashMap(2,1f);
 		sysUserVo.getResult().setId(SessionManager.getUserId());
@@ -795,6 +796,7 @@ public class AccountSettingsController {
 			map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.realName.success"));
 			SessionManager.clearPrivilegeStatus();
 			SessionManager.refreshUser();
+			BussAuditLogTool.addLog("PLAYER_SET_REALNAME_SUCCESS",StringTool.overlayName(sysUserVo.getResult().getRealName()));
 		} else {
 			map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "binding.realName.failed"));
 		}

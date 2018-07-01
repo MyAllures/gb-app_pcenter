@@ -218,7 +218,7 @@
         <div name="electronicElement" class="control-group" style="${firstPayAccount.type eq '1'?'':'display:none'}">
             <label class="control-label">${views.fund_auto['订单号（后5位）']}：</label>
             <div class="controls">
-                <input style="width: 200px" type="text" class="input" placeholder="${views.fund_auto['请填写商户订单号']}" maxlength="5" name="result.bankOrder" autocomplete="off">
+                <input style="width: 200px" type="text" class="input" placeholder="${views.fund_auto['请填写订单号非商户订单号']}" maxlength="5" name="result.bankOrder" autocomplete="off">
             </div>
         </div>
         <c:if test="${!empty thirdAccountType}">

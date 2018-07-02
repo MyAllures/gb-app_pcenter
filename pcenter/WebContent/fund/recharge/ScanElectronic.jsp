@@ -127,7 +127,7 @@
                                 <c:choose>
                                     <c:when test="${isHide}">
                                        <span class="orange select">
-                                            <i class="orange fontsbig">${views.fund_auto['账号代码']}：<span id="accountCode">${firstPayAccount.code}</span></i>
+                                            <i class="orange fontsbig">${views.fund_auto['账号代码']}：<em id="accountCode">${firstPayAccount.code}</em></i>
                                             <i class="m-bigl">
                                                 <soul:button target="customerService" text="${(empty hideContent.value) ? views.fund_auto['联系客服获取账号'] : hideContent.value}" url="${customerService}" opType="function"/>
                                             </i>

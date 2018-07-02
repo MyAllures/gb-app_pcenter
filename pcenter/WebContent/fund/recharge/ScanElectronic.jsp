@@ -218,7 +218,15 @@
         <div name="electronicElement" class="control-group" style="${firstPayAccount.type eq '1'?'':'display:none'}">
             <label class="control-label">${views.fund_auto['订单号（后5位）']}：</label>
             <div class="controls">
-                <input style="width: 200px" type="text" class="input" placeholder="${views.fund_auto['请填写订单号非商户订单号']}" maxlength="5" name="result.bankOrder" autocomplete="off">
+                <c:choose>
+                    <c:when test="${siteId == '119' || siteId == '270'}">
+                        <input  id="merchantNumber" style="width: 200px" type="text" class="input" maxlength="5"  placeholder="${views.fund_auto['请填写商户订单号']}${views.fund_auto['必填']}" maxlength="5" name="result.bankOrder" autocomplete="off">
+                        <span id="merchantNumberPrompt" class="orange merchant-number-prompt"><i class="mark plaintsmall"></i>${views.fund_auto['商户订单号不能为空']}</span>
+                    </c:when>
+                    <c:otherwise><%--style="visibility:hidden"--%>
+                        <input style="width: 200px" type="text" class="input" placeholder="${views.fund_auto['请填写商户订单号']}" maxlength="5" name="result.bankOrder" autocomplete="off">
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
         <c:if test="${!empty thirdAccountType}">

@@ -955,7 +955,7 @@ public class PersonalInfoController {
     @RequestMapping("/toUserBank")
     @Token(generate = true)
     public String toUserBank(Model model) {
-        model.addAttribute("validate", JsRuleCreator.create(AddBankcardForm.class));
+        model.addAttribute("validate", JsRuleCreator.create(BankcardForm.class));
         model.addAttribute("bankListVo", BankHelper.getBankListVo());
         model.addAttribute("user", SessionManager.getUser());
         return "fund/withdraw/bankcard/IntoBankcard";
@@ -975,6 +975,25 @@ public class PersonalInfoController {
         SysUserVo sysUserVo = new SysUserVo();
         sysUserVo.getSearch().setRealName(realName);
         sysUserVo.getSearch().setSiteId(SessionManager.getSiteId());
+        sysUserVo.getSearch().setSubsysCode(SubSysCodeEnum.PCENTER.getCode());
+        String isExistRealName = ServiceSiteTool.userAgentService().isExistRealName(sysUserVo);
+        return isExistRealName;
+    }
+
+    /**
+     * 判断真实姓名的唯一性
+     *
+     * @return
+     */
+    @RequestMapping(value = "/checkBankNameExist")
+    @ResponseBody
+    public String checkBankNameExist(@RequestParam("result.bankcardMasterName") String realName, @RequestParam("editType") String editType) {
+        if ("edit".equals(editType) || !ParamTool.isOnlyFiled("realName")) {
+            return "true";
+        }
+        SysUserVo sysUserVo = new SysUserVo();
+        sysUserVo.getSearch().setRealName(realName);
+        sysUserVo.getSearch().setSiteId(SessionManagerCommon.getSiteId());
         sysUserVo.getSearch().setSubsysCode(SubSysCodeEnum.PCENTER.getCode());
         String isExistRealName = ServiceSiteTool.userAgentService().isExistRealName(sysUserVo);
         return isExistRealName;

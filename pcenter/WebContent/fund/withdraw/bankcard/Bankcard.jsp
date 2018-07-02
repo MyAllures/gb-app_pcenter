@@ -13,6 +13,7 @@
                 <c:when test="${not empty user.realName}">
                     <span>${soulFn:overlayName(user.realName)}</span>
                     <input type="hidden" name="result.bankcardMasterName" value="${user.realName}"/>
+                    <input type="hidden" name="editType" value="edit"/>
                 </c:when>
                 <c:otherwise>
                     <input type="text" name="result.bankcardMasterName" maxlength="30" class="input bn"/>

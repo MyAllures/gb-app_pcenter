@@ -127,7 +127,7 @@
                                 <c:choose>
                                     <c:when test="${isHide}">
                                        <span class="orange select">
-                                            <i class="orange fontsbig">${views.fund_auto['账号代码']}：<span id="accountCode">${firstPayAccount.code}</span></i>
+                                            <i class="orange fontsbig">${views.fund_auto['账号代码']}：<em id="accountCode">${firstPayAccount.code}</em></i>
                                             <i class="m-bigl">
                                                 <soul:button target="customerService" text="${(empty hideContent.value) ? views.fund_auto['联系客服获取账号'] : hideContent.value}" url="${customerService}" opType="function"/>
                                             </i>
@@ -186,9 +186,9 @@
         </div>
         <c:if test="${thirdBankCode eq 'alipay'}">
             <div class="control-group" name="electronicElement" style="${firstPayAccount.type eq '1'?'':'display:none'}">
-                <label class="control-label" for="result.payerName">您的支付户名：</label>
+                <label class="control-label" for="result.payerName">${views.fund_auto['您的支付宝昵称']}：</label>
                 <div class="controls">
-                    <input style="width: 200px" type="text" class="input" id="result.payerName" name="result.payerName" placeholder="请填写存款时使用的真实姓名">
+                    <input style="width: 200px" type="text" class="input" id="result.payerName" name="result.payerName" placeholder="${views.fund_auto['请填入您的支付宝昵称']}">
                 </div>
             </div>
         </c:if>

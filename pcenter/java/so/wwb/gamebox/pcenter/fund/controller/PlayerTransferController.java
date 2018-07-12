@@ -50,11 +50,11 @@ import so.wwb.gamebox.pcenter.fund.form.PlayerTransferForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.api.IApiBalanceService;
+import so.wwb.gamebox.web.api.controller.BaseApiServiceController;
 import so.wwb.gamebox.web.cache.Cache;
 import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
 import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.common.token.Token;
-import so.wwb.gamebox.web.common.token.TokenHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -70,7 +70,7 @@ import java.util.*;
 @Controller
 //region your codes 1
 @RequestMapping("/fund/playerTransfer")
-public class PlayerTransferController {
+public class PlayerTransferController extends BaseApiServiceController {
     private static final String TRANSFER_WALLET = "wallet";//转入转出选择我的钱包
     //免转-转帐主页
     private static final String AUTO_TRANSFER_INDEX_URL = "/fund/transfers/auto/Index";
@@ -81,7 +81,7 @@ public class PlayerTransferController {
     private IPlayerTransferService playerTransferService;
 
     //endregion your codes 1
-    private String getViewBasePath() {
+    public String getViewBasePath() {
         //region your codes 2
         return "/fund/transfers/";
         //endregion your codes 2
@@ -300,21 +300,6 @@ public class PlayerTransferController {
         return doTransfer(playerTransferVo);
     }
 
-    /**
-     * 封装playerTransferVo
-     *
-     * @param playerTransferVo
-     * @return
-     */
-    public PlayerApiAccountVo createVoByTransfer(PlayerTransferVo playerTransferVo) {
-        PlayerApiAccountVo playerApiAccountVo = new PlayerApiAccountVo();
-        playerApiAccountVo.setSysUser(playerTransferVo.getSysUser());
-        playerApiAccountVo.setApiId(playerTransferVo.getResult().getApiId());
-        playerApiAccountVo.getSearch().setApiId(playerTransferVo.getResult().getApiId());
-        playerApiAccountVo.getSearch().setUserId(SessionManager.getUserId());
-        return playerApiAccountVo;
-    }
-
 
     /**
      * 封装当前转账的基本信息
@@ -400,92 +385,7 @@ public class PlayerTransferController {
         return transferTime == null || DateTool.secondsBetween(nowTime, transferTime) > 3;
     }
 
-    /**
-     * 开始进行转账
-     *
-     * @param playerTransferVo
-     * @return
-     */
-    private Map<String, Object> doTransfer(PlayerTransferVo playerTransferVo) {
-        LOG.info("【玩家[{0}]转账】:开始处理,当前时间【{1}】", playerTransferVo.getResult().getUserName(), SessionManager.getTransferTime());
-        try {
-            playerTransferVo = playerTransferService().saveTransferAndTransaction(playerTransferVo);
-        } catch (Exception e) {
-            LOG.error(e, "【玩家[{0}]转账】:生成额度转换记录失败。", playerTransferVo.getResult().getUserName());
-            return getErrorMessage(TransferResultStatusEnum.TRANSFER_INTERFACE_BUSY.getCode(), playerTransferVo.getResult().getApiId());
-        }
-        boolean isSuccess = playerTransferVo.isSuccess();
-        if (!isSuccess && StringTool.isNotBlank(playerTransferVo.getErrMsg())) {
-            return getErrorMessage(playerTransferVo.getErrMsg(), playerTransferVo.getResult().getApiId());
-        } else if (!isSuccess) {
-            return getErrorMessage(TransferResultStatusEnum.TRANSFER_INTERFACE_BUSY.getCode(), playerTransferVo.getResult().getApiId());
-        }
 
-        try {
-            playerTransferVo = playerTransferService().handleTransferResult(playerTransferVo);
-        } catch (Exception e) {
-            LOG.error("【玩家[{0}]转账】:额度转换处理超时。", playerTransferVo.getResult().getUserName());
-            return getErrorMessage(TransferResultStatusEnum.TRANSFER_TIME_OUT.getCode(), playerTransferVo.getResult().getApiId());
-        }
-        ResultStatus resultStatus = ResultStatus.PROCCESSING;
-        if (playerTransferVo.getTransferResult() != null && playerTransferVo.getTransferResult().getStatus() != null) {
-            resultStatus = playerTransferVo.getTransferResult().getStatus();
-        }
-        Map<String, Object> resultMap;
-        if (playerTransferVo.isSuccess()) {
-            //转账后更新player_api_account表的登录时间，以判断余额是否更新
-            updatePlayerApiAccountLoginTime(playerTransferVo);
-            resultMap = getSuccessMessage(playerTransferVo.getResult().getApiId());
-        } else {
-            resultMap = getErrorMessage(TransferResultStatusEnum.TRANSFER_INTERFACE_BUSY.getCode(), playerTransferVo.getResult().getApiId());
-        }
-        resultMap.put("resultStatus", resultStatus.name());
-        resultMap.put("orderId", playerTransferVo.getResult().getTransactionNo());
-        resultMap.put("resultCode", resultStatus.getCode());
-        resultMap.put("transferOut", playerTransferVo.getTransferOut());
-        return resultMap;
-    }
-
-    private void updatePlayerApiAccountLoginTime(PlayerTransferVo playerTransferVo) {
-        PlayerApiAccountVo playerApiAccountVo = new PlayerApiAccountVo();
-        PlayerApiAccount playerApiAccount = playerTransferVo.getPlayerApiAccount();
-        playerApiAccount.setLastLoginIp(SessionManager.getIpDb().getIp());
-        playerApiAccount.setLastLoginTime(SessionManager.getDate().getNow());
-        playerApiAccountVo.setProperties(PlayerApiAccount.PROP_LAST_LOGIN_TIME, PlayerApiAccount.PROP_LAST_LOGIN_IP);
-        playerApiAccountVo.setResult(playerApiAccount);
-        ServiceSiteTool.playerApiAccountService().updateOnly(playerApiAccountVo);
-    }
-
-    /**
-     * 获取成功提示信息
-     *
-     * @param apiId
-     * @return
-     */
-    private Map<String, Object> getSuccessMessage(Integer apiId) {
-        Map<String, Object> resultMap = new HashMap<>(5, 1f);
-        resultMap.put("state", true);
-        //用于站点站进入API前的转账窗口
-        resultMap.put("api", apiId);
-        return resultMap;
-    }
-
-    /**
-     * 获取失败提示信息
-     *
-     * @param messageCode
-     * @param apiId
-     * @return
-     */
-    private Map<String, Object> getErrorMessage(String messageCode, Integer apiId) {
-        Map<String, Object> resultMap = new HashMap<>(5, 1f);
-        resultMap.put("state", false);
-        resultMap.put("msg", LocaleTool.tranMessage(Module.FUND.getCode(), messageCode));
-        //用于站点站进入API前的转账窗口
-        resultMap.put("api", apiId);
-        resultMap.put(TokenHandler.TOKEN_VALUE, TokenHandler.generateGUID());
-        return resultMap;
-    }
 
     /**
      * 转账结果页面

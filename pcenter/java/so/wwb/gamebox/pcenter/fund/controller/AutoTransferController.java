@@ -14,7 +14,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/transfer/auto")
-public class AutoTransferController extends so.wwb.gamebox.web.fund.controller.AutoTransferController {
+public class AutoTransferController extends so.wwb.gamebox.web.fund.controller.WebCommonAutoTransferController {
     @Override
     public PlayerApiAccountVo doLogin(PlayerApiAccountVo playerApiAccountVo, HttpServletRequest request) {
         return null;

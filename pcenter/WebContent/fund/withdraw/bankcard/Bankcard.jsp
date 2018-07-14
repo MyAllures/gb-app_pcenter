@@ -26,7 +26,7 @@
     <div class="control-grouptwo clearfix ud-select" style="margin-top: 0;">
         <label class="control-left">${views.fund_auto['银行']}：</label>
 
-        <div class="bank-deposit" style="margin-bottom: 0">
+        <div class="bank-deposit" id="bank_list" style="margin-bottom: 0">
             <div class="bank-total">
                 <c:forEach items="${bankListVo.result}" var="bank" varStatus="vs" end="14">
                     <label class="bank ${bankcard.bankName eq bank.bankName ? 'select' : ''}" bankcode="${bank.bankName}">

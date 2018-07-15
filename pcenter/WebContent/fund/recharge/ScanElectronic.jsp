@@ -134,15 +134,15 @@
                                        </span>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="orange paidname select" data-clipboard-text="${thirdBankCode eq 'onecodepay'?'不显示':firstPayAccount.account}" name="copy">
-                                            <em class="bank-number" ${thirdBankCode != 'onecodepay'?'id="bankNum"':''}>${thirdBankCode eq 'onecodepay'?'不显示':firstPayAccount.account}</em>
+                                        <span class="orange paidname select" data-clipboard-text="${firstPayAccount.account}" name="copy">
+                                            <em class="bank-number" ${thirdBankCode != 'onecodepay'?'id="bankNum"':''}>${firstPayAccount.account}</em>
                                             <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
                                         </span>
                                     </c:otherwise>
                                 </c:choose>
-                                 <span class="paidname select" data-clipboard-text="${thirdBankCode eq 'onecodepay'?'不显示':firstPayAccount.fullName}" name="copy">
+                                <span class="paidname select">
                                     <em class="gray">${views.fund_auto['姓名']}：</em>
-                                    <em class="gathering-name" ${thirdBankCode != 'onecodepay'?'id="bankName"':''}>${thirdBankCode eq 'onecodepay'?'不显示':firstPayAccount.fullName}</em>
+                                    <em class="gathering-name" ${thirdBankCode != 'onecodepay'?'id="bankName"':''}>${firstPayAccount.fullName}</em>
                                     <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>
                                 </span>
                             </div>

@@ -140,7 +140,7 @@
                                         </span>
                                     </c:otherwise>
                                 </c:choose>
-                                <span class="paidname select">
+                                <span class="paidname select" data-clipboard-text="${firstPayAccount.fullName}" name="copy">
                                     <em class="gray">${views.fund_auto['姓名']}：</em>
                                     <em class="gathering-name" ${thirdBankCode != 'onecodepay'?'id="bankName"':''}>${firstPayAccount.fullName}</em>
                                     <a href="javascript:;" class="btn-copy">${views.common['copy']}</a>

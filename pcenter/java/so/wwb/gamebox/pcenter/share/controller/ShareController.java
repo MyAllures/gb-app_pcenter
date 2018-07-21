@@ -27,7 +27,7 @@ import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.pcenter.share.form.RealNameConfirmForm;
 import so.wwb.gamebox.pcenter.share.form.RealNameForm;
 import so.wwb.gamebox.pcenter.tools.BankTool;
-import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.common.cache.Cache;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;

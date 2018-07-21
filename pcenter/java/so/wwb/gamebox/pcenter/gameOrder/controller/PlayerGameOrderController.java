@@ -42,7 +42,7 @@ import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderDetailVo;
 import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderListVo;
 import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderVo;
 import so.wwb.gamebox.pcenter.session.SessionManager;
-import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
 import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.report.betting.form.PlayerGameOrderDetailSearchForm;

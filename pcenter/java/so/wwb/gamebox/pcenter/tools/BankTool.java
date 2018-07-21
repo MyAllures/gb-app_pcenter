@@ -14,7 +14,7 @@ import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.po.BankExtend;
 import so.wwb.gamebox.model.company.vo.BankExtendVo;
 import so.wwb.gamebox.model.company.vo.BankVo;
-import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.common.cache.Cache;
 
 import java.io.IOException;
 import java.util.HashMap;

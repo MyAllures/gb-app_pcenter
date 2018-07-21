@@ -62,7 +62,7 @@ import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.SessionManagerCommon;
-import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.web.privilege.controller.PrivilegeController;
 
 import javax.validation.Valid;

@@ -35,6 +35,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.common.security.AuthTool;
@@ -49,7 +50,7 @@ import so.wwb.gamebox.model.company.po.Bank;
 import so.wwb.gamebox.model.company.po.BankExtend;
 import so.wwb.gamebox.model.company.site.po.SiteOperateArea;
 import so.wwb.gamebox.model.company.site.vo.SiteOperateAreaListVo;
-import so.wwb.gamebox.model.company.sys.vo.SysSiteVo;
+import so.wwb.gamebox.model.company.sys.po.SysSite;
 import so.wwb.gamebox.model.company.vo.BankListVo;
 import so.wwb.gamebox.model.enums.UserTypeEnum;
 import so.wwb.gamebox.model.listop.FreezeTime;
@@ -62,7 +63,6 @@ import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.SessionManagerCommon;
-import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.web.privilege.controller.PrivilegeController;
 
 import javax.validation.Valid;
@@ -112,10 +112,10 @@ public class AccountSettingsController {
 		Integer userId = SessionManager.getUserId();
 		//1.登录密码--获取玩家用户
 		SysUserVo sysUserVo = getPlayerInfo();
-		SysSiteVo sysSiteVo = getSysSite(sysUserVo);
+		SysSite sysSite = Cache.getSysSite().get(CommonContext.get().getSiteIdString());
 		model.addAttribute("sysUserVo", sysUserVo);
 		model.addAttribute("isSet", StringTool.isNotBlank(sysUserVo.getResult().getPermissionPwd()));
-		model.addAttribute("postfix", sysSiteVo.getResult().getPostfix());
+		model.addAttribute("postfix", sysSite.getPostfix());
 		//修改密码绑定表单验证
 		model.addAttribute("loginPwdRule", JsRuleCreator.create(UpdatePasswordForm.class));
 
@@ -1387,28 +1387,5 @@ public class AccountSettingsController {
 		}
 		return phoneCodeVos;
 	}
-
-	/**
-	 * 获取站点信息
-	 *
-	 * @param sysUserVo
-	 * @return
-	 */
-	private SysSiteVo getSysSite(SysUserVo sysUserVo) {
-		SysSiteVo sysSiteVo = new SysSiteVo();
-		sysSiteVo.getSearch().setId(sysUserVo.getResult().getSiteId());
-		sysSiteVo = ServiceTool.sysSiteService().get(sysSiteVo);
-		return sysSiteVo;
-	}
-
-	/**
-	 * 生成token
-	 * @param model
-	 *//*
-	private void generatorToken(Model model) {
-		String token = UUID.randomUUID().toString();
-		SessionManager.setToken(token);
-		model.addAttribute("token",token);
-	}*/
 	//endregion your codes 3
 }

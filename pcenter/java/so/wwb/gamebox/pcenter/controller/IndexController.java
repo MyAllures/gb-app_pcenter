@@ -2,7 +2,6 @@ package so.wwb.gamebox.pcenter.controller;
 
 import org.json.JSONObject;
 import org.soul.commons.collections.CollectionTool;
-import org.soul.commons.collections.ListTool;
 import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.dict.DictTool;
 import org.soul.commons.init.context.CommonContext;
@@ -30,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.DictEnum;
@@ -44,9 +44,8 @@ import so.wwb.gamebox.model.master.enums.CreateChannelEnum;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
 import so.wwb.gamebox.model.master.player.vo.PlayerApiListVo;
 import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
-import so.wwb.gamebox.pcenter.init.ConfigManager;
 import so.wwb.gamebox.pcenter.session.SessionManager;
-import so.wwb.gamebox.web.cache.Cache;
+import so.wwb.gamebox.web.init.ConfigBase;
 import so.wwb.gamebox.web.phoneapi.controller.BasePhoneApiController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -80,7 +79,7 @@ public class IndexController extends BasePhoneApiController {
             default:
                 break;
         }
-        o.getSearch().setSubsysCode(ConfigManager.getConfigration().getSubsysCode());
+        o.getSearch().setSubsysCode(ConfigBase.get().getSubsysCode());
         o.getSearch().setParentId(parentId);
         List<TreeNode<VSysUserResource>> menuNodeList = ServiceTool.sysResourceService().getAllMenus(o);
         SysResourceController.loadLocal(menuNodeList);

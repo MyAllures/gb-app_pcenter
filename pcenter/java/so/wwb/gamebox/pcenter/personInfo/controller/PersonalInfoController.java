@@ -52,6 +52,7 @@ import so.wwb.gamebox.pcenter.common.consts.FormValidRegExps;
 import so.wwb.gamebox.pcenter.personInfo.form.*;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.BussAuditLogTool;
+import so.wwb.gamebox.web.MessageSendTool;
 import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.bank.BankHelper;
 import so.wwb.gamebox.common.cache.Cache;
@@ -618,42 +619,15 @@ public class PersonalInfoController {
             map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.format.error"));
             return map;
         }
-
-        //判断是否是100秒后,再次发起请求
-        if (validCountDown(PHONE)) {
+        //90秒后可以重新提交
+        if (!SessionManagerCommon.canSendRegisterPhone()) {
+            map.put("state", false);
             return map;
         }
-        SessionManager.setLastSendTime(SessionManager.getDate().getNow(), PHONE);
 
-        //保存手机和验证码匹配成对
-        String verificationCode = RandomStringTool.randomNumeric(6);
+        boolean success = MessageSendTool.sendMessage(phone, request);
 
-        SmsInterface smsInterface = getSiteSmsInterface();
-        SmsMessageVo smsMessageVo = new SmsMessageVo();
-        smsMessageVo.setUserIp(ServletTool.getIpAddr(request));
-        smsMessageVo.setProviderId(smsInterface.getId());
-        smsMessageVo.setProviderName(smsInterface.getUsername());
-        smsMessageVo.setProviderPwd(smsInterface.getPassword());
-        smsMessageVo.setProviderKey(smsInterface.getDataKey());
-        smsMessageVo.setPhoneNum(phone);
-        smsMessageVo.setType(SmsTypeEnum.YZM.getCode());
-        String signature = null;
-        if(StringTool.isNotEmpty(smsInterface.getSignature())){
-            signature = smsInterface.getSignature();
-        }else{
-            signature = SessionManagerCommon.getSiteName(request);
-        }
-        smsMessageVo.setContent("验证码：" + verificationCode + " 【"+signature+"】");//【】为固定格式
-        LOG.info("个人资料验证：手机号：{0}-验证码：{1}-签名：{2}",phone,verificationCode,signature);
-        try {
-            ServiceTool.messageService().sendSmsMessage(smsMessageVo);
-        } catch (Exception ex) {
-            LOG.error(ex, "发送手机验证码错误");
-        }
-
-        setToSession(phone, verificationCode, PHONE);
-
-        map.put("state", true);
+        map.put("state", success);
         return map;
     }
 

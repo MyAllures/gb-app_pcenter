@@ -11,7 +11,6 @@ import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
-import org.soul.commons.net.ServletTool;
 import org.soul.commons.query.Criterion;
 import org.soul.commons.query.enums.Operator;
 import org.soul.commons.query.sort.Order;
@@ -24,7 +23,6 @@ import org.soul.model.security.privilege.po.SysUser;
 import org.soul.model.security.privilege.po.SysUserProtection;
 import org.soul.model.security.privilege.vo.SysUserProtectionVo;
 import org.soul.model.security.privilege.vo.SysUserVo;
-import org.soul.model.sms.SmsMessageVo;
 import org.soul.model.sms_interface.po.SmsInterface;
 import org.soul.model.sms_interface.vo.SmsInterfaceVo;
 import org.soul.model.sys.po.SysDict;
@@ -37,6 +35,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.*;
@@ -55,8 +54,8 @@ import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.MessageSendTool;
 import so.wwb.gamebox.web.SessionManagerCommon;
 import so.wwb.gamebox.web.bank.BankHelper;
-import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.web.common.SiteCustomerServiceHelper;
+import so.wwb.gamebox.web.common.controller.VerificationCodeTool;
 import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
 import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.common.token.Token;
@@ -621,6 +620,12 @@ public class PersonalInfoController {
         }
         //90秒后可以重新提交
         if (!SessionManagerCommon.canSendRegisterPhone()) {
+            map.put("state", false);
+            return map;
+        }
+
+        //防刷，IP+USER-AGENT
+        if (VerificationCodeTool.validIpUserAgent(request)) {
             map.put("state", false);
             return map;
         }

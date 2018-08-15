@@ -96,7 +96,7 @@ public class PersonalInfoController {
     @RequestMapping("/index")
     @DemoModel(menuCode = DemoMenuEnum.GRZL)
     @Token(generate = true)
-    public String index(Model model) {
+    public String index(Model model, HttpServletRequest request) {
         //获取玩家资料信息展示
         SysParam personalInformation = ParamTool.getSysParam(SiteParamEnum.CONNECTION_SETTING_PERSONAL_INFORMATION);
         model.addAttribute("personal_information", personalInformation);
@@ -152,6 +152,7 @@ public class PersonalInfoController {
 
         model.addAttribute("openPhoneCall", ParamTool.isOpenPhoneCall());
 
+        model.addAttribute("verificationCodeToken", VerificationCodeTool.generateVerificationCodeToken(request));//获取手机验证码请求时的token
 
         return PERSON_INFO_PERSON_INFO;
 
@@ -604,7 +605,7 @@ public class PersonalInfoController {
      */
     @RequestMapping("/getPhoneVerificationCode")
     @ResponseBody
-    public Map getPhoneVerificationCode(String phone, HttpServletRequest request) {
+    public Map getPhoneVerificationCode(String phone, String verificationCodeToken, HttpServletRequest request) {
 
         Map map = new HashMap();
         if (phone == null || "".equals(phone)) {
@@ -625,7 +626,7 @@ public class PersonalInfoController {
         }
 
         //防刷，IP+USER-AGENT
-        if (VerificationCodeTool.validIpUserAgent(request)) {
+        if (!VerificationCodeTool.validVerificationCodeToken(verificationCodeToken, request)) {
             map.put("state", false);
             return map;
         }

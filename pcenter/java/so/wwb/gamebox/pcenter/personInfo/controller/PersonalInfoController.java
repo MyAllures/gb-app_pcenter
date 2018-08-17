@@ -626,10 +626,10 @@ public class PersonalInfoController {
         }
 
         //防刷，IP+USER-AGENT
-        if (!VerificationCodeTool.validVerificationCodeToken(verificationCodeToken, request)) {
-            map.put("state", false);
-            return map;
-        }
+//        if (!VerificationCodeTool.validVerificationCodeToken(verificationCodeToken, request)) {
+//            map.put("state", false);
+//            return map;
+//        }
 
         boolean success = MessageSendTool.sendMessage(phone, request);
 

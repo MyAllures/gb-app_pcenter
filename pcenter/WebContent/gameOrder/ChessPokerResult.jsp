@@ -73,7 +73,7 @@
         </c:if>
         <%--三公--%>
         <c:if test="${betType eq '860'}">
-            <c:set var="betType" value="THREE_FACE"/>
+            <c:set var="betType" value="LEG_THREE_FACE"/>
         </c:if>
         <%--押庄龙虎--%>
         <c:if test="${betType eq '900'}">
@@ -85,7 +85,7 @@
         </c:if>
         <%--通比牛牛--%>
         <c:if test="${betType eq '870'}">
-            <c:set var="betType" value="BULL_BULL"/>
+            <c:set var="betType" value="LEG_TB_BULL"/>
         </c:if>
         <%--欢乐红包--%>
         <c:if test="${betType eq '880'}">

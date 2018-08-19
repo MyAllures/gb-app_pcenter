@@ -96,9 +96,9 @@
             <c:set var="betType" value="GOLDEN_FRIED"/>
         </c:if>
         <%--抢庄牌九--%>
-        <%--<c:if test="${betType eq '730'}">
-            <c:set var="betType" value="RED_ENVELOPE"/>
-        </c:if>--%>
+        <c:if test="${betType eq '730'}">
+            <c:set var="betType" value="LEG_PAIJIU"/>
+        </c:if>
         <%--斗地主--%>
         <c:if test="${betType eq '610'}">
             <c:set var="betType" value="DDZ"/>

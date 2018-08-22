@@ -22,11 +22,11 @@
         <h3>${views.recommend['recommend.Recommend.registerCodeTips']}</h3>
         <div class="invite-copy">
             <div class="invite-copyleft">
-                <textarea class="textarea" id="recommendUrl"><%=request.getServerName()%>/register.html?c=${invitationCode}</textarea>
+                <textarea class="textarea" readonly="readonly" id="recommendUrl">${inviteExclusive}</textarea>
                 <p class="gray">${views.recommend['recommend.Recommend.copyRecommendUrl']}</p>
             </div>
             <div class="invite-button">
-                <a class="btn-blue btn large-big lar-l" data-clipboard-text="<%=request.getServerName()%>/register.html?c=${invitationCode}" name="copy">${views.common['copy']}</a>
+                <a class="btn-blue btn large-big lar-l" data-clipboard-text="${inviteExclusive}" name="copy">${views.common['copy']}</a>
             </div>
         </div>
     </div>

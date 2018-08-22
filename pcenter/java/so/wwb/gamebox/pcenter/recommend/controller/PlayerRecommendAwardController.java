@@ -77,7 +77,7 @@ public class PlayerRecommendAwardController {
             getRecord(listVo, model);
             getTotalRecommend(listVo, model);
         } else {
-            recommendBaseData(model, new SiteConfineIpVo(), listVo);
+            recommendBaseData(model, new SiteConfineIpVo(), listVo,request);
         }
         if (ServletTool.isAjaxSoulRequest(request) && StringTool.isBlank(type)) {
             return getViewBasePath() + "RecommendPartial";
@@ -127,7 +127,7 @@ public class PlayerRecommendAwardController {
      * @param siteConfineIpVo
      * @param listVo
      */
-    private void recommendBaseData(Model model, SiteConfineIpVo siteConfineIpVo, PlayerRecommendAwardListVo listVo) {
+    private void recommendBaseData(Model model, SiteConfineIpVo siteConfineIpVo, PlayerRecommendAwardListVo listVo, HttpServletRequest request) {
         //推荐设置参数
         SysParam reward = ParamTool.getSysParam(SiteParamEnum.SETTING_RECOMMENDED_REWARD);
         SysParam rewardMoney = ParamTool.getSysParam(SiteParamEnum.SETTING_RECOMMENDED_REWARD_MONEY);
@@ -157,7 +157,9 @@ public class PlayerRecommendAwardController {
         Map<String, SiteI18n> ruleMap = Cache.getSiteI18n(SiteI18nEnum.MASTER_RECOMMEND_RULE, SessionManager.getSiteId());
         model.addAttribute("rule", ruleMap.get(SessionManager.getLocale().toString()));
         Map<String, SiteI18n> contentMap = Cache.getSiteI18n(SiteI18nEnum.MASTER_RECOMMEND_CONTENT, SessionManager.getSiteId());
-        model.addAttribute("content", contentMap.get(SessionManager.getLocale().toString()));
+        SiteI18n siteI18n = contentMap.get(SessionManager.getLocale().toString());
+        model.addAttribute("content", siteI18n);
+
 
         //查询玩家
         UserPlayerVo userPlayerVo = new UserPlayerVo();
@@ -167,6 +169,9 @@ public class PlayerRecommendAwardController {
             model.addAttribute("player", userPlayerVo.getResult());
             String invitationCode = userPlayerVo.getResult().getRegistCode() + SessionManager.getUserId().toString();
             model.addAttribute("invitationCode", Base36.encryptIgnoreCase(invitationCode));
+            String value = siteI18n.getValue() == null ? "" :  siteI18n.getValue();
+            String inviteExclusive = value + "\n\n" + request.getServerName()+"/register.html?c="+Base36.encryptIgnoreCase(invitationCode);
+            model.addAttribute("inviteExclusive", inviteExclusive);
             LOG.info("玩家邀请码:[" + userPlayerVo.getResult().getRegistCode() + "][" + SessionManager.getUserId().toString() + "]" + Base36.encryptIgnoreCase(invitationCode));
         }
 

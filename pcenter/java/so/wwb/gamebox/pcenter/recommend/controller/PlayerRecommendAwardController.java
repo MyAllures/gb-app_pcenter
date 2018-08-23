@@ -170,7 +170,7 @@ public class PlayerRecommendAwardController {
             String invitationCode = userPlayerVo.getResult().getRegistCode() + SessionManager.getUserId().toString();
             model.addAttribute("invitationCode", Base36.encryptIgnoreCase(invitationCode));
             String value = siteI18n.getValue() == null ? "" :  siteI18n.getValue();
-            String inviteExclusive = value + "\n\n" + request.getServerName()+"/register.html?c="+Base36.encryptIgnoreCase(invitationCode);
+            String inviteExclusive = value + "\r\n\r\n" + request.getServerName()+"/register.html?c="+Base36.encryptIgnoreCase(invitationCode);
             model.addAttribute("inviteExclusive", inviteExclusive);
             LOG.info("玩家邀请码:[" + userPlayerVo.getResult().getRegistCode() + "][" + SessionManager.getUserId().toString() + "]" + Base36.encryptIgnoreCase(invitationCode));
         }

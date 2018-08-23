@@ -92,24 +92,22 @@ public class PlayerGameOrderController {
         Date today = SessionManager.getDate().getToday();
         Date maxDate = DateQuickPicker.getInstance().getTomorrow();//DateTool.addSeconds(SessionManagerBase.getDate().getTomorrow(), -1);
         Date minDate = DateTool.addDays(today, DATE_INTERVAL);
+        Date beginBetTime = listVo.getSearch().getBeginBetTime();
+        Date endBetTime = listVo.getSearch().getEndBetTime();
 
         if (PAYOUT_TIME.equals(listVo.getSearch().getTimeType())) { //payoutTime 按派彩时间查询
-            Date beginPayoutTime = listVo.getSearch().getBeginPayoutTime();
-            Date endPayoutTime = listVo.getSearch().getEndPayoutTime();
-            //默认查询今日数据
-            if (beginPayoutTime == null) {
+            listVo.getSearch().setEndPayoutTime(endBetTime);
+            listVo.getSearch().setBeginPayoutTime(beginBetTime);
+            if (beginBetTime == null) {
                 listVo.getSearch().setBeginPayoutTime(today);
-            } else if (beginPayoutTime.getTime() < minDate.getTime()) {
+            } else if (beginBetTime.getTime() < minDate.getTime()) {
                 listVo.getSearch().setBeginPayoutTime(minDate);
             }
 
-            if (endPayoutTime == null || endPayoutTime.getTime() > maxDate.getTime()) {
+            if (endBetTime == null || endBetTime.getTime() > maxDate.getTime()) {
                 listVo.getSearch().setEndPayoutTime(maxDate);
             }
         } else { //默认按投注时间查询 betTime
-            Date beginBetTime = listVo.getSearch().getBeginBetTime();
-            Date endBetTime = listVo.getSearch().getEndBetTime();
-            //默认查询今日数据
             if (beginBetTime == null) {
                 listVo.getSearch().setBeginBetTime(today);
             } else if (beginBetTime.getTime() < minDate.getTime()) {

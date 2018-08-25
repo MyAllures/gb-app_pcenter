@@ -634,7 +634,8 @@ public class PersonalInfoController {
         }
 
         boolean success = MessageSendTool.sendMessage(phone, request);
-
+        String verificationCode = SessionManagerCommon.getCheckRegisterPhoneInfo().get("code");
+        setToSession(phone, verificationCode, PHONE);
         map.put("state", success);
         return map;
     }

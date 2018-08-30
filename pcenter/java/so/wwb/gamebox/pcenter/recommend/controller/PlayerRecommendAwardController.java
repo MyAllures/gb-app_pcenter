@@ -77,7 +77,7 @@ public class PlayerRecommendAwardController {
             getRecord(listVo, model);
             getTotalRecommend(listVo, model);
         } else {
-            recommendBaseData(model, new SiteConfineIpVo(), listVo,request);
+            recommendBaseData(model, new SiteConfineIpVo(), listVo, request);
         }
         if (ServletTool.isAjaxSoulRequest(request) && StringTool.isBlank(type)) {
             return getViewBasePath() + "RecommendPartial";
@@ -165,14 +165,18 @@ public class PlayerRecommendAwardController {
         UserPlayerVo userPlayerVo = new UserPlayerVo();
         userPlayerVo.getSearch().setId(SessionManager.getUserId());
         userPlayerVo = ServiceSiteTool.userPlayerService().get(userPlayerVo);
-        if(userPlayerVo.getResult()!=null){
+        if (userPlayerVo.getResult() != null) {
             model.addAttribute("player", userPlayerVo.getResult());
             String invitationCode = userPlayerVo.getResult().getRegistCode() + SessionManager.getUserId().toString();
             model.addAttribute("invitationCode", Base36.encryptIgnoreCase(invitationCode));
-            String value = siteI18n.getValue() == null ? "" :  siteI18n.getValue();
-            String inviteExclusive = value + "\r\n\r\n" + request.getServerName()+"/register.html?c="+Base36.encryptIgnoreCase(invitationCode);
+            String value = "";
+            if (siteI18n != null) {
+                value = siteI18n.getValue() == null ? "" : siteI18n.getValue();
+                value = value + "\r\n\r\n";
+            }
+            String inviteExclusive = value + request.getServerName() + "/register.html?c=" + Base36.encryptIgnoreCase(invitationCode);
             model.addAttribute("inviteExclusive", inviteExclusive);
-            LOG.info("玩家邀请码:[" + userPlayerVo.getResult().getRegistCode() + "][" + SessionManager.getUserId().toString() + "][" + Base36.encryptIgnoreCase(invitationCode)+"]{"+inviteExclusive+"}");
+            LOG.info("玩家邀请码:[" + userPlayerVo.getResult().getRegistCode() + "][" + SessionManager.getUserId().toString() + "][" + Base36.encryptIgnoreCase(invitationCode) + "]{" + inviteExclusive + "}");
         }
 
         //查询玩家主货币

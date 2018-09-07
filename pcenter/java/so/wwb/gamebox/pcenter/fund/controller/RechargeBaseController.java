@@ -29,6 +29,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.common.dubbo.ServiceActivityTool;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
@@ -65,7 +66,6 @@ import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.model.master.player.po.UserPlayer;
 import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
 import so.wwb.gamebox.pcenter.session.SessionManager;
-import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.web.common.token.TokenHandler;
 import so.wwb.gamebox.web.passport.captcha.CaptchaUrlEnum;
 
@@ -523,12 +523,15 @@ public abstract class RechargeBaseController {
     public PayAccount getPayAccountBySearchId(String searchId) {
         PayAccountVo payAccountVo = new PayAccountVo();
         payAccountVo.setSearchId(searchId);
-        payAccountVo = ServiceSiteTool.payAccountService().get(payAccountVo);
+        payAccountVo.getSearch().setPlayerId(SessionManager.getUserId());
+        payAccountVo = ServiceSiteTool.payAccountService().queryAccountByAccountIdAndPlayerId(payAccountVo);//查询可用的账户
         PayAccount payAccount = payAccountVo.getResult();
         if (payAccount != null && !PayAccountStatusEnum.USING.getCode().equals(payAccount.getStatus())) {
             LOG.info("账号{0}已停用,故返回收款账号null", payAccount.getPayName());
             return null;
         }
+        //玩家层级
+
         return payAccount;
     }
 

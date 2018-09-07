@@ -11,7 +11,13 @@
         </div>
         <div class="rgeechar">
             <div class="history btnalign">
-                <span class="pull-left">${views.gameOrder_auto['投注日期']}：</span>
+                <%--<span class="pull-left">${views.gameOrder_auto['投注日期']}：</span>--%>
+                    <%--派彩时间 payoutTime  投注时间 betTime--%>
+                <select name="search.timeType" data-placeholder="${views.operation_auto['请选择']}">
+                    <option value="betTime">${views.gameOrder_auto['投注时间']}</option>
+                    <option value="payoutTime">${views.gameOrder_auto['派彩时间']}</option>
+                </select>
+
                 <gb:dateRange style="width:170px;" inputStyle="width:150px" format="${DateFormat.DAY_SECOND}"
                               useToday="true" useRange="true" position="down" btnClass="search"
                               minDate="${command.minDate}" maxDate="${command.maxDate}"

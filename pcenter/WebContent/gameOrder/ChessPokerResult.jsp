@@ -52,6 +52,7 @@
         </c:if>
     </c:when>
 
+
     <%--乐游棋牌--%>
     <c:when test="${p.apiId==46}">
         <%--德州扑克--%>
@@ -72,7 +73,7 @@
         </c:if>
         <%--三公--%>
         <c:if test="${betType eq '860'}">
-            <c:set var="betType" value="THREE_FACE"/>
+            <c:set var="betType" value="LEG_THREE_FACE"/>
         </c:if>
         <%--押庄龙虎--%>
         <c:if test="${betType eq '900'}">
@@ -84,7 +85,7 @@
         </c:if>
         <%--通比牛牛--%>
         <c:if test="${betType eq '870'}">
-            <c:set var="betType" value="BULL_BULL"/>
+            <c:set var="betType" value="LEG_TB_BULL"/>
         </c:if>
         <%--欢乐红包--%>
         <c:if test="${betType eq '880'}">
@@ -95,9 +96,9 @@
             <c:set var="betType" value="GOLDEN_FRIED"/>
         </c:if>
         <%--抢庄牌九--%>
-        <%--<c:if test="${betType eq '730'}">
-            <c:set var="betType" value="RED_ENVELOPE"/>
-        </c:if>--%>
+        <c:if test="${betType eq '730'}">
+            <c:set var="betType" value="LEG_PAIJIU"/>
+        </c:if>
         <%--斗地主--%>
         <c:if test="${betType eq '610'}">
             <c:set var="betType" value="DDZ"/>

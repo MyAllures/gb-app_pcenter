@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.common.dubbo.ServiceGameApiTool;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
@@ -42,7 +43,6 @@ import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderDetailVo;
 import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderListVo;
 import so.wwb.gamebox.model.master.player.vo.PlayerGameOrderVo;
 import so.wwb.gamebox.pcenter.session.SessionManager;
-import so.wwb.gamebox.common.cache.Cache;
 import so.wwb.gamebox.web.common.demomodel.DemoMenuEnum;
 import so.wwb.gamebox.web.common.demomodel.DemoModel;
 import so.wwb.gamebox.web.report.betting.form.PlayerGameOrderDetailSearchForm;
@@ -65,6 +65,14 @@ public class PlayerGameOrderController {
     private static final String INDEX_URI = "/gameOrder/Index";
     private static final String INDEX_PARTIAL_URI = "/gameOrder/IndexPartial";
     /**
+     * 派彩时间 payoutTime
+     */
+    private static final String PAYOUT_TIME = "payoutTime";
+    /**
+     * 投注时间 betTime
+     */
+    private static final String BET_TIME = "betTime";
+    /**
      * 选择游戏类型页面
      */
     private static final String GAME_URI = "/gameOrder/Game";
@@ -85,16 +93,32 @@ public class PlayerGameOrderController {
         Date maxDate = DateQuickPicker.getInstance().getTomorrow();//DateTool.addSeconds(SessionManagerBase.getDate().getTomorrow(), -1);
         Date minDate = DateTool.addDays(today, DATE_INTERVAL);
         Date beginBetTime = listVo.getSearch().getBeginBetTime();
-        //默认查询今日数据
-        if (beginBetTime == null) {
-            listVo.getSearch().setBeginBetTime(today);
-        } else if (beginBetTime.getTime() < minDate.getTime()) {
-            listVo.getSearch().setBeginBetTime(minDate);
-        }
         Date endBetTime = listVo.getSearch().getEndBetTime();
-        if (endBetTime == null || endBetTime.getTime() > maxDate.getTime()) {
-            listVo.getSearch().setEndBetTime(maxDate);
+
+        if (PAYOUT_TIME.equals(listVo.getSearch().getTimeType())) { //payoutTime 按派彩时间查询
+            listVo.getSearch().setEndPayoutTime(endBetTime);
+            listVo.getSearch().setBeginPayoutTime(beginBetTime);
+            if (beginBetTime == null) {
+                listVo.getSearch().setBeginPayoutTime(today);
+            } else if (beginBetTime.getTime() < minDate.getTime()) {
+                listVo.getSearch().setBeginPayoutTime(minDate);
+            }
+
+            if (endBetTime == null || endBetTime.getTime() > maxDate.getTime()) {
+                listVo.getSearch().setEndPayoutTime(maxDate);
+            }
+        } else { //默认按投注时间查询 betTime
+            if (beginBetTime == null) {
+                listVo.getSearch().setBeginBetTime(today);
+            } else if (beginBetTime.getTime() < minDate.getTime()) {
+                listVo.getSearch().setBeginBetTime(minDate);
+            }
+
+            if (endBetTime == null || endBetTime.getTime() > maxDate.getTime()) {
+                listVo.getSearch().setEndBetTime(maxDate);
+            }
         }
+
         listVo.setMinDate(minDate);
         listVo.setMaxDate(maxDate);
         listVo.getSearch().setPlayerId(SessionManager.getUserId());

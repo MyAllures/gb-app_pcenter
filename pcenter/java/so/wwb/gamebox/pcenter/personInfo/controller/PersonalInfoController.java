@@ -40,6 +40,7 @@ import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.common.dubbo.ServiceTool;
 import so.wwb.gamebox.model.*;
 import so.wwb.gamebox.model.common.Audit;
+import so.wwb.gamebox.model.common.RegExpConstants;
 import so.wwb.gamebox.model.common.notice.enums.ContactWayType;
 import so.wwb.gamebox.model.company.enums.SiteOperateStatusEnum;
 import so.wwb.gamebox.model.company.site.po.SiteOperateArea;
@@ -65,6 +66,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.Serializable;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created by eagle on 15-10-29.
@@ -96,7 +98,7 @@ public class PersonalInfoController {
     @RequestMapping("/index")
     @DemoModel(menuCode = DemoMenuEnum.GRZL)
     @Token(generate = true)
-    public String index(Model model, HttpServletRequest request) {
+    public String index(Model model) {
         //获取玩家资料信息展示
         SysParam personalInformation = ParamTool.getSysParam(SiteParamEnum.CONNECTION_SETTING_PERSONAL_INFORMATION);
         model.addAttribute("personal_information", personalInformation);
@@ -151,8 +153,6 @@ public class PersonalInfoController {
         model.addAttribute("playerCallMaster", ParamTool.playerCallMaster());
 
         model.addAttribute("openPhoneCall", ParamTool.isOpenPhoneCall());
-
-        model.addAttribute("verificationCodeToken", VerificationCodeTool.generateVerificationCodeToken(request));//获取手机验证码请求时的token
 
         return PERSON_INFO_PERSON_INFO;
 
@@ -605,10 +605,10 @@ public class PersonalInfoController {
      */
     @RequestMapping("/getPhoneVerificationCode")
     @ResponseBody
-    public Map getPhoneVerificationCode(String phone, String verificationCodeToken, HttpServletRequest request) {
+    public Map getPhoneVerificationCode(String phone,HttpServletRequest request) {
 
         Map map = new HashMap();
-        if (phone == null || "".equals(phone)) {
+        if (phone == null || "".equals(phone) || !Pattern.matches(RegExpConstants.CELL_PHONE, phone)) {
             map.put("state", false);
             map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.notBlank"));
             return map;
@@ -619,20 +619,17 @@ public class PersonalInfoController {
             map.put("msg", LocaleTool.tranMessage(Module.MASTER_SETTING, "personal.phone.format.error"));
             return map;
         }
-        //90秒后可以重新提交
-        if (!SessionManagerCommon.canSendRegisterPhone()) {
-            map.put("state", false);
-            return map;
-        }
 
-        //防刷，IP+USER-AGENT
-        if (!VerificationCodeTool.validVerificationCodeToken(verificationCodeToken, request)) {
+        //IP防刷，同一个IP90s内有重复，就不发送短信
+        if (VerificationCodeTool.validIp(request)) {
             map.put("state", false);
+            map.put("msg", "请在90秒后再申请验证码");
             return map;
         }
 
         boolean success = MessageSendTool.sendMessage(phone, request);
-
+        String verificationCode = SessionManagerCommon.getCheckRegisterPhoneInfo().get("code");
+        setToSession(phone, verificationCode, PHONE);
         map.put("state", success);
         return map;
     }

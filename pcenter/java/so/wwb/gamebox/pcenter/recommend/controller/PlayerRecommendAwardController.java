@@ -1,6 +1,7 @@
 package so.wwb.gamebox.pcenter.recommend.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.soul.commons.collections.MapTool;
 import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
@@ -157,7 +158,7 @@ public class PlayerRecommendAwardController {
         Map<String, SiteI18n> ruleMap = Cache.getSiteI18n(SiteI18nEnum.MASTER_RECOMMEND_RULE, SessionManager.getSiteId());
         model.addAttribute("rule", ruleMap.get(SessionManager.getLocale().toString()));
         Map<String, SiteI18n> contentMap = Cache.getSiteI18n(SiteI18nEnum.MASTER_RECOMMEND_CONTENT, SessionManager.getSiteId());
-        SiteI18n siteI18n = contentMap.get(SessionManager.getLocale().toString());
+        SiteI18n siteI18n = MapTool.isEmpty(contentMap) ? new SiteI18n() : contentMap.get(SessionManager.getLocale().toString());
         model.addAttribute("content", siteI18n);
 
 

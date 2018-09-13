@@ -34,7 +34,7 @@
         </c:if>
         <%--21 点--%>
         <c:if test="${betType eq '600'}">
-            <c:set var="betType" value="LEG_BLACKJACK"/>
+            <c:set var="betType" value="BLACKJACK"/>
         </c:if>
         <%--通比牛牛--%>
         <c:if test="${betType eq '870'}">

@@ -34,7 +34,7 @@
         </c:if>
         <%--21 点--%>
         <c:if test="${betType eq '600'}">
-            <c:set var="betType" value="LEG_BLACKJACK"/>
+            <c:set var="betType" value="BLACKJACK"/>
         </c:if>
         <%--通比牛牛--%>
         <c:if test="${betType eq '870'}">
@@ -132,6 +132,17 @@
             <c:set var="betType" value="BLACKJACK"/>
         </c:if>
     </c:when>
-
+    <%--SG 棋牌--%>
+    <c:when test="${p.apiId==47}">
+        <c:if test="${betType eq 'qznn'||betType eq 'qzsz' || betType eq 'tbnn'|| betType eq 'sg'|| betType eq 'zjh'}">
+            <c:set var="betType" value="BULL_BULL"/>
+        </c:if>
+        <c:if test="${betType eq 'dice'}">
+            <c:set var="betType" value="SICBO"/>
+        </c:if>
+        <c:if test="${betType eq 'ebg'}">
+            <c:set var="betType" value="MAHJONG_TILES"/>
+        </c:if>
+    </c:when>
 </c:choose>
 <gb:chessPokerCardResult betType="${betType}" commonPorker="${resultVo.commonPorker}" porkerListSet="${resultVo.porkerListSet}" porkerList="${resultVo.porkerList}"/>

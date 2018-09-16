@@ -343,7 +343,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
             return false;
         }
         //计算手续费
-        double fee = calculateFee(rank, amount);
+        double fee = calculateFeeSchemaAndRank(rank, amount,account);
         return (amount + fee) > 0;
     }
 

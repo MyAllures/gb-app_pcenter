@@ -1,15 +1,11 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
-import org.soul.commons.net.ServletTool;
 import org.soul.commons.security.CryptoTool;
-import org.soul.model.pay.enums.CommonFieldsConst;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
@@ -42,7 +38,6 @@ import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.common.token.Token;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -342,7 +337,8 @@ public class OnlineRechargeController extends RechargeBaseController {
         if ((max != null && max < amount) || (min != null && min > amount)) {
             return false;
         }
-        double fee = calculateFee(rank, amount);
+        String account = CryptoTool.aesEncrypt(String.valueOf(payAccount.getId()), "BaseVo");//calculateFeeSchemaAndRank方法中id是加密的,所以调用前加密
+        double fee = calculateFeeSchemaAndRank(rank, amount,account);
         return (amount + fee) > 0;
     }
 

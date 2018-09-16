@@ -23,30 +23,29 @@ import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
-import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
-import so.wwb.gamebox.model.master.dataRight.po.SysUserDataRight;
-import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightVo;
 import so.wwb.gamebox.model.master.enums.DepositWayEnum;
 import so.wwb.gamebox.model.master.enums.PayAccountAccountType;
 import so.wwb.gamebox.model.master.enums.PayAccountType;
 import so.wwb.gamebox.model.master.fund.enums.RechargeStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
-import so.wwb.gamebox.model.master.fund.enums.RechargeTypeParentEnum;
 import so.wwb.gamebox.model.master.fund.po.PlayerRecharge;
 import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeListVo;
 import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
 import so.wwb.gamebox.model.master.operation.po.ActivityDepositWay;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
-import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
-import so.wwb.gamebox.pcenter.fund.form.*;
+import so.wwb.gamebox.pcenter.fund.form.AtmCounterForm;
+import so.wwb.gamebox.pcenter.fund.form.BitCoinPayForm;
+import so.wwb.gamebox.pcenter.fund.form.OnlineBankForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
 import so.wwb.gamebox.web.common.token.Token;
 import so.wwb.gamebox.web.common.token.TokenHandler;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cherry on 16-9-11.
@@ -312,7 +311,8 @@ public class CompanyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/checkAmount")
     @ResponseBody
-    public boolean checkAmount(@RequestParam("result.rechargeAmount") String rechargeAmount) {
+    public boolean checkAmount(@RequestParam("result.rechargeAmount") String rechargeAmount,
+                               @RequestParam("account") String account) {
         PlayerRank rank = getRank();
         double amount = NumberTool.toDouble(rechargeAmount);
         Long max = rank.getOnlinePayMax();
@@ -320,7 +320,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         if ((max != null && max < amount) || (min != null && min > amount)) {
             return false;
         }
-        double fee = calculateFee(rank, amount);
+        double fee = calculateFeeSchemaAndRank(rank, amount, account);
         return (amount + fee) > 0;
     }
 

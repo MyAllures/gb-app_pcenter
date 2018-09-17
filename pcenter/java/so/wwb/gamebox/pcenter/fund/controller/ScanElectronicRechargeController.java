@@ -1,10 +1,13 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
 import org.soul.commons.collections.CollectionTool;
+import org.soul.commons.collections.MapTool;
+import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.math.NumberTool;
+import org.soul.model.log.audit.enums.OpType;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
 import so.wwb.gamebox.model.*;
+import so.wwb.gamebox.model.common.Audit;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
@@ -29,6 +33,7 @@ import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.fund.form.ScanElectronicRechargeForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
+import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.common.token.Token;
 
 import javax.servlet.http.HttpServletRequest;
@@ -343,7 +348,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
             return false;
         }
         //计算手续费
-        double fee = calculateFeeSchemaAndRank(rank, amount,account);
+        double fee = calculateFeeSchemaAndRank(rank, amount,account, null);
         return (amount + fee) > 0;
     }
 
@@ -376,6 +381,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
     @RequestMapping("/submit")
     @ResponseBody
     @Token(valid = true)
+    @Audit(module = Module.MASTER_OPERATION, moduleType = ModuleType.PLAYER_RECHARGE, opType = OpType.CREATE)
     public Map<String, Object> submit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return getResultMsg(false, LocaleTool.tranView(Module.FUND.getCode(), MessageI18nConst.RECHARGE_PARAMS_DATA_ERROR), null);
@@ -414,7 +420,16 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
                 rechargeType = RechargeTypeEnum.EASY_PAY.getCode();
             }
             playerRecharge.setRechargeType(rechargeType);
-            return commonOnlineSubmit(playerRechargeVo, payAccount, request);
+            Map<String, Object> rtnMap = commonOnlineSubmit(playerRechargeVo, payAccount, request);
+            //存款记录保存完成,记录各个参数日志
+            if (MapTool.getBoolean(rtnMap, "state")) {
+                BussAuditLogTool.addLog("PLAYER_RECHARGE",
+                        MapTool.getString(rtnMap,"transactionNo"),
+                        (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
+                                JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo())).replace("{", "").replace("}", ""));
+            }
+            return rtnMap;
+
         }
     }
 
@@ -430,6 +445,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
     @RequestMapping("/electronicSubmit")
     @ResponseBody
     @Token(valid = true)
+    @Audit(module = Module.MASTER_OPERATION, moduleType = ModuleType.PLAYER_RECHARGE, opType = OpType.CREATE)
     public Map<String, Object> electronicSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid ScanElectronicRechargeForm form, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return getResultMsg(false, null, null);

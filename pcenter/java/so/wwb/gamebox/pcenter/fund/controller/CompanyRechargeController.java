@@ -1,12 +1,15 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
 import org.soul.commons.collections.CollectionTool;
+import org.soul.commons.collections.MapTool;
+import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.SystemTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
+import org.soul.model.log.audit.enums.OpType;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
@@ -16,9 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
-import so.wwb.gamebox.model.DictEnum;
-import so.wwb.gamebox.model.ParamTool;
-import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.*;
+import so.wwb.gamebox.model.common.Audit;
 import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
@@ -37,6 +39,7 @@ import so.wwb.gamebox.pcenter.fund.form.AtmCounterForm;
 import so.wwb.gamebox.pcenter.fund.form.BitCoinPayForm;
 import so.wwb.gamebox.pcenter.fund.form.OnlineBankForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
+import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.common.token.Token;
 import so.wwb.gamebox.web.common.token.TokenHandler;
 
@@ -229,8 +232,17 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("/onlineBankSubmit")
     @ResponseBody
     @Token(valid = true)
+    @Audit(module = Module.MASTER_OPERATION, moduleType = ModuleType.PLAYER_RECHARGE, opType = OpType.CREATE)
     public Map<String, Object> onlineBankSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlineBankForm form, BindingResult result) {
-        return commonCompanyRechargeSubmit(playerRechargeVo, result, RechargeTypeEnum.ONLINE_BANK.getCode());
+        Map<String, Object> rtnMap = commonCompanyRechargeSubmit(playerRechargeVo, result, RechargeTypeEnum.ONLINE_BANK.getCode());
+        //存款记录保存完成,记录各个参数日志
+        if (MapTool.getBoolean(rtnMap, "state")) {
+            BussAuditLogTool.addLog("PLAYER_RECHARGE",
+                    MapTool.getString(rtnMap,"transactionNo"),
+                    (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
+                            JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo())).replace("{", "").replace("}", ""));
+        }
+        return rtnMap;
     }
 
     /**
@@ -320,7 +332,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         if ((max != null && max < amount) || (min != null && min > amount)) {
             return false;
         }
-        double fee = calculateFeeSchemaAndRank(rank, amount, account);
+        double fee = calculateFeeSchemaAndRank(rank, amount, account,null);
         return (amount + fee) > 0;
     }
 

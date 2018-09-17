@@ -107,7 +107,7 @@ public abstract class RechargeBaseController {
     public Map<String, Object> counterFee(@RequestParam("result.rechargeAmount") String rechargeAmount, @RequestParam("type") String type,
                                           @RequestParam("account") String account) {
         double amount = NumberTool.toDouble(rechargeAmount);
-        double fee = calculateFeeSchemaAndRank(getRank(), amount, account);
+        double fee = calculateFeeSchemaAndRank(getRank(), amount, account, null);
         Map<String, Object> map = new HashMap<>();
         map.put("counterFee", getCurrencySign() + CurrencyTool.formatCurrency(Math.abs(fee)));
         map.put("fee", fee);
@@ -125,7 +125,7 @@ public abstract class RechargeBaseController {
      * @param rechargeAmount 存款金额
      * @return
      */
-    public double calculateFee(PlayerRank rank, double rechargeAmount) {
+    private double calculateFee(PlayerRank rank, double rechargeAmount) {
         if (rank == null) {
             return 0d;
         }
@@ -161,71 +161,52 @@ public abstract class RechargeBaseController {
         return fee;
     }
 
+
     /**
-     * 计算手续费:存款手续费方案或者层级手续费
-     *
-     * @param rechargeAmount 存款金额
+     * 计算手续费:存款手续费方案或者层级手续费     *
+     * @param rank
+     * @param rechargeAmount
+     * @param account
+     * @param playerRechargeVo 传入playerRechargeVo是方便查出层级和手续费方案,存入到playerRechargeVo中方便后续写入日志
      * @return
      */
-    public double calculateFeeSchemaAndRank(PlayerRank rank, double rechargeAmount, String account) {
+    public double calculateFeeSchemaAndRank(PlayerRank rank, double rechargeAmount, String account, PlayerRechargeVo playerRechargeVo) {
 
         //计算手续费方案收取的手续费金额
-        RechargeFeeSchemaVo schemaVo = calculateFeeSchema(rechargeAmount, account);
+        if (playerRechargeVo == null){
+            playerRechargeVo = new PlayerRechargeVo();
+            playerRechargeVo.setAccount(account);
+        }
+
+        playerRechargeVo.setPlayerRank(rank);//为后续日志
+        //计算手续费方案收取的手续费金额
+        playerRechargeVo = calculateFeeSchema(rechargeAmount, playerRechargeVo);
+        RechargeFeeSchemaVo schemaVo = playerRechargeVo.getRechargeFeeSchemaVo();
         if (schemaVo.getISSchema()){
             return schemaVo.getFeeAmount();
         }
         //不用手续费方案,就计算层级的费用设置
-        if (rank == null) {
-            return 0d;
-        }
-        //手续费标志
-        boolean isFee = !(rank.getIsFee() == null || !rank.getIsFee());
-        //返手续费标志
-        boolean isReturnFee = !(rank.getIsReturnFee() == null || !rank.getIsReturnFee());
-        if (!isFee && !isReturnFee) {
-            return 0d;
-        }
-        if (isReturnFee && rechargeAmount < rank.getReachMoney()) {
-            return 0d;
-        }
-        // 规定时间内存款次数
-        long count = getDepositCountInTime(rank, isFee, isReturnFee);
-        if (isFee && rank.getFreeCount() != null && count < rank.getFreeCount()) {
-            return 0d;
-        }
-        if (isReturnFee && rank.getReturnFeeCount() != null && count >= rank.getReturnFeeCount()) {
-            return 0d;
-        }
-        double fee = 0d;
-        if (isFee && rank.getFeeMoney() != null) {
-            fee = computeFee(rank.getFeeType(), rank.getFeeMoney(), rechargeAmount, rank.getMaxFee());
-        } else if (isReturnFee && rank.getReturnMoney() != null) {
-            fee = computeFee(rank.getReturnType(), rank.getReturnMoney(), rechargeAmount, rank.getMaxReturnFee());
-        }
-        if (isFee) {
-            fee = -Math.abs(fee);
-        } else {
-            fee = Math.abs(fee);
-        }
-        return fee;
+        return calculateFee(rank, rechargeAmount);
     }
 
-    /**
-     * 计算手续费方案收取的手续费金额
+
+    /**计算手续费方案收取的手续费金额
+     *
      * @param rechargeAmount
-     * @param account
+     * @param playerRechargeVo
      * @return
      */
-    public RechargeFeeSchemaVo calculateFeeSchema(double rechargeAmount, String account) {
+    private PlayerRechargeVo calculateFeeSchema(double rechargeAmount, PlayerRechargeVo playerRechargeVo) {
         //查询手续费方案
         PayAccountVo accountVo = new PayAccountVo();
-        accountVo.setSearchId(account);
+        accountVo.setSearchId(playerRechargeVo.getAccount());
         RechargeFeeSchemaVo schemaVo = ServiceSiteTool.rechargeFeeSchemaService().searchFeeSchemaUseAccountId(accountVo);
+        playerRechargeVo.setRechargeFeeSchemaVo(schemaVo);
         RechargeFeeSchema schema = schemaVo.getResult();
         //是否收取或者返还:手续费为空,
         if (schema == null) {
             schemaVo.setISSchema(false);
-            return schemaVo;
+            return playerRechargeVo;
         }
 
         //其余情况都是要收取的
@@ -241,19 +222,19 @@ public abstract class RechargeBaseController {
 
         //有手续费方案关联,但不收不返
         if (!isFee && !isReturnFee) {
-            return schemaVo;
+            return playerRechargeVo;
         }
         //返还达不到金额要求
         if (isReturnFee && rechargeAmount < schema.getReachMoney()) {
-            return schemaVo;
+            return playerRechargeVo;
         }
         // 规定时间内存款次数
         long count = getDepositFeeSchemaCountInTime(schema, isFee, isReturnFee);
         if (isFee && schema.getFreeCount() != null && count < schema.getFreeCount()) {
-            return schemaVo;
+            return playerRechargeVo;
         }
         if (isReturnFee && schema.getReturnFeeCount() != null && count >= schema.getReturnFeeCount()) {
-            return schemaVo;
+            return playerRechargeVo;
         }
 
         //费用计算
@@ -268,7 +249,7 @@ public abstract class RechargeBaseController {
             fee = Math.abs(fee);
         }
         schemaVo.setFeeAmount(fee);
-        return schemaVo;
+        return playerRechargeVo;
 
     }
 
@@ -352,7 +333,7 @@ public abstract class RechargeBaseController {
         PlayerRecharge playerRecharge = playerRechargeVo.getResult();
         playerRecharge.setRechargeTypeParent(rechargeTypeParent);
         playerRecharge.setRechargeType(rechargeType);
-        playerRecharge.setCounterFee(calculateFeeSchemaAndRank(rank, playerRecharge.getRechargeAmount(),playerRechargeVo.getAccount()));
+        playerRecharge.setCounterFee(calculateFeeSchemaAndRank(rank, playerRecharge.getRechargeAmount(),playerRechargeVo.getAccount(), playerRechargeVo));
         playerRecharge.setPlayerId(SessionManager.getUserId());
         playerRecharge.setMasterBankType(payAccount.getAccountType());
         playerRecharge.setPayAccountId(payAccount.getId());
@@ -852,7 +833,7 @@ public abstract class RechargeBaseController {
     public Map<String, Object> companyRechargeConfirmInfo(PlayerRechargeVo playerRechargeVo) {
         PlayerRank rank = getRank();
         Double rechargeAmount = playerRechargeVo.getResult().getRechargeAmount();
-        double fee = calculateFeeSchemaAndRank(rank, rechargeAmount,playerRechargeVo.getAccount());
+        double fee = calculateFeeSchemaAndRank(rank, rechargeAmount,playerRechargeVo.getAccount(), playerRechargeVo);
         Map<String, Object> map = new HashMap<>(7, 1f);
         map.put("state", true);
         map.put("fee", fee);

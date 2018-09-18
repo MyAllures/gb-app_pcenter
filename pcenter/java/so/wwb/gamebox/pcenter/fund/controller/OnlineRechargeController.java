@@ -179,7 +179,7 @@ public class OnlineRechargeController extends RechargeBaseController {
             BussAuditLogTool.addLog("PLAYER_RECHARGE",
                     MapTool.getString(rtnMap,"transactionNo"),
                     (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
-                            JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo())).replace("{", "").replace("}", ""));
+                            JsonTool.toJson(playerRechargeVo.getPlayerRank())).replace("{", "").replace("}", ""));
         }
         return rtnMap;
 

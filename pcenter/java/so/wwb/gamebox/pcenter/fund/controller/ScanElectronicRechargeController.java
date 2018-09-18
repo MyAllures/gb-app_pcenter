@@ -426,7 +426,7 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
                 BussAuditLogTool.addLog("PLAYER_RECHARGE",
                         MapTool.getString(rtnMap,"transactionNo"),
                         (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
-                                JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo())).replace("{", "").replace("}", ""));
+                                JsonTool.toJson(playerRechargeVo.getPlayerRank())).replace("{", "").replace("}", ""));
             }
             return rtnMap;
 
@@ -469,7 +469,15 @@ public class ScanElectronicRechargeController extends RechargeBaseController {
         } else if (BankCodeEnum.OTHER.getCode().equals(bankCode)) {
             rechargeType = RechargeTypeEnum.OTHER_FAST.getCode();
         }
-        return companySaveRecharge(playerRechargeVo, payAccount, rechargeType);
+        Map<String, Object> rtnMap = companySaveRecharge(playerRechargeVo, payAccount, rechargeType);
+        //存款记录保存完成,记录各个参数日志
+        if (MapTool.getBoolean(rtnMap, "state")) {
+            BussAuditLogTool.addLog("PLAYER_RECHARGE",
+                    MapTool.getString(rtnMap,"transactionNo"),
+                    (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
+                            JsonTool.toJson(playerRechargeVo.getPlayerRank())).replace("{", "").replace("}", ""));
+        }
+        return rtnMap;
     }
 
 }

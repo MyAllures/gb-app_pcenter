@@ -240,7 +240,7 @@ public class CompanyRechargeController extends RechargeBaseController {
             BussAuditLogTool.addLog("PLAYER_RECHARGE",
                     MapTool.getString(rtnMap,"transactionNo"),
                     (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
-                            JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo())).replace("{", "").replace("}", ""));
+                            JsonTool.toJson(playerRechargeVo.getPlayerRank())).replace("{", "").replace("}", ""));
         }
         return rtnMap;
     }
@@ -282,6 +282,7 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("/bitCoinSubmit")
     @ResponseBody
     @Token(valid = true)
+    @Audit(module = Module.MASTER_OPERATION, moduleType = ModuleType.PLAYER_RECHARGE, opType = OpType.CREATE)
     public Map<String, Object> bitCoinSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid BitCoinPayForm form, BindingResult result) {
         if (result.hasErrors()) {
             return getResultMsg(false, null, null);
@@ -292,7 +293,15 @@ public class CompanyRechargeController extends RechargeBaseController {
         }
         String rechargeType = RechargeTypeEnum.BITCOIN_FAST.getCode();
         playerRechargeVo.getResult().setRechargeAmount(0d);
-        return companySaveRecharge(playerRechargeVo, payAccount, rechargeType);
+        Map<String, Object> rtnMap = companySaveRecharge(playerRechargeVo, payAccount, rechargeType);
+        //存款记录保存完成,记录各个参数日志
+        if (MapTool.getBoolean(rtnMap, "state")) {
+            BussAuditLogTool.addLog("PLAYER_RECHARGE",
+                    MapTool.getString(rtnMap,"transactionNo"),
+                    (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
+                            JsonTool.toJson(playerRechargeVo.getPlayerRank())).replace("{", "").replace("}", ""));
+        }
+        return rtnMap;
     }
 
 
@@ -307,12 +316,21 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("atmCounterSubmit")
     @ResponseBody
     @Token(valid = true)
+    @Audit(module = Module.MASTER_OPERATION, moduleType = ModuleType.PLAYER_RECHARGE, opType = OpType.CREATE)
     public Map<String, Object> atmCounterSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid AtmCounterForm form, BindingResult result) {
         String rechargeType = playerRechargeVo.getResult().getRechargeType();
         if (!RechargeTypeEnum.ATM_COUNTER.getCode().equals(rechargeType) && !RechargeTypeEnum.ATM_MONEY.getCode().equals(rechargeType) && !RechargeTypeEnum.ATM_RECHARGE.getCode().equals(rechargeType)) {
             rechargeType = RechargeTypeEnum.ATM_COUNTER.getCode();
         }
-        return commonCompanyRechargeSubmit(playerRechargeVo, result, rechargeType);
+        Map<String, Object> rtnMap = commonCompanyRechargeSubmit(playerRechargeVo, result, rechargeType);
+        //存款记录保存完成,记录各个参数日志
+        if (MapTool.getBoolean(rtnMap, "state")) {
+            BussAuditLogTool.addLog("PLAYER_RECHARGE",
+                    MapTool.getString(rtnMap,"transactionNo"),
+                    (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
+                            JsonTool.toJson(playerRechargeVo.getPlayerRank())).replace("{", "").replace("}", ""));
+        }
+        return rtnMap;
     }
 
     /**

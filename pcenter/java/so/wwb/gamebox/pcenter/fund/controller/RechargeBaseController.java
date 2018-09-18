@@ -881,6 +881,6 @@ public abstract class RechargeBaseController {
             //设置session相关存款数据
             setRechargeCount();
         }
-        return getResultMsg(playerRechargeVo.isSuccess(), null, null);
+        return getResultMsg(playerRechargeVo.isSuccess(), null, playerRechargeVo.getResult()==null?null:playerRechargeVo.getResult().getTransactionNo());
     }
 }

@@ -229,7 +229,7 @@ public abstract class RechargeBaseController {
             return playerRechargeVo;
         }
         // 规定时间内存款次数
-        long count = getDepositFeeSchemaCountInTime(schema, isFee, isReturnFee);
+        long count = getDepositFeeSchemaCountInTime(schema, isFee, isReturnFee, accountVo);
         if (isFee && schema.getFreeCount() != null && count < schema.getFreeCount()) {
             return playerRechargeVo;
         }
@@ -306,7 +306,7 @@ public abstract class RechargeBaseController {
      * @param isReturnFee 返手续费标志
      * @return
      */
-    private long getDepositFeeSchemaCountInTime(RechargeFeeSchema schema, boolean isFee, boolean isReturnFee) {
+    private long getDepositFeeSchemaCountInTime(RechargeFeeSchema schema, boolean isFee, boolean isReturnFee, PayAccountVo accountVo) {
         PlayerRechargeListVo listVo = new PlayerRechargeListVo();
         Date now = SessionManager.getDate().getNow();
         listVo.getSearch().setEndTime(now);
@@ -317,6 +317,7 @@ public abstract class RechargeBaseController {
             listVo.getSearch().setStartTime(DateTool.addHours(now, -schema.getReturnTime()));
         }
         listVo.setRechargeFeeSchema(schema);
+        listVo.setAccountVo(accountVo);
         return playerRechargeService().searchPlayerRechargeFeeSchemaCount(listVo);
     }
 

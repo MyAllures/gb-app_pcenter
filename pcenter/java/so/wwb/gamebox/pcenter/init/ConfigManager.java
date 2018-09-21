@@ -1,14 +1,15 @@
 package so.wwb.gamebox.pcenter.init;
 
 import org.soul.commons.spring.utils.SpringTool;
+import org.springframework.stereotype.Component;
+import so.wwb.gamebox.web.init.ConfigBase;
 
 /**
- * Created by tony on 15-4-28.
+ * Created by Kevice on 2015/3/26 0026.
  */
-public class ConfigManager extends so.wwb.gamebox.web.init.ConfigBase {
-
-    public static PCenterConfigration get() {
-        return SpringTool.getBean(PCenterConfigration.class);
+@Component
+public class ConfigManager extends ConfigBase {
+    public static ConfigManager get() {
+        return SpringTool.getBean(ConfigManager.class);
     }
-
 }

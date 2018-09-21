@@ -1,15 +1,14 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import org.soul.commons.collections.MapTool;
 import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.locale.LocaleTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
-import org.soul.commons.net.ServletTool;
 import org.soul.commons.security.CryptoTool;
-import org.soul.model.pay.enums.CommonFieldsConst;
+import org.soul.model.log.audit.enums.OpType;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
@@ -19,10 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
-import so.wwb.gamebox.model.CacheBase;
-import so.wwb.gamebox.model.Module;
-import so.wwb.gamebox.model.ParamTool;
-import so.wwb.gamebox.model.TerminalEnum;
+import so.wwb.gamebox.model.*;
+import so.wwb.gamebox.model.common.Audit;
 import so.wwb.gamebox.model.common.MessageI18nConst;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.company.po.Bank;
@@ -39,10 +36,10 @@ import so.wwb.gamebox.model.master.operation.po.VActivityMessage;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
 import so.wwb.gamebox.pcenter.fund.form.OnlinePayForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
+import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.common.token.Token;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -174,8 +171,18 @@ public class OnlineRechargeController extends RechargeBaseController {
     @RequestMapping("/onlineSubmit")
     @Token(valid = true)
     @ResponseBody
+    @Audit(module = Module.MASTER_OPERATION, moduleType = ModuleType.PLAYER_RECHARGE, opType = OpType.CREATE)
     public Map<String, Object> onlineSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlinePayForm form, BindingResult result, HttpServletRequest request) {
-        return onlineSubmit(playerRechargeVo, form.get$code(), result, RechargeTypeEnum.ONLINE_DEPOSIT.getCode(), request);
+        Map<String, Object> rtnMap = onlineSubmit(playerRechargeVo, form.get$code(), result, RechargeTypeEnum.ONLINE_DEPOSIT.getCode(), request);
+        //存款记录保存完成,记录各个参数日志
+        if (MapTool.getBoolean(rtnMap, "state")) {
+            BussAuditLogTool.addLog("PLAYER_RECHARGE",
+                    MapTool.getString(rtnMap,"transactionNo"),
+                    (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
+                            JsonTool.toJson(playerRechargeVo.getPlayerRank())).replace("{", "").replace("}", ""));
+        }
+        return rtnMap;
+
     }
 
     /**
@@ -342,7 +349,8 @@ public class OnlineRechargeController extends RechargeBaseController {
         if ((max != null && max < amount) || (min != null && min > amount)) {
             return false;
         }
-        double fee = calculateFee(rank, amount);
+        String account = CryptoTool.aesEncrypt(String.valueOf(payAccount.getId()), "BaseVo");//calculateFeeSchemaAndRank方法中id是加密的,所以调用前加密
+        double fee = calculateFeeSchemaAndRank(rank, amount,account,null);
         return (amount + fee) > 0;
     }
 

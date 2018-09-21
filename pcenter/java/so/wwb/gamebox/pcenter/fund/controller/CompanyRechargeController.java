@@ -1,12 +1,15 @@
 package so.wwb.gamebox.pcenter.fund.controller;
 
 import org.soul.commons.collections.CollectionTool;
+import org.soul.commons.collections.MapTool;
+import org.soul.commons.data.json.JsonTool;
 import org.soul.commons.lang.SystemTool;
 import org.soul.commons.lang.string.I18nTool;
 import org.soul.commons.lang.string.StringTool;
 import org.soul.commons.log.Log;
 import org.soul.commons.log.LogFactory;
 import org.soul.commons.math.NumberTool;
+import org.soul.model.log.audit.enums.OpType;
 import org.soul.web.validation.form.annotation.FormModel;
 import org.soul.web.validation.form.js.JsRuleCreator;
 import org.springframework.stereotype.Controller;
@@ -16,37 +19,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import so.wwb.gamebox.common.dubbo.ServiceSiteTool;
-import so.wwb.gamebox.model.DictEnum;
-import so.wwb.gamebox.model.ParamTool;
-import so.wwb.gamebox.model.SiteParamEnum;
+import so.wwb.gamebox.model.*;
+import so.wwb.gamebox.model.common.Audit;
 import so.wwb.gamebox.model.company.enums.BankCodeEnum;
 import so.wwb.gamebox.model.company.enums.BankEnum;
 import so.wwb.gamebox.model.master.content.po.PayAccount;
 import so.wwb.gamebox.model.master.content.vo.PayAccountVo;
-import so.wwb.gamebox.model.master.dataRight.DataRightModuleType;
-import so.wwb.gamebox.model.master.dataRight.po.SysUserDataRight;
-import so.wwb.gamebox.model.master.dataRight.vo.SysUserDataRightVo;
 import so.wwb.gamebox.model.master.enums.DepositWayEnum;
 import so.wwb.gamebox.model.master.enums.PayAccountAccountType;
 import so.wwb.gamebox.model.master.enums.PayAccountType;
 import so.wwb.gamebox.model.master.fund.enums.RechargeStatusEnum;
 import so.wwb.gamebox.model.master.fund.enums.RechargeTypeEnum;
-import so.wwb.gamebox.model.master.fund.enums.RechargeTypeParentEnum;
 import so.wwb.gamebox.model.master.fund.po.PlayerRecharge;
 import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeListVo;
 import so.wwb.gamebox.model.master.fund.vo.PlayerRechargeVo;
 import so.wwb.gamebox.model.master.operation.po.ActivityDepositWay;
 import so.wwb.gamebox.model.master.player.po.PlayerRank;
-import so.wwb.gamebox.model.master.player.vo.UserPlayerVo;
-import so.wwb.gamebox.pcenter.fund.form.*;
+import so.wwb.gamebox.pcenter.fund.form.AtmCounterForm;
+import so.wwb.gamebox.pcenter.fund.form.BitCoinPayForm;
+import so.wwb.gamebox.pcenter.fund.form.OnlineBankForm;
 import so.wwb.gamebox.pcenter.session.SessionManager;
+import so.wwb.gamebox.web.BussAuditLogTool;
 import so.wwb.gamebox.web.common.token.Token;
 import so.wwb.gamebox.web.common.token.TokenHandler;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cherry on 16-9-11.
@@ -230,8 +232,17 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("/onlineBankSubmit")
     @ResponseBody
     @Token(valid = true)
+    @Audit(module = Module.MASTER_OPERATION, moduleType = ModuleType.PLAYER_RECHARGE, opType = OpType.CREATE)
     public Map<String, Object> onlineBankSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid OnlineBankForm form, BindingResult result) {
-        return commonCompanyRechargeSubmit(playerRechargeVo, result, RechargeTypeEnum.ONLINE_BANK.getCode());
+        Map<String, Object> rtnMap = commonCompanyRechargeSubmit(playerRechargeVo, result, RechargeTypeEnum.ONLINE_BANK.getCode());
+        //存款记录保存完成,记录各个参数日志
+        if (MapTool.getBoolean(rtnMap, "state")) {
+            BussAuditLogTool.addLog("PLAYER_RECHARGE",
+                    MapTool.getString(rtnMap,"transactionNo"),
+                    (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
+                            JsonTool.toJson(playerRechargeVo.getPlayerRank())).replace("{", "").replace("}", ""));
+        }
+        return rtnMap;
     }
 
     /**
@@ -271,6 +282,7 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("/bitCoinSubmit")
     @ResponseBody
     @Token(valid = true)
+    @Audit(module = Module.MASTER_OPERATION, moduleType = ModuleType.PLAYER_RECHARGE, opType = OpType.CREATE)
     public Map<String, Object> bitCoinSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid BitCoinPayForm form, BindingResult result) {
         if (result.hasErrors()) {
             return getResultMsg(false, null, null);
@@ -281,7 +293,15 @@ public class CompanyRechargeController extends RechargeBaseController {
         }
         String rechargeType = RechargeTypeEnum.BITCOIN_FAST.getCode();
         playerRechargeVo.getResult().setRechargeAmount(0d);
-        return companySaveRecharge(playerRechargeVo, payAccount, rechargeType);
+        Map<String, Object> rtnMap = companySaveRecharge(playerRechargeVo, payAccount, rechargeType);
+        //存款记录保存完成,记录各个参数日志
+        if (MapTool.getBoolean(rtnMap, "state")) {
+            BussAuditLogTool.addLog("PLAYER_RECHARGE",
+                    MapTool.getString(rtnMap,"transactionNo"),
+                    (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
+                            JsonTool.toJson(playerRechargeVo.getPlayerRank())).replace("{", "").replace("}", ""));
+        }
+        return rtnMap;
     }
 
 
@@ -296,12 +316,21 @@ public class CompanyRechargeController extends RechargeBaseController {
     @RequestMapping("atmCounterSubmit")
     @ResponseBody
     @Token(valid = true)
+    @Audit(module = Module.MASTER_OPERATION, moduleType = ModuleType.PLAYER_RECHARGE, opType = OpType.CREATE)
     public Map<String, Object> atmCounterSubmit(PlayerRechargeVo playerRechargeVo, @FormModel @Valid AtmCounterForm form, BindingResult result) {
         String rechargeType = playerRechargeVo.getResult().getRechargeType();
         if (!RechargeTypeEnum.ATM_COUNTER.getCode().equals(rechargeType) && !RechargeTypeEnum.ATM_MONEY.getCode().equals(rechargeType) && !RechargeTypeEnum.ATM_RECHARGE.getCode().equals(rechargeType)) {
             rechargeType = RechargeTypeEnum.ATM_COUNTER.getCode();
         }
-        return commonCompanyRechargeSubmit(playerRechargeVo, result, rechargeType);
+        Map<String, Object> rtnMap = commonCompanyRechargeSubmit(playerRechargeVo, result, rechargeType);
+        //存款记录保存完成,记录各个参数日志
+        if (MapTool.getBoolean(rtnMap, "state")) {
+            BussAuditLogTool.addLog("PLAYER_RECHARGE",
+                    MapTool.getString(rtnMap,"transactionNo"),
+                    (JsonTool.toJson(playerRechargeVo.getRechargeFeeSchemaVo()) +
+                            JsonTool.toJson(playerRechargeVo.getPlayerRank())).replace("{", "").replace("}", ""));
+        }
+        return rtnMap;
     }
 
     /**
@@ -312,7 +341,8 @@ public class CompanyRechargeController extends RechargeBaseController {
      */
     @RequestMapping("/checkAmount")
     @ResponseBody
-    public boolean checkAmount(@RequestParam("result.rechargeAmount") String rechargeAmount) {
+    public boolean checkAmount(@RequestParam("result.rechargeAmount") String rechargeAmount,
+                               @RequestParam("account") String account) {
         PlayerRank rank = getRank();
         double amount = NumberTool.toDouble(rechargeAmount);
         Long max = rank.getOnlinePayMax();
@@ -320,7 +350,7 @@ public class CompanyRechargeController extends RechargeBaseController {
         if ((max != null && max < amount) || (min != null && min > amount)) {
             return false;
         }
-        double fee = calculateFee(rank, amount);
+        double fee = calculateFeeSchemaAndRank(rank, amount, account,null);
         return (amount + fee) > 0;
     }
 

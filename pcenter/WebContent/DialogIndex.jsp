@@ -6,7 +6,7 @@
     <title>${views.home['index.title']} - ${views.home['index.name']} - ${siteName}
     </title>
     <%
-        System.out.printf(MessageFormat.format(BaseConfigManager.getConfigration().getResComRoot(),request.getServerName()));
+        System.out.printf(MessageFormat.format(ConfigBase.get().getResComRoot(),request.getServerName()));
     %>
     <%@ include file="/include/include.head.jsp" %>
     <link rel="icon" type="image/png" href="${cdnUrl}/ftl/${siteDomain.templateCode}/images/favicon.png" sizes="32x32">

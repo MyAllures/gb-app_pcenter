@@ -121,7 +121,7 @@
                                 <table width="90%" border="0" cellspacing="0" cellpadding="0">
                                     <c:forEach items="${array}" var="json">
                                         <c:if test="${!empty views.gameOrder[json.key]||(result.apiId==3&&json.key=='type')||(result.apiId==1&&json.key=='ip')}">
-                                            <c:if test="${result.apiId!=42}">
+                                            <c:if test="${result.apiId!=44}">
                                                 <tr>
                                                     <td class="datailname datailback" style="width:30%">
                                                         <c:choose>
